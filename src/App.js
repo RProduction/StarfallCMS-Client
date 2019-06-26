@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useContext, lazy, Suspense} from 'react';
+import {Route, withRouter, Switch, __RouterContext} from 'react-router-dom';
+import {CssBaseline} from '@material-ui/core';
+
+const Admin = lazy(()=>import('./Admin'));
+const SignIn = lazy(()=>import('./SignIn'));
+const SignUp = lazy(()=>import('./SignUp'));
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const {location} = useContext(__RouterContext);
+	  
+	return (
+    	<Suspense fallback={<div></div>}>
+			<CssBaseline/>
+
+			<Switch location={location}>
+				<Route exact path="/" component={Admin}/>
+				<Route path="/signin" component={SignIn}/>
+				<Route path="/signup" component={SignUp}/>
+			</Switch>
+
+		</Suspense>
+  	);
 }
 
-export default App;
+export default withRouter(App);
