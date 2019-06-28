@@ -1,7 +1,6 @@
 import React from 'react';
 import ContentContainer from './ContentContainer';
-import {Grid} from '@material-ui/core';
-import {makeStyles} from '@material-ui/styles';
+import {Grid, makeStyles} from '@material-ui/core';
 import {Formik} from 'formik';
 
 const useStyle = makeStyles({
