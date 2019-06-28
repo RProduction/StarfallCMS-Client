@@ -15,14 +15,19 @@ function App() {
 	const {location} = useContext(__RouterContext);
 	const [status, setStatus] = useState(undefined);
 
-	useEffect(()=>{
-		Axios.get('user/status').then((res)=>{
-			console.log(res.data);
+	async function fetchStatus(){
+		try{
+			const {data} = await Axios.get('user/status');
 			// set status only if status value change
-			if(status !== res.data) setStatus(res.data);
-		}).catch((error)=>{
-			console.log(error);
-		});
+			if(status !== data) setStatus(data);
+		}
+		catch(err){
+			console.log(err);
+		}
+	}
+
+	useEffect(()=>{
+		fetchStatus();
 	}, []);
 
 	useEffect(()=>{
