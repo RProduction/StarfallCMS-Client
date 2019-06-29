@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import React from 'react';
 import {Drawer, useTheme, IconButton, Divider, Hidden, makeStyles} from '@material-ui/core';
 import {ChevronLeft, ChevronRight} from '@material-ui/icons';
-import {useDispatch, useSelector, shallowEqual} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {SwitchSideBar} from '../actions/actions';
 import SideBarContent from './SideBarContent';
 

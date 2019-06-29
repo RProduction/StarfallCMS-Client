@@ -1,5 +1,5 @@
-import React, {useContext, lazy, Suspense, useEffect, useState} from 'react';
-import {Route, withRouter, Switch, __RouterContext} from 'react-router-dom';
+import React, {lazy, Suspense, useEffect, useState} from 'react';
+import {Route, Switch} from 'react-router-dom';
 import {CssBaseline} from '@material-ui/core';
 import {useDispatch} from 'react-redux';
 import Axios from './Axios';
@@ -12,7 +12,6 @@ const SignUp = lazy(()=>import('./SignUp'));
 
 function App() {
 	const dispatch = useDispatch();
-	const {location} = useContext(__RouterContext);
 	const [status, setStatus] = useState(undefined);
 
 	async function fetchStatus(){
@@ -40,14 +39,14 @@ function App() {
 			<CssBaseline/>
 			<AuthorizationCheck/>
 
-			<Switch location={location}>
-				<Route exact path="/" component={Admin}/>
-				<Route path="/signin" component={SignIn}/>
-				<Route path="/signup" component={SignUp}/>
+			<Switch>
+				<Route path="/" component={Admin}/>
+				<Route exact path="/signin" component={SignIn}/>
+				<Route exact path="/signup" component={SignUp}/>
 			</Switch>
 
 		</Suspense>
   	);
 }
 
-export default withRouter(App);
+export default App;

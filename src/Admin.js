@@ -1,5 +1,5 @@
-import React, {useContext, lazy, Suspense, useEffect} from 'react';
-import {Route, Redirect , Switch, __RouterContext} from 'react-router-dom';
+import React, {lazy, Suspense, useEffect} from 'react';
+import {Route, Switch} from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideBar from './components/SideBar';
@@ -7,7 +7,8 @@ import Axios from './Axios';
 import {AddProject, AddEntity} from './actions/actions';
 import {useDispatch} from 'react-redux';
 
-function Admin() {
+function Admin(props) {
+	const {match, location} = props;
 	const dispatch = useDispatch();
 	async function fetchData(){
 		// fetch all projects
@@ -20,7 +21,7 @@ function Admin() {
 				const entities = await Axios.get(`entity/${project.id}`);
 				// loop over entities of project and assign it into store
 				for(let entity of entities.data){
-					dispatch(AddEntity(project.id, entity.id, entity.entity_name));
+					dispatch(AddEntity(project.project_name, entity.id, entity.entity_name));
 				}
 			}
 		}
@@ -35,8 +36,14 @@ function Admin() {
 
 	return (
 		<React.Fragment>
-			<Header/>
+			<Header {...props}/>
 			<SideBar/>
+			
+			<Switch>
+				<Route path='/' component={()=>location.pathname}/>
+				<Route path='/:project' component={()=>location.pathname}/>
+				<Route path='/:project/:entity' component={()=>location.pathname}/>
+			</Switch>
 	
 			<Footer/>
 		</React.Fragment>
