@@ -36,22 +36,22 @@ export function AddProject(id, name){
     return {type: ADD_PROJECT, id: id, name: name};
 }
 
-export function DeleteProject(id){
-    return {type: DELETE_PROJECT, id: id};
+export function DeleteProject(name){
+    return {type: DELETE_PROJECT, name: name};
 }
 
-export function RenameProject(id, name){
-    return {type: RENAME_PROJECT, id: id, name: name};
+export function RenameProject(oldName, name){
+    return {type: RENAME_PROJECT, oldName: oldName, name: name};
 }
 
-export function AddEntity(projectid, id, name){
-    return {type: ADD_ENTITY, projectid: projectid, id: id, name: name};
+export function AddEntity(projectName, id, name){
+    return {type: ADD_ENTITY, projectName: projectName, id: id, name: name};
 }
 
-export function DeleteEntity(projectid, id){
-    return {type: DELETE_ENTITY, projectid: projectid, id: id};
+export function DeleteEntity(projectName, name){
+    return {type: DELETE_ENTITY, projectName: projectName, name: name};
 }
 
-export function RenameEntity(projectid, id, name){
-    return {type: RENAME_ENTITY, projectid: projectid, id: id, name: name};
+export function RenameEntity(projectName, oldName, name){
+    return {type: RENAME_ENTITY, projectName: projectName, oldName: oldName, name: name};
 }
