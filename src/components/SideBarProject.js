@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {ListItem, Divider, ListItemText, List, Collapse, IconButton, makeStyles} from '@material-ui/core';
+import {ListItem, Divider, ListItemText, List, Collapse, IconButton, makeStyles, ButtonBase} from '@material-ui/core';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
 import SideBarEntity from './SideBarEntity';
@@ -12,6 +12,9 @@ const useStyle = makeStyles(theme => ({
     },
     hide: {
         display: 'none'
+    },
+    btn: {
+        flexGrow: 1
     }
 }));
 
@@ -25,8 +28,7 @@ function SideBarEntities(props){
                 <List className={style.root} disablePadding>
                     {
                         entities.map((value)=>{
-                            const {id, name} = value;
-                            return <SideBarEntity key={id} id={id} name={name}/>
+                            return <SideBarEntity {...value}/>
                         })
                     }
                 </List>
@@ -40,24 +42,32 @@ function SideBarEntities(props){
 
 function SideBarProject(props){
     const style = useStyle();
-    const {id, name} = props;
+    const {name} = props;
     const database = useSelector(
-        state => state.database[id].entities, ()=>false
+        state => state.database[name].entities, ()=>false
     );
     const [open, setOpen] = useState(false);
 
     let entities = [];
-    for(const [key, value] of Object.entries(database)){
-        entities.push({
-            id: key,
-            name: value.name
-        });
+    if(database !== undefined){
+        for(const [key, value] of Object.entries(database)){
+            entities.push({
+                key: value.id,
+                name: key,
+                projectName: name
+            });
+        }
     }
 
     return(
         <React.Fragment>
             <ListItem>
-                <ListItemText primary={name}/>
+                <ButtonBase component={Link} 
+                    to={`/${name}`}
+                    className={style.btn}
+                >
+                    <ListItemText primary={name}/>
+                </ButtonBase>
                 <IconButton
                     color="inherit"
                     aria-label={`Expand ${name}`}

@@ -1,12 +1,26 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {ListItem, Divider, ListItemText} from '@material-ui/core';
+import {ListItem, Divider, ListItemText, ButtonBase, makeStyles} from '@material-ui/core';
+
+const useStyle = makeStyles({
+    root: {
+        flexGrow: 1
+    }
+});
 
 function SideBarEntity(props){
+    const style = useStyle();
+    const {name, projectName} = props;
+
     return(
         <React.Fragment>
             <ListItem>
-                <ListItemText primary={props.name}/>
+                <ButtonBase component={Link} 
+                    to={`/${projectName}/${name}`}
+                    className={style.root}
+                >
+                    <ListItemText primary={name}/>
+                </ButtonBase>
             </ListItem>
             <Divider/>
         </React.Fragment>

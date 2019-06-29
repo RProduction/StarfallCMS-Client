@@ -1,5 +1,6 @@
 import React from 'react';
-import {List} from '@material-ui/core';
+import {Link} from 'react-router-dom';
+import {List, ListItem, Divider, ListItemText} from '@material-ui/core';
 import {useSelector} from 'react-redux';
 import SideBarProject from './SideBarProject';
 
@@ -11,8 +12,7 @@ function SideBarProjects(props){
             <React.Fragment>
                 {
                     projects.map((value)=>{
-                        const {id, name} = value;
-                        return <SideBarProject key={id} id={id} name={name}/>
+                        return <SideBarProject {...value}/>
                     })
                 }
             </React.Fragment>
@@ -31,13 +31,17 @@ function SideBarContent(props){
     let projects = [];
     for(const [key, value] of Object.entries(database)){
         projects.push({
-            id: key,
-            name: value.name
+            key: value.id,
+            name: key
         });
     }
 
     return(
         <List>
+            <ListItem button component={Link} to="/">
+                <ListItemText primary="Overview" />
+            </ListItem>
+            <Divider />
             <SideBarProjects projects={projects}/>
         </List>
     )
