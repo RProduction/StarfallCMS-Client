@@ -6,20 +6,6 @@ import clsx from 'clsx';
 import {SwitchSideBar} from '../actions/actions';
 import {Link, matchPath} from 'react-router-dom';
 
-const sidebarWidth = 300;
-
-const useStyle = makeStyles(theme => ({
-    root: {
-        marginLeft: sidebarWidth,
-        [theme.breakpoints.up('sm')]: {
-            width: `calc(100% - ${sidebarWidth}px)`,
-        }
-    },
-    hide: {
-        display: 'none'
-    }
-}));
-
 function HeaderLink({project, entity}){
     // from root => project => entity
     if(project === undefined && entity === undefined){
@@ -47,6 +33,11 @@ function HeaderLink({project, entity}){
     }
 }
 
+const useStyle = makeStyles(theme=>({
+    root: theme.responsive,
+    hide: theme.hide
+}));
+
 function Header(props){
     const style = useStyle();
     const dispatch = useDispatch();
@@ -70,13 +61,13 @@ function Header(props){
     return(
         <AppBar position="fixed" className={style.root}>
             <Toolbar>
-                <Hidden smUp>
+                <Hidden mdUp>
                     <IconButton
                         color="inherit"
                         aria-label="Open drawer"
                         onClick={() => dispatch(SwitchSideBar(!sidebar))}
                         edge="start"
-                        className={clsx(style.menuBtn, sidebar && style.hide)}
+                        className={clsx(sidebar && style.hide)}
                     >
                         <Menu />
                     </IconButton>
@@ -90,7 +81,6 @@ function Header(props){
                     edge="end"
                     aria-label="Account of current user"
                     aria-haspopup="true"
-                    
                     color="inherit"
                 >
                     <AccountCircle />

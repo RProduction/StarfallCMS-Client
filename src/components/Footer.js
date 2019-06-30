@@ -1,9 +1,10 @@
 import React from 'react';
 import { Typography, makeStyles} from '@material-ui/core';
 
-const useStyle = makeStyles({
+const useStyle = makeStyles(theme => ({
     root: {
         backgroundColor: '#292D2E',
+        ...theme.responsive
     },
     text: {
         color: 'white',
@@ -11,7 +12,7 @@ const useStyle = makeStyles({
         textAlign: 'center',
         lineHeight: '50px'
     }
-});
+}));
 
 function Footer(){
     const style = useStyle();
