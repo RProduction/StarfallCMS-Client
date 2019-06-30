@@ -10,6 +10,7 @@ import ContentContainer from './components/ContentContainer';
 import {makeStyles} from '@material-ui/core';
 
 const Overview = lazy(()=>import('./components/Overview'));
+const Project = lazy(()=>import('./components/Project'));
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -31,11 +32,27 @@ function Admin(props) {
 			const projects = await Axios.get('project');
 			// loop over project and assign it into store
 			for(let project of projects.data){
-				dispatch(AddProject(project.id, project.project_name));
+				dispatch(
+					AddProject(
+						project.id, 
+						project.project_name, 
+						project.created_at,
+						project.updated_at,
+						project.public_key
+					)
+				);
 				const entities = await Axios.get(`entity/${project.id}`);
 				// loop over entities of project and assign it into store
 				for(let entity of entities.data){
-					dispatch(AddEntity(project.project_name, entity.id, entity.entity_name));
+					dispatch(
+						AddEntity(
+							project.project_name, 
+							entity.id, 
+							entity.entity_name,
+							project.created_at,
+							project.updated_at
+						)
+					);
 				}
 			}
 		}

@@ -32,8 +32,15 @@ export const ADD_ENTITY = "ADD_ENTITY";
 export const DELETE_ENTITY = "DELETE_ENTITY";
 export const RENAME_ENTITY = "RENAME_ENTITY";
 
-export function AddProject(id, name){
-    return {type: ADD_PROJECT, id: id, name: name};
+export function AddProject(id, name, created, updated, publicKey){
+    return {
+        type: ADD_PROJECT, 
+        id: id, 
+        name: name, 
+        created: created, 
+        updated: updated, 
+        publicKey: publicKey
+    };
 }
 
 export function DeleteProject(name){
@@ -44,8 +51,15 @@ export function RenameProject(oldName, name){
     return {type: RENAME_PROJECT, oldName: oldName, name: name};
 }
 
-export function AddEntity(projectName, id, name){
-    return {type: ADD_ENTITY, projectName: projectName, id: id, name: name};
+export function AddEntity(projectName, id, name, created, updated){
+    return {
+        type: ADD_ENTITY, 
+        projectName: projectName, 
+        id: id, 
+        name: name,
+        created: created,
+        updated: updated
+    };
 }
 
 export function DeleteEntity(projectName, name){

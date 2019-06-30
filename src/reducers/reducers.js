@@ -28,11 +28,14 @@ function SwitchSideBar(state = false, action){
 function SetDatabase(state = {}, action){
     let temp = state;
     let tempValue;
-    const {type, projectName, oldName, id, name} = action; 
+    const {type, projectName, oldName, id, name, updated, created, publicKey} = action; 
     switch(type){
         case ADD_PROJECT:
             temp[name] = {
                 id: id,
+                created: created,
+                updated: updated,
+                publicKey: publicKey,
                 entities: {}
             };
         break;
@@ -47,6 +50,8 @@ function SetDatabase(state = {}, action){
         case ADD_ENTITY:
             temp[projectName].entities[name] = {
                 id: id,
+                created: created,
+                updated: updated,
                 items: {}
             };
         break;
