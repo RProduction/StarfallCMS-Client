@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useEffect} from 'react';
+import React, {useEffect, lazy} from 'react';
 import {Route, Switch} from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -6,9 +6,23 @@ import SideBar from './components/SideBar';
 import Axios from './Axios';
 import {AddProject, AddEntity} from './actions/actions';
 import {useDispatch} from 'react-redux';
+import ContentContainer from './components/ContentContainer';
+import {makeStyles} from '@material-ui/core';
+
+const Overview = lazy(()=>import('./components/Overview'));
+
+const useStyle = makeStyles(theme => ({
+    root: {
+		marginTop: 65,
+		paddingTop: 15,
+		paddingBottom: 15,
+		...theme.responsive
+	}
+}));
 
 function Admin(props) {
-	const {match, location} = props;
+	const style = useStyle();
+	const {location} = props;
 	const dispatch = useDispatch();
 	async function fetchData(){
 		// fetch all projects
@@ -39,11 +53,13 @@ function Admin(props) {
 			<Header {...props}/>
 			<SideBar/>
 			
-			<Switch>
-				<Route path='/' component={()=>location.pathname}/>
-				<Route path='/:project' component={()=>location.pathname}/>
-				<Route path='/:project/:entity' component={()=>location.pathname}/>
-			</Switch>
+			<ContentContainer className={style.root}>
+				<Switch>
+					<Route path='/:project/:entity' component={()=>location.pathname}/>
+					<Route path='/:project' component={()=>location.pathname}/>
+					<Route path='/' component={Overview}/>
+				</Switch>
+			</ContentContainer>
 	
 			<Footer/>
 		</React.Fragment>
