@@ -1,8 +1,23 @@
 import React, {useState} from 'react';
-import {Grid, Card, CardContent, CardHeader, CardMedia
-    , Box, List, ListItem, ListItemText, Collapse} from '@material-ui/core';
-import {useSelector} from 'react-redux';
-import {ExpandLess, ExpandMore} from '@material-ui/icons';
+import {Grid, Card, CardContent, CardHeader
+    , CardMedia, Box, List, ListItem
+    , ListItemText, Collapse, Avatar, IconButton
+    , Typography} from '@material-ui/core';
+import {ExpandLess, ExpandMore, MoreVert} from '@material-ui/icons';
+import {Link} from 'react-router-dom';
+
+function OverviewList(props){
+    return(
+        <ListItem dense>
+            <ListItemText
+                primaryTypographyProps={{
+                    variant: 'body2'
+                }}
+                primary={props.primary}
+            />
+        </ListItem>
+    )
+}
 
 function OverviewContent(props){
     const {entities} = props;
@@ -12,17 +27,31 @@ function OverviewContent(props){
         return(
             <React.Fragment>
                 <ListItem button onClick={() => setOpen(!open)}>
-                    <ListItemText primary="Entities"/>
+                    <ListItemText 
+                        primaryTypographyProps={{
+                            variant:'h6'
+                        }}
+                        primary="Entities"
+                    />
                     {open ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                 {
                     entities.map((value, index)=>{
-                        const {key, name} = value;
+                        const {key, name, projectName} = value;
                         return(
-                            <ListItem key={key}>
-                                <ListItemText primary={`${index+1}. ${name}`}/>
-                            </ListItem>
+                            <OverviewList key={key} 
+                                primary={
+                                    <React.Fragment>
+                                        {`${index+1}. `}
+                                        <Link style={{color: "black"}} 
+                                            to={`/${projectName}/${name}`}
+                                        >
+                                            {name}
+                                        </Link>
+                                    </React.Fragment>
+                                }
+                            />
                         )
                     })
                 }
@@ -35,18 +64,19 @@ function OverviewContent(props){
     }
 }
 
+// Overview Card actions will only available for creator
+// actions consist of renaming and deleting Project
+// and those action need Creator Authorization
 function OverviewCard(props){
-    const {name} = props;
-    const database = useSelector(
-        state => state.database[name].entities, ()=>false
-    );
+    const {name, index, id, updated, created, entities, publicKey, authorized} = props;
 
-    let entities = [];
-    if(database !== undefined){
-        for(const [key, value] of Object.entries(database)){
-            entities.push({
+    let _entities = [];
+    if(entities !== undefined){
+        for(const [key, value] of Object.entries(entities)){
+            _entities.push({
                 key: value.id,
-                name: key
+                name: key,
+                projectName: name
             });
         }
     }
@@ -54,12 +84,31 @@ function OverviewCard(props){
     return(
         <Grid item container xs={12} justify="center">
             <Box component={Card} bgcolor='#F2F3F3' my={1.5} width={1}>
-                <CardHeader title={name}/>
+                <CardHeader 
+                    avatar={<Avatar>{index}</Avatar>} 
+                    title={
+                        <Typography variant="h4" component={Link} 
+                            to={`/${name}`} style={{color: "black"}}
+                        >
+                            {name}
+                        </Typography>
+                    }
+                    action={
+                        authorized ?
+                        <IconButton aria-label="More Action">
+                            <MoreVert/>
+                        </IconButton>
+                        : null
+                    }
+                />
                 <Box component={CardMedia} height={250} title={name}
                     image={'https://via.placeholder.com/150'}
                 />
                 <CardContent component={List}>
-                    <OverviewContent entities={entities}/>
+                    <OverviewList primary={`Public Key: ${publicKey}`}/>
+                    <OverviewList primary={`Created At: ${created}`}/>
+                    <OverviewList primary={`Updated At: ${updated}`}/>
+                    <OverviewContent entities={_entities}/>
                 </CardContent>
             </Box>
         </Grid>

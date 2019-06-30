@@ -1,20 +1,34 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Grid} from '@material-ui/core';
 import OverviewCard from './OverviewCard';
+import {CREATOR} from '../actions/actions';
 
+// fetch authStatus from redux store and setAuthorized(true) if creator
+// Any actions in Overview will affect Project and need Creator level Authorization
 function Overview(props){
+    const status = useSelector(state=>state.authStatus);
     const database = useSelector(
         state => state.database, ()=>false
     );
+    const [authorized, setAuthorized] = useState(false);
+
+    useEffect(()=>{
+        if(status === CREATOR) setAuthorized(true);
+        else setAuthorized(false);
+    }, status);
 
     let cards = [];
     if(database !== undefined){
+        let i=1;
         for(const [key, value] of Object.entries(database)){
             cards.push({
                 key: value.id,
-                name: key
+                index: i,
+                name: key,
+                ...value
             });
+            i++;
         }
     }
 
@@ -30,7 +44,7 @@ function Overview(props){
         {
             cards.map((value)=>{
                 return(
-                    <OverviewCard {...value}/>
+                    <OverviewCard {...value} authorized={authorized}/>
                 )
             })
         }
