@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {ListItem, Divider, ListItemText, List, Collapse, IconButton, makeStyles, ButtonBase} from '@material-ui/core';
+import {ListItem, ListItemText, List, Collapse, IconButton, makeStyles, ButtonBase} from '@material-ui/core';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
 import SideBarEntity from './SideBarEntity';
@@ -21,7 +21,6 @@ const useStyle = makeStyles(theme => ({
 function SideBarEntities(props){
     const style = useStyle();
     const {entities, open} = props;
-
     if(entities.length > 0){
         return(
             <Collapse in={open} timeout="auto" unmountOnExit>
@@ -61,7 +60,7 @@ function SideBarProject(props){
 
     return(
         <React.Fragment>
-            <ListItem>
+            <ListItem divider>
                 <ButtonBase component={Link} 
                     to={`/${name}`}
                     className={style.btn}
@@ -78,8 +77,7 @@ function SideBarProject(props){
                     {open ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
             </ListItem>
-            <SideBarEntities entities={entities} open={open}/>
-            <Divider/>
+            <SideBarEntities open={open} entities={entities}/>
         </React.Fragment>
     )
 }

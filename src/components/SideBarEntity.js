@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {ListItem, Divider, ListItemText, ButtonBase, makeStyles} from '@material-ui/core';
+import {ListItem, ListItemText, ButtonBase, makeStyles} from '@material-ui/core';
 
 const useStyle = makeStyles({
     root: {
@@ -14,7 +14,7 @@ function SideBarEntity(props){
 
     return(
         <React.Fragment>
-            <ListItem>
+            <ListItem divider>
                 <ButtonBase component={Link} 
                     to={`/${projectName}/${name}`}
                     className={style.root}
@@ -22,7 +22,6 @@ function SideBarEntity(props){
                     <ListItemText primary={name}/>
                 </ButtonBase>
             </ListItem>
-            <Divider/>
         </React.Fragment>
     )
 }

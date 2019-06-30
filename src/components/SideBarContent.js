@@ -1,27 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {List, ListItem, Divider, ListItemText} from '@material-ui/core';
+import {List, ListItem, ListItemText} from '@material-ui/core';
 import {useSelector} from 'react-redux';
 import SideBarProject from './SideBarProject';
-
-function SideBarProjects(props){
-    const {projects} = props;
-
-    if(projects.length > 0){
-        return(
-            <React.Fragment>
-                {
-                    projects.map((value)=>{
-                        return <SideBarProject {...value}/>
-                    })
-                }
-            </React.Fragment>
-        )
-    }
-    else{
-        return null;
-    }
-}
 
 function SideBarContent(props){
     const database = useSelector(
@@ -38,11 +19,16 @@ function SideBarContent(props){
 
     return(
         <List>
-            <ListItem button component={Link} to="/">
+            <ListItem button component={Link} to="/" divider>
                 <ListItemText primary="Overview" />
             </ListItem>
-            <Divider />
-            <SideBarProjects projects={projects}/>
+            {
+                projects.map((value)=>{
+                    return(
+                        <SideBarProject {...value}/>
+                    )
+                })
+            }
         </List>
     )
 }
