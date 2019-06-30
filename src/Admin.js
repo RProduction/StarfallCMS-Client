@@ -73,7 +73,7 @@ function Admin(props) {
 			<ContentContainer className={style.root}>
 				<Switch>
 					<Route path='/:project/:entity' component={()=>location.pathname}/>
-					<Route path='/:project' component={()=>location.pathname}/>
+					<Route path='/:project' component={Project}/>
 					<Route path='/' component={Overview}/>
 				</Switch>
 			</ContentContainer>
