@@ -39,7 +39,7 @@ PopoverMenu.propTypes = {
     menus: PropTypes.arrayOf(
         PropTypes.shape({
             title: PropTypes.string.isRequired,
-            icon: PropTypes.node,
+            icon: PropTypes.elementType,
             onClick: PropTypes.func.isRequired
         }).isRequired
     ).isRequired,
