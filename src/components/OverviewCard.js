@@ -1,67 +1,77 @@
 import React, {useState} from 'react';
 import {Grid, Card, CardContent, CardHeader
-    , CardMedia, Box, List, ListItem
-    , ListItemText, Collapse, Avatar, IconButton
+    , CardMedia, Box, List, Avatar, IconButton
     , Typography} from '@material-ui/core';
-import {ExpandLess, ExpandMore, MoreVert} from '@material-ui/icons';
+import {MoreVert} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
+import PopoverMenu from './PopoverMenu';
+import OverviewContent from './OverviewContent';
+import OverviewList from './OverviewList';
+import {DeleteForever, Create} from '@material-ui/icons'
 
-function OverviewList(props){
+function Index({index}){
+    return <Avatar>{index}</Avatar>;
+}
+
+function Title({name}){
     return(
-        <ListItem dense>
-            <ListItemText
-                primaryTypographyProps={{
-                    variant: 'body2'
-                }}
-                primary={props.primary}
-            />
-        </ListItem>
+        <Typography 
+            variant="h4" 
+            component={Link}
+            to={`/${name}`} 
+            style={{ color: "black" }}
+        >
+            {name}
+        </Typography>
     )
 }
 
-function OverviewContent(props){
-    const {entities} = props;
-    const [open, setOpen] = useState(false);
+function Action(){
+    const [anchor, setAnchor] = useState(null);
 
-    if(entities.length > 0){
-        return(
-            <React.Fragment>
-                <ListItem button onClick={() => setOpen(!open)}>
-                    <ListItemText 
-                        primaryTypographyProps={{
-                            variant:'h6'
-                        }}
-                        primary="Entities"
-                    />
-                    {open ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                {
-                    entities.map((value, index)=>{
-                        const {key, name, projectName} = value;
-                        return(
-                            <OverviewList key={key} 
-                                primary={
-                                    <React.Fragment>
-                                        {`${index+1}. `}
-                                        <Link style={{color: "black"}} 
-                                            to={`/${projectName}/${name}`}
-                                        >
-                                            {name}
-                                        </Link>
-                                    </React.Fragment>
-                                }
-                            />
-                        )
-                    })
-                }
-                </Collapse>
-            </React.Fragment>
-        )
-    }
-    else{
-        return null;
-    }
+    return(
+        <React.Fragment>
+            <IconButton 
+                aria-label="More Action"
+                onClick={(e)=>setAnchor(e.currentTarget)}
+            >
+                <MoreVert />
+            </IconButton>
+            <PopoverMenu
+                id={anchor ? 'Project Menu' : null}
+                open={anchor ? true : false}
+                onClose={()=>setAnchor(null)}
+                anchorEl={anchor}
+                menus={[
+                    { 
+                        title: "Rename",
+                        icon: Create,
+                        onClick: ()=>{
+                            setAnchor(null);
+                        }
+                    },
+                    { 
+                        title: "Delete",
+                        icon: DeleteForever,
+                        onClick: ()=>{
+                            setAnchor(null);
+                        }
+                    }
+                ]}
+            />
+        </React.Fragment>
+    )
+}
+
+function Detail({primary}){
+    return(
+        <OverviewList listItemProp={{dense: true}}
+            listItemTextProp={{
+                primaryTypographyProps:{variant: 'body2'},
+                primary: primary
+            }}
+        />
+    )
 }
 
 // Overview Card actions will only available for creator
@@ -85,29 +95,17 @@ function OverviewCard(props){
         <Grid item container xs={12} justify="center">
             <Box component={Card} bgcolor='#F2F3F3' my={1.5} width={1}>
                 <CardHeader 
-                    avatar={<Avatar>{index}</Avatar>} 
-                    title={
-                        <Typography variant="h4" component={Link} 
-                            to={`/${name}`} style={{color: "black"}}
-                        >
-                            {name}
-                        </Typography>
-                    }
-                    action={
-                        authorized ?
-                        <IconButton aria-label="More Action">
-                            <MoreVert/>
-                        </IconButton>
-                        : null
-                    }
+                    avatar={<Index index={index}/>} 
+                    title={<Title name={name}/>}
+                    action={authorized ? <Action/> : null}
                 />
                 <Box component={CardMedia} height={250} title={name}
                     image={'https://via.placeholder.com/150'}
                 />
                 <CardContent component={List}>
-                    <OverviewList primary={`Public Key: ${publicKey}`}/>
-                    <OverviewList primary={`Created At: ${created}`}/>
-                    <OverviewList primary={`Updated At: ${updated}`}/>
+                    <Detail primary={`Public Key: ${publicKey}`}/>
+                    <Detail primary={`Created At: ${created}`}/>
+                    <Detail primary={`Updated At: ${updated}`}/>
                     <OverviewContent entities={_entities}/>
                 </CardContent>
             </Box>
