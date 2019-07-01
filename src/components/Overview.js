@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Grid} from '@material-ui/core';
 import OverviewCard from './OverviewCard';
-import {CREATOR} from '../actions/actions';
+import {CREATOR} from '../actions/authorizationActions';
 
 // fetch authStatus from redux store and setAuthorized(true) if creator
 // Any actions in Overview will affect Project and need Creator level Authorization

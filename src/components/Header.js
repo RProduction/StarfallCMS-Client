@@ -3,7 +3,7 @@ import { Typography, AppBar, Toolbar, IconButton, Hidden, makeStyles, Box} from 
 import {useDispatch, useSelector} from 'react-redux';
 import {Menu, AccountCircle} from '@material-ui/icons';
 import clsx from 'clsx';
-import {SwitchSideBar} from '../actions/actions';
+import {SwitchSideBar} from '../actions/adminActions';
 import {Link, matchPath} from 'react-router-dom';
 
 function HeaderLink({project, entity}){

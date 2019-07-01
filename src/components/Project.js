@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons'
-import {CREATOR, MANAGER} from '../actions/actions';
+import {CREATOR, MANAGER} from '../actions/authorizationActions';
 import {Link} from 'react-router-dom';
 
 const columns = [

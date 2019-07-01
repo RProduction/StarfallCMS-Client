@@ -1,7 +1,7 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
 import {useSelector} from 'react-redux';
-import {NOT_AUTHORIZED, FIRST_BOOT, USER} from '../actions/actions';
+import {NOT_AUTHORIZED, FIRST_BOOT, USER} from '../actions/authorizationActions';
 
 function AuthorizationCheck(){
     const _status = useSelector(state => state.authStatus);

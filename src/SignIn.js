@@ -3,7 +3,7 @@ import AuthorizationForm from './components/AuthorizationForm';
 import {TextField, Button, Grid} from '@material-ui/core';
 import {Redirect} from 'react-router-dom';
 import {useSelector} from 'react-redux';
-import {FIRST_BOOT, NOT_AUTHORIZED} from './actions/actions';
+import {FIRST_BOOT, NOT_AUTHORIZED} from './actions/authorizationActions';
 import Axios from './Axios';
 import * as Yup from 'yup';
 

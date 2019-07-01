@@ -3,7 +3,7 @@ import {Route, Switch} from 'react-router-dom';
 import {CssBaseline} from '@material-ui/core';
 import {useDispatch} from 'react-redux';
 import Axios from './Axios';
-import {AUTHORIZATION_STATUS, SetAuthStatus} from './actions/actions';
+import {AUTHORIZATION_STATUS, SetAuthStatus} from './actions/authorizationActions';
 import AuthorizationCheck from './components/AuthorizationCheck';
 
 const Admin = lazy(()=>import('./Admin'));

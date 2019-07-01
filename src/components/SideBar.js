@@ -2,7 +2,7 @@ import React from 'react';
 import {Drawer, IconButton, Divider, Hidden, makeStyles} from '@material-ui/core';
 import {ChevronLeft, ChevronRight} from '@material-ui/icons';
 import {useDispatch, useSelector} from 'react-redux';
-import {SwitchSideBar} from '../actions/actions';
+import {SwitchSideBar} from '../actions/adminActions';
 import SideBarContent from './SideBarContent';
 
 const useStyle = makeStyles(theme => ({
