@@ -4,10 +4,11 @@ import {Grid, Card, CardContent, CardHeader
     , Typography} from '@material-ui/core';
 import {MoreVert} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
-import PopoverMenu from './PopoverMenu';
 import OverviewContent from './OverviewContent';
 import OverviewList from './OverviewList';
-import {DeleteForever, Create} from '@material-ui/icons'
+import {useDispatch} from 'react-redux';
+import {SetProjectPopover} from '../actions/projectActions';
+import {SetTarget} from '../actions/globalActions';
 
 function Index({index}){
     return <Avatar>{index}</Avatar>;
@@ -26,40 +27,21 @@ function Title({name}){
     )
 }
 
-function Action(){
-    const [anchor, setAnchor] = useState(null);
+function Action({id, name}){
+    const dispatch = useDispatch();
 
     return(
-        <React.Fragment>
-            <IconButton 
-                aria-label="More Action"
-                onClick={(e)=>setAnchor(e.currentTarget)}
-            >
-                <MoreVert />
-            </IconButton>
-            <PopoverMenu
-                id={anchor ? 'Project Menu' : null}
-                open={anchor ? true : false}
-                onClose={()=>setAnchor(null)}
-                anchorEl={anchor}
-                menus={[
-                    { 
-                        title: "Rename",
-                        icon: Create,
-                        onClick: ()=>{
-                            setAnchor(null);
-                        }
-                    },
-                    { 
-                        title: "Delete",
-                        icon: DeleteForever,
-                        onClick: ()=>{
-                            setAnchor(null);
-                        }
-                    }
-                ]}
-            />
-        </React.Fragment>
+        <IconButton 
+            aria-label="More Action"
+            onClick={
+                (e)=>{
+                    dispatch(SetTarget(id, name));
+                    dispatch(SetProjectPopover(e.currentTarget));
+                }
+            }
+        >
+            <MoreVert />
+        </IconButton>
     )
 }
 
@@ -97,7 +79,7 @@ function OverviewCard(props){
                 <CardHeader 
                     avatar={<Index index={index}/>} 
                     title={<Title name={name}/>}
-                    action={authorized ? <Action/> : null}
+                    action={authorized ? <Action id={id} name={name}/> : null}
                 />
                 <Box component={CardMedia} height={250} title={name}
                     image={'https://via.placeholder.com/150'}
