@@ -19,8 +19,13 @@ export function DeleteProject(name){
     return {type: "DELETE_PROJECT", name: name};
 }
 
-export function RenameProject(oldName, name){
-    return {type: "RENAME_PROJECT", oldName: oldName, name: name};
+export function RenameProject(oldName, name, updated){
+    return {
+        type: "RENAME_PROJECT", 
+        oldName: oldName, 
+        name: name,
+        updated: updated
+    };
 }
 
 export function AddEntity(projectName, id, name, created, updated){
@@ -38,6 +43,12 @@ export function DeleteEntity(projectName, name){
     return {type: "DELETE_ENTITY", projectName: projectName, name: name};
 }
 
-export function RenameEntity(projectName, oldName, name){
-    return {type: "RENAME_ENTITY", projectName: projectName, oldName: oldName, name: name};
+export function RenameEntity(projectName, oldName, name, updated){
+    return {
+        type: "RENAME_ENTITY", 
+        projectName: projectName, 
+        oldName: oldName, 
+        name: name,
+        updated: updated
+    };
 }

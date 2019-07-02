@@ -32,11 +32,12 @@ function DeleteProject(state, action){
 
 function RenameProject(state, action){
     let temp = state;
-    const {oldName, name} = action;
+    const {oldName, name, updated} = action;
 
     let tempValue;
     tempValue = temp[oldName];
     temp[name] = tempValue;
+    temp[name].updated = updated;
     delete temp[oldName];
 
     return temp;      
@@ -67,11 +68,12 @@ function DeleteEntity(state, action){
 
 function RenameEntity(state, action){
     let temp = state;
-    const {projectName, name, oldName} = action; 
+    const {projectName, name, oldName, updated} = action; 
 
     let tempValue;
     tempValue = temp[projectName].entities[oldName];
     temp[projectName].entities[name] = tempValue;
+    temp[projectName].entities[name].updated = updated;
     delete temp[projectName].entities[oldName];
 
     return temp;      
