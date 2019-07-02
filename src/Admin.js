@@ -8,6 +8,7 @@ import {AddProject, AddEntity} from './actions/adminActions';
 import {useDispatch} from 'react-redux';
 import ContentContainer from './components/ContentContainer';
 import {makeStyles} from '@material-ui/core';
+import WebsocketClient from './WebsocketClient';
 
 const Overview = lazy(()=>import('./components/Overview'));
 const Project = lazy(()=>import('./components/Project'));
@@ -49,8 +50,8 @@ function Admin(props) {
 							project.project_name, 
 							entity.id, 
 							entity.entity_name,
-							project.created_at,
-							project.updated_at
+							entity.created_at,
+							entity.updated_at
 						)
 					);
 				}
@@ -67,6 +68,7 @@ function Admin(props) {
 
 	return (
 		<React.Fragment>
+			<WebsocketClient/>
 			<Header {...props}/>
 			<SideBar/>
 			
