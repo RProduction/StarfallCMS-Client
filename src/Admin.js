@@ -35,21 +35,21 @@ function Admin(props) {
 			for(let project of projects.data){
 				dispatch(
 					AddProject(
-						project.id, 
-						project.project_name, 
+						project._id, 
+						project.name,
 						project.created_at,
 						project.updated_at,
 						project.public_key
 					)
 				);
-				const entities = await Axios.get(`entity/${project.id}`);
+				const entities = await Axios.get(`entity/${project._id}`);
 				// loop over entities of project and assign it into store
 				for(let entity of entities.data){
 					dispatch(
 						AddEntity(
-							project.project_name, 
-							entity.id, 
-							entity.entity_name,
+							project.name, 
+							entity._id, 
+							entity.name,
 							entity.created_at,
 							entity.updated_at
 						)

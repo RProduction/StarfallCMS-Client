@@ -17,8 +17,8 @@ function WebsocketClient(props) {
                 console.log("add project");
                 console.log(msg);
                 dispatch(AddProject(
-                    msg.id, 
-					msg.project_name, 
+                    msg._id, 
+					msg.name, 
 					msg.created_at,
 					msg.updated_at,
 					msg.public_key
@@ -27,14 +27,14 @@ function WebsocketClient(props) {
             project.on('delete', (msg)=>{
                 console.log("delete project");
                 console.log(msg);
-                dispatch(DeleteProject(msg.project_name));
+                dispatch(DeleteProject(msg.name));
             });
             project.on('rename', (msg)=>{
                 console.log("rename project");
                 console.log(msg);
                 dispatch(RenameProject(
                     msg.old_name, 
-                    msg.project_name, 
+                    msg.name, 
                     msg.updated_at
                 ));
             });
@@ -47,8 +47,8 @@ function WebsocketClient(props) {
                 console.log(msg);
                 dispatch(AddEntity(
                     msg.project_name, 
-                    msg.id,
-                    msg.entity_name,
+                    msg._id,
+                    msg.name,
                     msg.created_at,
                     msg.updated_at
                 ));
@@ -56,7 +56,7 @@ function WebsocketClient(props) {
             entity.on('delete', (msg)=>{
                 console.log("delete entity");
                 console.log(msg);
-                dispatch(DeleteEntity(msg.project_name, msg.entity_name));
+                dispatch(DeleteEntity(msg.project_name, msg.name));
             });
             entity.on('rename', (msg)=>{
                 console.log("rename entity");
@@ -64,7 +64,7 @@ function WebsocketClient(props) {
                 dispatch(RenameEntity(
                     msg.project_name,
                     msg.old_name,
-                    msg.entity_name, 
+                    msg.name, 
                     msg.updated_at
                 ));
             });
