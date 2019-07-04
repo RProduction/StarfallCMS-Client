@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {Link} from 'react-router-dom';
 import {ListItem, ListItemText, List, Collapse, IconButton, makeStyles, ButtonBase} from '@material-ui/core';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
 import SideBarEntity from './SideBarEntity';
 import clsx from 'clsx';
+import {selectRelatedEntities} from '../selectors/adminSelectors';
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -20,14 +21,15 @@ const useStyle = makeStyles(theme => ({
 
 function SideBarEntities(props){
     const style = useStyle();
-    const {entities, open} = props;
+    const {entities, projectName, open} = props;
     if(entities.length > 0){
         return(
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List className={style.root} disablePadding>
                     {
-                        entities.map((value)=>{
-                            return <SideBarEntity {...value}/>
+                        entities.map((value, index)=>{
+                            const {name} = value;
+                            return <SideBarEntity key={index} name={name} projectName={projectName}/>
                         })
                     }
                 </List>
@@ -41,22 +43,10 @@ function SideBarEntities(props){
 
 function SideBarProject(props){
     const style = useStyle();
-    const {name} = props;
-    const database = useSelector(
-        state => state.database[name].entities, ()=>false
-    );
+    const {id, name} = props;
+    const select = useMemo(selectRelatedEntities, []);
+    const entities = useSelector(state => select(state, id));
     const [open, setOpen] = useState(false);
-
-    let entities = [];
-    if(database !== undefined){
-        for(const [key, value] of Object.entries(database)){
-            entities.push({
-                key: value.id,
-                name: key,
-                projectName: name
-            });
-        }
-    }
 
     return(
         <React.Fragment>
@@ -77,7 +67,7 @@ function SideBarProject(props){
                     {open ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
             </ListItem>
-            <SideBarEntities open={open} entities={entities}/>
+            <SideBarEntities open={open} entities={entities} projectName={name}/>
         </React.Fragment>
     )
 }

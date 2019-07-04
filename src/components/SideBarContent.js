@@ -3,19 +3,10 @@ import {Link} from 'react-router-dom';
 import {List, ListItem, ListItemText} from '@material-ui/core';
 import {useSelector} from 'react-redux';
 import SideBarProject from './SideBarProject';
+import {selectAllProjects} from '../selectors/adminSelectors';
 
 function SideBarContent(props){
-    const database = useSelector(
-        state => state.database, ()=>false
-    );
-
-    let projects = [];
-    for(const [key, value] of Object.entries(database)){
-        projects.push({
-            key: value.id,
-            name: key
-        });
-    }
+    const projects = useSelector(selectAllProjects);
 
     return(
         <List>
@@ -23,9 +14,10 @@ function SideBarContent(props){
                 <ListItemText primary="Overview" />
             </ListItem>
             {
-                projects.map((value)=>{
+                projects.map((value, index)=>{
+                    const {id, name} = value;
                     return(
-                        <SideBarProject {...value}/>
+                        <SideBarProject id={id} name={name} key={index}/>
                     )
                 })
             }

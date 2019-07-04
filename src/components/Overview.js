@@ -4,6 +4,7 @@ import {Grid, Fab, Box} from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import OverviewCard from './OverviewCard';
 import {CREATOR} from '../actions/authorizationActions';
+import {selectAllProjects} from '../selectors/adminSelectors';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog, ShowAddDialog, ShowNotificationDialog, HideNotificationDialog } from '../actions/globalActions';
 import OverviewPopover from './OverviewPopover';
@@ -109,29 +110,13 @@ function Authorized(props){
 // Any actions in Overview will affect Project and need Creator level Authorization
 function Overview(props){
     const status = useSelector(state=>state.authStatus);
-    const database = useSelector(
-        state => state.database, ()=>false
-    );
+    const projects = useSelector(selectAllProjects);
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(()=>{
         if(status === CREATOR) setAuthorized(true);
         else setAuthorized(false);
     }, status);
-
-    let cards = [];
-    if(database !== undefined){
-        let i=1;
-        for(const [key, value] of Object.entries(database)){
-            cards.push({
-                key: value.id,
-                index: i,
-                name: key,
-                ...value
-            });
-            i++;
-        }
-    }
 
     // view all projects within CMS and their attribute
     // project name
@@ -144,9 +129,11 @@ function Overview(props){
         <Grid container>
             {authorized ? <Authorized/> : null}
             {
-                cards.map((value)=>{
+                projects.map((value, index)=>{
                     return(
-                        <OverviewCard {...value} authorized={authorized}/>
+                        <OverviewCard key={index+1} index={index+1} 
+                            {...value} authorized={authorized}
+                        />
                     )
                 })
             }

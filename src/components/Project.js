@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons'
 import {CREATOR, MANAGER} from '../actions/authorizationActions';
 import {Link} from 'react-router-dom';
+import {selectRelatedEntities, selectProjectByName} from '../selectors/adminSelectors';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog
     , ShowAddDialog, ShowDeleteDialog, ShowRenameDialog
@@ -149,10 +150,11 @@ const columns = [
 function Project(props){
     const dispatch = useDispatch();
     const {project} = props.match.params;
+    const selectProject = useMemo(selectProjectByName, []);
+    const selectEntities = useMemo(selectRelatedEntities, []);
     const status = useSelector(state=>state.authStatus);
-    const database = useSelector(
-        state => state.database[project], ()=>false
-    );
+    const _project = useSelector(state => selectProject(state, project));
+    const entities = useSelector(state => selectEntities(state, _project.id));
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(()=>{
@@ -161,19 +163,17 @@ function Project(props){
     }, status);
 
     let datas = [];
-    if(database !== undefined && database.entities !== undefined){
-        let i=1;
-        for(const [key, value] of Object.entries(database.entities)){
-            datas.push({
-                "#": i,
-                id: value.id,
-                projectName: project,
-                name: key,
-                createdAt: value.created,
-                updatedAt: value.updated
-            });
-            i++;
-        }
+    let i=1;
+    for(let entity of entities){
+        datas.push({
+            "#": i,
+            id: entity.id,
+            projectName: project,
+            name: entity.name,
+            createdAt: entity.created,
+            updatedAt: entity.updated
+        });
+        i++;
     }
 
     // view all entities within project and their attribute
@@ -213,7 +213,7 @@ function Project(props){
                         tooltip: "Add Entity",
                         isFreeAction: true,
                         onClick: (e)=>{
-                            dispatch(SetTarget(database.id, ""));
+                            dispatch(SetTarget(_project.id, ""));
                             dispatch(ShowAddDialog());
                         }
                     }

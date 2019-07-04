@@ -3,7 +3,6 @@ import { ListItem, ListItemText, Collapse} from '@material-ui/core';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 import OverviewList from './OverviewList';
-import PropTypes from 'prop-types';
 
 function Content({index, projectName, name}){
     return(
@@ -12,7 +11,7 @@ function Content({index, projectName, name}){
                 primaryTypographyProps: {variant: 'body2'},
                 primary: 
                     <React.Fragment>
-                        {`${index + 1}. `}
+                        {`${index}. `}
                         <Link style={{ color: "black" }}
                             to={`/${projectName}/${name}`}
                         >
@@ -25,7 +24,7 @@ function Content({index, projectName, name}){
 }
 
 function OverviewContent(props){
-    const {entities} = props;
+    const {entities, projectName} = props;
     const [open, setOpen] = useState(false);
 
     if(entities.length === 0) return null;
@@ -42,22 +41,15 @@ function OverviewContent(props){
             <Collapse in={open} timeout="auto" unmountOnExit>
             {
                 entities.map((value, index)=>{
-                    return <Content {...value} index={index}/>;
+                    const {name} = value
+                    return <Content key={index+1} name={name} 
+                        projectName={projectName} index={index+1}
+                    />;
                 })
             }
             </Collapse>
         </React.Fragment>
     )
-}
-
-OverviewContent.propTypes = {
-    entities: PropTypes.arrayOf(
-        PropTypes.shape({
-            key: PropTypes.number.isRequired,
-            name: PropTypes.string.isRequired,
-            projectName: PropTypes.string.isRequired
-        }).isRequired
-    ).isRequired
 }
 
 export default OverviewContent;
