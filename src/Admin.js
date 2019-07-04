@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import SideBar from './components/SideBar';
 import Axios from './Axios';
-import {AddProject, AddEntity} from './actions/adminActions';
+import {InitDatabase} from './actions/adminActions';
 import {useDispatch} from 'react-redux';
 import ContentContainer from './components/ContentContainer';
 import {makeStyles} from '@material-ui/core';
@@ -27,35 +27,10 @@ function Admin(props) {
 	const {location} = props;
 	const dispatch = useDispatch();
 	async function fetchData(){
-		// fetch all projects
-		// then fetch all entities for each projects
+		// fetch all projects with entities embedded
 		try{
 			const projects = await Axios.get('project');
-			// loop over project and assign it into store
-			for(let project of projects.data){
-				dispatch(
-					AddProject(
-						project._id, 
-						project.name,
-						project.created_at,
-						project.updated_at,
-						project.public_key
-					)
-				);
-				const entities = await Axios.get(`entity/${project._id}`);
-				// loop over entities of project and assign it into store
-				for(let entity of entities.data){
-					dispatch(
-						AddEntity(
-							project.name, 
-							entity._id, 
-							entity.name,
-							entity.created_at,
-							entity.updated_at
-						)
-					);
-				}
-			}
+			dispatch(InitDatabase(projects.data));
 		}
 		catch(err){
 			console.log(err);

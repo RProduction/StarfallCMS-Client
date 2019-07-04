@@ -27,13 +27,13 @@ function WebsocketClient(props) {
             project.on('delete', (msg)=>{
                 console.log("delete project");
                 console.log(msg);
-                dispatch(DeleteProject(msg.name));
+                dispatch(DeleteProject(msg._id));
             });
             project.on('rename', (msg)=>{
                 console.log("rename project");
                 console.log(msg);
                 dispatch(RenameProject(
-                    msg.old_name, 
+                    msg._id, 
                     msg.name, 
                     msg.updated_at
                 ));
@@ -46,8 +46,8 @@ function WebsocketClient(props) {
                 console.log("add entity");
                 console.log(msg);
                 dispatch(AddEntity(
-                    msg.project_name, 
                     msg._id,
+                    msg.project_id, 
                     msg.name,
                     msg.created_at,
                     msg.updated_at
@@ -56,14 +56,13 @@ function WebsocketClient(props) {
             entity.on('delete', (msg)=>{
                 console.log("delete entity");
                 console.log(msg);
-                dispatch(DeleteEntity(msg.project_name, msg.name));
+                dispatch(DeleteEntity(msg._id));
             });
             entity.on('rename', (msg)=>{
                 console.log("rename entity");
                 console.log(msg);
                 dispatch(RenameEntity(
-                    msg.project_name,
-                    msg.old_name,
+                    msg._id,
                     msg.name, 
                     msg.updated_at
                 ));

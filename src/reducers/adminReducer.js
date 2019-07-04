@@ -10,12 +10,13 @@ function AddProject(state, action){
     let temp = state;
     const {id, name, updated, created, publicKey} = action; 
 
-    temp[name] = {
+    temp.ids.push(id);
+    temp.byId[id] = {
         id: id,
+        name: name,
         created: created,
         updated: updated,
-        publicKey: publicKey,
-        entities: {}
+        publicKey: publicKey
     };
 
     return temp;      
@@ -23,35 +24,35 @@ function AddProject(state, action){
 
 function DeleteProject(state, action){
     let temp = state;
-    const {name} = action; 
+    const {id} = action;
 
-    delete temp[name];
+    temp.ids = temp.ids.filter(value => value !== id);
+    delete temp.byId[id];
 
     return temp;      
 }
 
 function RenameProject(state, action){
     let temp = state;
-    const {oldName, name, updated} = action;
+    const {id, name, updated} = action;
 
-    let tempValue;
-    tempValue = temp[oldName];
-    temp[name] = tempValue;
-    temp[name].updated = updated;
-    delete temp[oldName];
+    temp.byId[id].name = name;
+    temp.byId[id].updated = updated;
 
     return temp;      
 }
 
 function AddEntity(state, action){
     let temp = state;
-    const {id, name, updated, created, projectName} = action; 
+    const {id, project_id, name, updated, created} = action; 
 
-    temp[projectName].entities[name] = {
+    temp.ids.push(id);
+    temp.byId[id] = {
         id: id,
+        project_id: project_id,
+        name: name,
         created: created,
-        updated: updated,
-        items: {}
+        updated: updated
     };
 
     return temp;      
@@ -59,22 +60,33 @@ function AddEntity(state, action){
 
 function DeleteEntity(state, action){
     let temp = state;
-    const {projectName, name} = action;
+    const {id} = action;
 
-    delete temp[projectName].entities[name];
+    temp.ids = temp.ids.filter(value => value !== id);
+    delete temp.byId[id];
+
+    return temp;      
+}
+
+function DeleteEntityByProject(state, action){
+    let temp = state;
+    const {id} = action;
+    
+    const entities = Object.values(temp.byId).filter(value => value.project_id === id);
+    for(let entity of entities){
+        temp.ids = temp.ids.filter(value => value !== entity.id);
+        delete temp.byId[entity.id];
+    }
 
     return temp;      
 }
 
 function RenameEntity(state, action){
     let temp = state;
-    const {projectName, name, oldName, updated} = action; 
+    const {id, name, updated} = action; 
 
-    let tempValue;
-    tempValue = temp[projectName].entities[oldName];
-    temp[projectName].entities[name] = tempValue;
-    temp[projectName].entities[name].updated = updated;
-    delete temp[projectName].entities[oldName];
+    temp.byId[id].name = name;
+    temp.byId[id].updated = updated;
 
     return temp;      
 }
@@ -84,11 +96,15 @@ export const sidebarReducer = createReducer(false, {
     SWITCH_SIDEBAR: SwitchSideBar
 });
 
-export const databaseReducer = createReducer({}, {
+export const projectsReducer = createReducer({byId: {}, ids: []}, {
     ADD_PROJECT: AddProject,
     DELETE_PROJECT: DeleteProject,
     RENAME_PROJECT: RenameProject,
+});
+
+export const entitiesReducer = createReducer({byId: {}, ids: []}, {
     ADD_ENTITY: AddEntity,
     DELETE_ENTITY: DeleteEntity,
+    DELETE_ENTITY_BY_PROJECT: DeleteEntityByProject,
     RENAME_ENTITY: RenameEntity
 });

@@ -1,18 +1,19 @@
 import {combineReducers} from 'redux';
 
 import authorizationReducer from './authorizationReducer';
-import {databaseReducer, sidebarReducer} from './adminReducer';
+import {projectsReducer, entitiesReducer, sidebarReducer} from './adminReducer';
 import {projectPopoverReducer} from './projectReducer';
 import {notificationReducer, dialogReducer, targetReducer} from './globalReducer';
 
 const reducers = combineReducers(
     {
         authStatus: authorizationReducer,
-        sidebar: sidebarReducer,
-        database: databaseReducer,
+        projects: projectsReducer,
+        entities: entitiesReducer,
         dialog: dialogReducer,
-        target: targetReducer,
         notification: notificationReducer,
+        target: targetReducer,
+        sidebar: sidebarReducer,
         projectPopover: projectPopoverReducer
     }
 );
