@@ -5,7 +5,6 @@ import {Add} from '@material-ui/icons';
 import OverviewCard from './OverviewCard';
 import {CREATOR} from '../redux/actions/authorizationActions';
 import {selectAllProjects} from '../redux/selectors/adminSelectors';
-import {selectTarget, selectNotification} from '../redux/selectors/globalSelectors';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog, ShowAddDialog, ShowNotificationDialog, HideNotificationDialog } from '../redux/actions/globalActions';
 import OverviewPopover from './OverviewPopover';
@@ -16,9 +15,9 @@ import DialogNotification from './DialogNotification';
 
 function Authorized(props){
     const dispatch = useDispatch();
-    const target = useSelector(selectTarget);
-    const dialogType = useSelector(state=>state.dialog);
-    const notification = useSelector(selectNotification);
+    const target = useSelector(state => state.target);
+    const dialogType = useSelector(state => state.dialog);
+    const notification = useSelector(state => state.notification);
 
     return(
         <React.Fragment>

@@ -5,7 +5,6 @@ import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForev
 import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
 import {Link} from 'react-router-dom';
 import {selectRelatedEntities, selectProjectByName} from '../redux/selectors/adminSelectors';
-import {selectTarget, selectNotification} from '../redux/selectors/globalSelectors';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog
     , ShowAddDialog, ShowDeleteDialog, ShowRenameDialog
@@ -17,9 +16,9 @@ import DialogNotification from './DialogNotification';
 
 function Authorized(props){
     const dispatch = useDispatch();
-    const target = useSelector(selectTarget);
-    const dialogType = useSelector(state=>state.dialog);
-    const notification = useSelector(selectNotification);
+    const target = useSelector(state => state.target);
+    const dialogType = useSelector(state => state.dialog);
+    const notification = useSelector(state => state.notification);
 
     return(
         <React.Fragment>
