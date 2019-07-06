@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import Ws from '@adonisjs/websocket-client';
-import {AddEntity, AddProject, DeleteEntity, DeleteProject, RenameEntity, RenameProject} from './redux/actions/adminActions';
+import {AddEntities, AddProjects, DeleteEntities, DeleteProject, RenameEntity, RenameProject} from './redux/actions/adminActions';
 
 function WebsocketClient(props) {
     const dispatch = useDispatch();
@@ -16,13 +16,13 @@ function WebsocketClient(props) {
             project.on('add', (msg)=>{
                 console.log("add project");
                 console.log(msg);
-                dispatch(AddProject(
-                    msg._id, 
-					msg.name, 
-					msg.created_at,
-					msg.updated_at,
-					msg.public_key
-                ));
+                dispatch(AddProjects([{
+                    id: msg._id,
+                    name: msg.name,
+                    created: msg.created_at,
+                    updated: msg.updated_at,
+                    publicKey: msg.public_key
+                }]));
             });
             project.on('delete', (msg)=>{
                 console.log("delete project");
@@ -45,18 +45,18 @@ function WebsocketClient(props) {
             entity.on('add', (msg)=>{
                 console.log("add entity");
                 console.log(msg);
-                dispatch(AddEntity(
-                    msg._id,
-                    msg.project_id, 
-                    msg.name,
-                    msg.created_at,
-                    msg.updated_at
-                ));
+                dispatch(AddEntities([{
+                    id: msg._id,
+                    projectId:msg.project_id,
+                    name: msg.name,
+                    created: msg.created_at,
+                    updated: msg.updated_at
+                }]));
             });
             entity.on('delete', (msg)=>{
                 console.log("delete entity");
                 console.log(msg);
-                dispatch(DeleteEntity(msg._id));
+                dispatch(DeleteEntities([msg._id]));
             });
             entity.on('rename', (msg)=>{
                 console.log("rename entity");

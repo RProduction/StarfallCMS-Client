@@ -1,10 +1,11 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import {useSelector, useDispatch, shallowEqual} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons'
 import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
 import {Link} from 'react-router-dom';
-import {selectRelatedEntities, selectProjectByName} from '../redux/selectors/adminSelectors';
+import {selectEntitiesInProject} from '../redux/selectors/adminSelectors';
+import {GetProjectIdByName} from '../redux/indexes/database';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog
     , ShowAddDialog, ShowDeleteDialog, ShowRenameDialog
@@ -150,17 +151,22 @@ const columns = [
 function Project(props){
     const dispatch = useDispatch();
     const {project} = props.match.params;
-    const selectProject = useMemo(selectProjectByName, []);
-    const selectEntities = useMemo(selectRelatedEntities, []);
     const status = useSelector(state=>state.authStatus);
-    const _project = useSelector(state => selectProject(state, project));
-    const entities = useSelector(state => selectEntities(state, _project.id));
+    const [id, setId] = useState(0);
+    const select = useMemo(selectEntitiesInProject, []);
+    const entities = useSelector(state => select(state, id));
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(()=>{
         if(status === CREATOR || status === MANAGER) setAuthorized(true);
         else setAuthorized(false);
-    }, status);
+    }, [status]);
+
+    useEffect(()=>{
+        GetProjectIdByName(project).then((value)=>{
+            setId(value);
+        });
+    }, [project]);
 
     let datas = [];
     let i=1;
@@ -213,7 +219,7 @@ function Project(props){
                         tooltip: "Add Entity",
                         isFreeAction: true,
                         onClick: (e)=>{
-                            dispatch(SetTarget(_project.id, ""));
+                            dispatch(SetTarget(id, ""));
                             dispatch(ShowAddDialog());
                         }
                     }

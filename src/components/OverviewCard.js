@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Grid, Card, CardContent, CardHeader
     , CardMedia, Box, List, Avatar, IconButton
     , Typography} from '@material-ui/core';
@@ -9,7 +9,7 @@ import OverviewList from './OverviewList';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetProjectPopover} from '../redux/actions/projectActions';
 import {SetTarget} from '../redux/actions/globalActions';
-import {selectRelatedEntities} from '../redux/selectors/adminSelectors';
+import {selectEntitiesInProject} from '../redux/selectors/adminSelectors';
 
 function Index({index}){
     return <Avatar>{index}</Avatar>;
@@ -62,7 +62,7 @@ function Detail({primary}){
 // and those action need Creator Authorization
 function OverviewCard(props){
     const {name, index, id, updated, created, publicKey, authorized} = props;
-    const select = useMemo(selectRelatedEntities, []);
+    const select = useMemo(selectEntitiesInProject,[]);
     const entities = useSelector(state => select(state, id));
     
     return(

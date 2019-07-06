@@ -1,11 +1,11 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {ListItem, ListItemText, List, Collapse, IconButton, makeStyles, ButtonBase} from '@material-ui/core';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
 import SideBarEntity from './SideBarEntity';
 import clsx from 'clsx';
-import {selectRelatedEntities} from '../redux/selectors/adminSelectors';
+import {selectEntitiesInProject} from '../redux/selectors/adminSelectors';
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -22,7 +22,7 @@ const useStyle = makeStyles(theme => ({
 function SideBarProject(props){
     const style = useStyle();
     const {id, name} = props;
-    const select = useMemo(selectRelatedEntities, []);
+    const select = useMemo(selectEntitiesInProject,[]);
     const entities = useSelector(state => select(state, id));
     const [open, setOpen] = useState(false);
 
