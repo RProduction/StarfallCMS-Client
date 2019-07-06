@@ -3,16 +3,16 @@ import * as Indexes from '../indexes/database';
 
 // project selectors
 const _selectProjects = state => state.projects;
-export const selectProjectIds = state => Array.from(_selectProjects(state).keys());
-export const selectProject = (state, id) => _selectProjects(state).get(id);
-export const selectAllProjects = state => Array.from(_selectProjects(state).values());
+export const selectProjectIds = state => Object.keys(_selectProjects(state));
+export const selectProject = (state, id) => _selectProjects(state)[id];
+export const selectAllProjects = state => Object.values(_selectProjects(state));
 export const selectProjectByName = ()=>{
     return createSelector(
         _selectProjects,
         (_, name) => name,
         (projects, name)=>{
             const id = Indexes.GetProjectIdByName(name);
-            return projects.get(id);
+            return projects[id];
         }
     );
 };
@@ -20,15 +20,15 @@ export const selectProjectByName = ()=>{
 // entity selectors
 const _selectEntities = state => state.entities;
 const _selectRelatedEntities = (state, id) => Indexes.GetRelatedEntityByProjectId(id);
-export const selectEntityIds = state => Array.from(_selectEntities(state).keys());
-export const selectEntity = (state, id) => _selectEntities(state).get(id);
-export const selectAllEntities = state => Array.from(_selectEntities(state).values());
+export const selectEntityIds = state => Object.keys(_selectEntities(state));
+export const selectEntity = (state, id) => _selectEntities(state)[id];
+export const selectAllEntities = state => Object.values(_selectEntities(state));
 export const selectRelatedEntities = ()=>{
     return createSelector(
         [_selectRelatedEntities, _selectEntities],
         (relatedIds, entities)=>{
             return relatedIds.map((value) =>{
-                return entities.get(value);
+                return entities[value];
             });
         }
     );
@@ -39,15 +39,15 @@ export const selectEntityByName = ()=>{
         (_, name) => name,
         (entities, name)=>{
             const id = Indexes.GetEntityIdByName(name);
-            return entities.get(id);
+            return entities[id];
         }
     );
 };
 
 const _selectDocuments = state => state.documents;
-export const selectDocumentIds = state => Array.from(_selectDocuments(state).keys());
-export const selectDocument = (state, id) => _selectDocuments(state).get(id);
-export const selectAllDocuments = state => Array.from(_selectDocuments(state).values());
+export const selectDocumentIds = state => Object.keys(_selectDocuments(state));
+export const selectDocument = (state, id) => _selectDocuments(state)[id];
+export const selectAllDocuments = state => Object.values(_selectDocuments(state));
 export const selectRelatedDocuments = ()=>{
     return createSelector(
         [selectEntity, selectAllDocuments],
