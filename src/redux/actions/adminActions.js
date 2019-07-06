@@ -28,8 +28,11 @@ export function AddProject(id, name, created, updated, publicKey){
 
 export function DeleteProject(id){
     return (dispatch)=>{
-        dispatch(_DeleteProject(id));
+        // must delete entities first before deleting project
+        // entities will search project indexes
+        // then project can delete it's indexes
         dispatch(_DeleteEntityByProjectId(id));
+        dispatch(_DeleteProject(id));
     };
 }
 

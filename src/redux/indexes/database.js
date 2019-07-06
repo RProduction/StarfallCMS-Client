@@ -121,9 +121,15 @@ export function DeleteEntity(id){
 export function DeleteRelatedEntity(projectId){
     const project = projectIds.find('projectId', projectId);
     
+    // search ids of related entities
+    let ids = entityIds.where({projectId: project.id});
+    ids = ids.map((value) => { 
+        return {id: value.id};
+    });
+
     // remove related entities
-    entityIds.remove({projectId: project.id});
-    entityIndex.remove({projectId: project.id});
+    entityIds.remove(ids);
+    entityIndex.remove(ids);
 }
 
 export function RenameEntity(id, name){
