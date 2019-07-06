@@ -1,4 +1,6 @@
 import { createReducer } from './helpers';
+import {Map} from 'immutable';
+import * as Indexes from '../indexes/database';
 
 // admin sidebar switch
 function SwitchSideBar(state, action) {
@@ -6,89 +8,89 @@ function SwitchSideBar(state, action) {
 }
 
 // admin database of project, entity, and item
+// id, name, updated, created, publicKey
 function AddProject(state, action){
-    let temp = state;
     const {id, name, updated, created, publicKey} = action; 
 
-    temp.ids.push(id);
-    temp.byId[id] = {
+    Indexes.AddProject(id, name);
+
+    return state.set(id, {
         id: id,
         name: name,
         created: created,
         updated: updated,
         publicKey: publicKey
-    };
-
-    return temp;      
+    });
 }
 
 function DeleteProject(state, action){
-    let temp = state;
     const {id} = action;
 
-    temp.ids = temp.ids.filter(value => value !== id);
-    delete temp.byId[id];
+    Indexes.DeleteProject(id);
 
-    return temp;      
+    return state.remove(id);
 }
 
 function RenameProject(state, action){
-    let temp = state;
     const {id, name, updated} = action;
 
-    temp.byId[id].name = name;
-    temp.byId[id].updated = updated;
+    Indexes.RenameProject(id, name);
 
-    return temp;      
+    return state.update(id, (value)=>{
+        value.name = name;
+        value.updated = updated;
+        return value;
+    });
 }
 
 function AddEntity(state, action){
-    let temp = state;
     const {id, project_id, name, updated, created} = action; 
 
-    temp.ids.push(id);
-    temp.byId[id] = {
+    Indexes.AddEntity(id, project_id, name);
+
+    return state.set(id, {
         id: id,
         project_id: project_id,
         name: name,
         created: created,
         updated: updated
-    };
-
-    return temp;      
+    });
 }
 
 function DeleteEntity(state, action){
-    let temp = state;
     const {id} = action;
 
-    temp.ids = temp.ids.filter(value => value !== id);
-    delete temp.byId[id];
+    Indexes.DeleteEntity(id);
 
-    return temp;      
+    return state.remove(id);
 }
 
 function DeleteEntityByProject(state, action){
-    let temp = state;
     const {id} = action;
     
-    const entities = Object.values(temp.byId).filter(value => value.project_id === id);
+    // get array of related entity id
+    // then loop it to delete in state
+    // after that remove related entity index
+    let result = state;
+    const entities = Indexes.GetRelatedEntityByProjectId(id);
     for(let entity of entities){
-        temp.ids = temp.ids.filter(value => value !== entity.id);
-        delete temp.byId[entity.id];
+        result = result.remove(entity);
     }
+    Indexes.DeleteRelatedEntity(id);
 
-    return temp;      
+    return result;
 }
 
 function RenameEntity(state, action){
-    let temp = state;
     const {id, name, updated} = action; 
 
-    temp.byId[id].name = name;
-    temp.byId[id].updated = updated;
+    Indexes.RenameEntity(id, name);
 
-    return temp;      
+    return state.update(id, (value)=>{
+        value.name = name;
+        value.updated = updated;
+        return value;
+    });
 }
 
 // reducers
@@ -96,13 +98,13 @@ export const sidebarReducer = createReducer(false, {
     SWITCH_SIDEBAR: SwitchSideBar
 });
 
-export const projectsReducer = createReducer({byId: {}, ids: []}, {
+export const projectsReducer = createReducer(Map({}), {
     ADD_PROJECT: AddProject,
     DELETE_PROJECT: DeleteProject,
     RENAME_PROJECT: RenameProject,
 });
 
-export const entitiesReducer = createReducer({byId: {}, ids: []}, {
+export const entitiesReducer = createReducer(Map({}), {
     ADD_ENTITY: AddEntity,
     DELETE_ENTITY: DeleteEntity,
     DELETE_ENTITY_BY_PROJECT: DeleteEntityByProject,

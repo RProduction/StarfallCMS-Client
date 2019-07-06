@@ -7,9 +7,9 @@ import {Link} from 'react-router-dom';
 import OverviewContent from './OverviewContent';
 import OverviewList from './OverviewList';
 import {useDispatch, useSelector} from 'react-redux';
-import {SetProjectPopover} from '../actions/projectActions';
-import {SetTarget} from '../actions/globalActions';
-import {selectRelatedEntities} from '../selectors/adminSelectors';
+import {SetProjectPopover} from '../redux/actions/projectActions';
+import {SetTarget} from '../redux/actions/globalActions';
+import {selectRelatedEntities} from '../redux/selectors/adminSelectors';
 
 function Index({index}){
     return <Avatar>{index}</Avatar>;

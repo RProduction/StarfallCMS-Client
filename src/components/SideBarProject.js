@@ -5,7 +5,7 @@ import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
 import SideBarEntity from './SideBarEntity';
 import clsx from 'clsx';
-import {selectRelatedEntities} from '../selectors/adminSelectors';
+import {selectRelatedEntities} from '../redux/selectors/adminSelectors';
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -18,28 +18,6 @@ const useStyle = makeStyles(theme => ({
         flexGrow: 1
     }
 }));
-
-function SideBarEntities(props){
-    const style = useStyle();
-    const {entities, projectName, open} = props;
-    if(entities.length > 0){
-        return(
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <List className={style.root} disablePadding>
-                    {
-                        entities.map((value, index)=>{
-                            const {name} = value;
-                            return <SideBarEntity key={index} name={name} projectName={projectName}/>
-                        })
-                    }
-                </List>
-            </Collapse>
-        )
-    }
-    else{
-        return null;
-    }
-}
 
 function SideBarProject(props){
     const style = useStyle();
@@ -67,7 +45,22 @@ function SideBarProject(props){
                     {open ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
             </ListItem>
-            <SideBarEntities open={open} entities={entities} projectName={name}/>
+            {
+                entities.length > 0 ? 
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <List className={style.root} disablePadding>
+                            {
+                                entities.map((value, index) => {
+                                    return <SideBarEntity
+                                        key={value.id}
+                                        name={value.name}
+                                        projectName={name}
+                                    />
+                                })
+                            }
+                        </List>
+                    </Collapse> : null
+            }
         </React.Fragment>
     )
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {SetProjectPopover} from '../actions/projectActions';
-import {ShowRenameDialog, ShowDeleteDialog} from '../actions/globalActions';
+import {SetProjectPopover} from '../redux/actions/projectActions';
+import {ShowRenameDialog, ShowDeleteDialog} from '../redux/actions/globalActions';
 import {DeleteForever, Create} from '@material-ui/icons'
 import PopoverMenu from './PopoverMenu';
 

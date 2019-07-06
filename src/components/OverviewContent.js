@@ -41,8 +41,8 @@ function OverviewContent(props){
             <Collapse in={open} timeout="auto" unmountOnExit>
             {
                 entities.map((value, index)=>{
-                    const {name} = value
-                    return <Content key={index+1} name={name} 
+                    const {id, name} = value;
+                    return <Content key={id} name={name} 
                         projectName={projectName} index={index+1}
                     />;
                 })

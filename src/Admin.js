@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import SideBar from './components/SideBar';
 import Axios from './Axios';
-import {InitDatabase} from './actions/adminActions';
+import {InitDatabase} from './redux/actions/adminActions';
 import {useDispatch} from 'react-redux';
 import ContentContainer from './components/ContentContainer';
 import {makeStyles} from '@material-ui/core';

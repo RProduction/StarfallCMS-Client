@@ -3,7 +3,7 @@ import {Route, Switch} from 'react-router-dom';
 import {CssBaseline} from '@material-ui/core';
 import {useDispatch} from 'react-redux';
 import Axios from './Axios';
-import {AUTHORIZATION_STATUS, SetAuthStatus} from './actions/authorizationActions';
+import {AUTHORIZATION_STATUS, SetAuthStatus} from './redux/actions/authorizationActions';
 import AuthorizationCheck from './components/AuthorizationCheck';
 
 const Admin = lazy(()=>import('./Admin'));
@@ -12,7 +12,7 @@ const SignUp = lazy(()=>import('./SignUp'));
 
 function App() {
 	const dispatch = useDispatch();
-	const [status, setStatus] = useState(undefined);
+	const [status, setStatus] = useState(null);
 
 	async function fetchStatus(){
 		try{
@@ -30,7 +30,7 @@ function App() {
 	}, []);
 
 	useEffect(()=>{
-		if(status !== undefined) 
+		if(status !== null) 
 			dispatch(SetAuthStatus(AUTHORIZATION_STATUS[status]));
 	}, [status]);
 	  

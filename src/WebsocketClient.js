@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import Ws from '@adonisjs/websocket-client';
-import {AddEntity, AddProject, DeleteEntity, DeleteProject, RenameEntity, RenameProject} from './actions/adminActions';
+import {AddEntity, AddProject, DeleteEntity, DeleteProject, RenameEntity, RenameProject} from './redux/actions/adminActions';
 
 function WebsocketClient(props) {
     const dispatch = useDispatch();

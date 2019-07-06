@@ -1,12 +1,11 @@
 import {createReducer} from './helpers';
 import {ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG} from '../actions/globalActions';
+import {Map} from 'immutable';
 
 // target
 function SetTarget(state, action){
-    return {
-        id: action.id,
-        name: action.name
-    }
+    const {id, name} = action
+    return state.set('id', id).set('name', name);
 }
 
 // add, delete, rename dialog
@@ -28,18 +27,16 @@ function HideDialog(state, action){
 
 // notification dialog switch
 function ShowNotificationDialog(state, action){
-    return {
-        title: action.title,
-        content: action.content
-    };
+    const {title, content} = action;
+    return state.set('title', title).set('content', content);
 }
 
 function HideNotificationDialog(state, action){
-    return null;
+    return state.clear();
 }
 
 // reducers
-export const targetReducer = createReducer({id: 0, name: ''}, {
+export const targetReducer = createReducer(Map({name: '', id: 0}), {
     SET_TARGET: SetTarget
 });
 
@@ -50,7 +47,7 @@ export const dialogReducer = createReducer(null, {
     HIDE_DIALOG: HideDialog
 });
 
-export const notificationReducer = createReducer(null, {
+export const notificationReducer = createReducer(Map({}), {
     SHOW_NOTIFICATION_DIALOG: ShowNotificationDialog,
     HIDE_NOTIFICATION_DIALOG: HideNotificationDialog
 });

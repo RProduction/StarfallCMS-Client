@@ -1,14 +1,15 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector, useDispatch, shallowEqual} from 'react-redux';
 import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons'
-import {CREATOR, MANAGER} from '../actions/authorizationActions';
+import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
 import {Link} from 'react-router-dom';
-import {selectRelatedEntities, selectProjectByName} from '../selectors/adminSelectors';
+import {selectRelatedEntities, selectProjectByName} from '../redux/selectors/adminSelectors';
+import {selectTarget, selectNotification} from '../redux/selectors/globalSelectors';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog
     , ShowAddDialog, ShowDeleteDialog, ShowRenameDialog
-    , ShowNotificationDialog, HideNotificationDialog, SetTarget} from '../actions/globalActions';
+    , ShowNotificationDialog, HideNotificationDialog, SetTarget} from '../redux/actions/globalActions';
 import DialogRename from './DialogRename';
 import DialogDelete from './DialogDelete';
 import DialogAdd from './DialogAdd';
@@ -16,9 +17,9 @@ import DialogNotification from './DialogNotification';
 
 function Authorized(props){
     const dispatch = useDispatch();
-    const target = useSelector(state => state.target);
+    const target = useSelector(selectTarget);
     const dialogType = useSelector(state=>state.dialog);
-    const notification = useSelector(state=>state.notification);
+    const notification = useSelector(selectNotification);
 
     return(
         <React.Fragment>

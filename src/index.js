@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
-import reducers from './reducers/reducers';
+import reducers from './redux/reducers/reducers';
 import thunk from 'redux-thunk';
 
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';

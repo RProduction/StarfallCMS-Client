@@ -3,10 +3,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import {Grid, Fab, Box} from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import OverviewCard from './OverviewCard';
-import {CREATOR} from '../actions/authorizationActions';
-import {selectAllProjects} from '../selectors/adminSelectors';
+import {CREATOR} from '../redux/actions/authorizationActions';
+import {selectAllProjects} from '../redux/selectors/adminSelectors';
+import {selectTarget, selectNotification} from '../redux/selectors/globalSelectors';
 
-import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog, ShowAddDialog, ShowNotificationDialog, HideNotificationDialog } from '../actions/globalActions';
+import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog, ShowAddDialog, ShowNotificationDialog, HideNotificationDialog } from '../redux/actions/globalActions';
 import OverviewPopover from './OverviewPopover';
 import DialogRename from './DialogRename';
 import DialogDelete from './DialogDelete';
@@ -15,9 +16,9 @@ import DialogNotification from './DialogNotification';
 
 function Authorized(props){
     const dispatch = useDispatch();
-    const target = useSelector(state => state.target);
+    const target = useSelector(selectTarget);
     const dialogType = useSelector(state=>state.dialog);
-    const notification = useSelector(state=>state.notification);
+    const notification = useSelector(selectNotification);
 
     return(
         <React.Fragment>
@@ -116,7 +117,7 @@ function Overview(props){
     useEffect(()=>{
         if(status === CREATOR) setAuthorized(true);
         else setAuthorized(false);
-    }, status);
+    }, [status]);
 
     // view all projects within CMS and their attribute
     // project name
@@ -131,7 +132,7 @@ function Overview(props){
             {
                 projects.map((value, index)=>{
                     return(
-                        <OverviewCard key={index+1} index={index+1} 
+                        <OverviewCard key={value.id} index={index+1} 
                             {...value} authorized={authorized}
                         />
                     )
