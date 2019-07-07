@@ -47,5 +47,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3333"
+  "proxy": "http://localhost:3333",
+  "devDependencies": {
+    "source-map-explorer": "^2.0.1"
+  }
 }
