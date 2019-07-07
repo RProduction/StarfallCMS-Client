@@ -1,4 +1,4 @@
-import React, {useEffect, lazy} from 'react';
+import React, {useEffect, lazy, Suspense} from 'react';
 import {Route, Switch} from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -11,6 +11,7 @@ import WebsocketClient from './WebsocketClient';
 
 const Overview = lazy(()=>import('./components/Overview'));
 const Project = lazy(()=>import('./components/Project'));
+const Entity = lazy(()=>import('./components/Entity'));
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -23,7 +24,6 @@ const useStyle = makeStyles(theme => ({
 
 function Admin(props) {
 	const style = useStyle();
-	const {location} = props;
 	const dispatch = useDispatch();
 
 	useEffect(()=>{
@@ -37,11 +37,13 @@ function Admin(props) {
 			<SideBar/>
 			
 			<ContentContainer className={style.root}>
-				<Switch>
-					<Route path='/:project/:entity' component={()=>location.pathname}/>
-					<Route path='/:project' component={Project}/>
-					<Route path='/' component={Overview}/>
-				</Switch>
+				<Suspense fallback={<div></div>}>
+					<Switch>
+						<Route path='/:project/:entity' component={Entity}/>
+						<Route path='/:project' component={Project}/>
+						<Route path='/' component={Overview}/>
+					</Switch>
+				</Suspense>
 			</ContentContainer>
 	
 			<Footer/>

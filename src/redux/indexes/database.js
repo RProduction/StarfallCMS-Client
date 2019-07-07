@@ -4,7 +4,8 @@ Dexie.delete('DB');
 const db = new Dexie('DB');
 db.version(1).stores({
     projects: 'id, &name',
-    entities: 'id, projectId, name'
+    entities: 'id, projectId, name',
+    documents: 'id, entityId'
 });
 
 // query function
@@ -20,6 +21,9 @@ export async function GetRelatedEntities(projectId){
     return await db.entities.where({'projectId': projectId}).primaryKeys();
 };
 
+export async function GetRelatedDocuments(entityId){
+    return await db.documents.where({'entityId': entityId}).primaryKeys();
+};
 
 // always call this manipulation function when data not in use
 // public project function
@@ -40,7 +44,7 @@ export async function RenameProject(id, name){
 };
 
 // public entity function
-// receive array of {id, projectId. name}
+// receive array of {id, projectId, name}
 export async function AddEntities(entities){
     await db.entities.bulkAdd(entities);
     return true;
@@ -54,5 +58,18 @@ export async function DeleteEntities(ids){
 
 export async function RenameEntity(id, name){
     await db.entities.update(id, {name: name});
+    return true;
+};
+
+// public document function
+// receive array of {id, entityId}
+export async function AddDocuments(documents){
+    await db.documents.bulkAdd(documents);
+    return true;
+};
+
+// receive array of id
+export async function DeleteDocuments(ids){
+    await db.documents.delete(ids);
     return true;
 };

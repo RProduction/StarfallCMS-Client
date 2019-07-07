@@ -151,11 +151,15 @@ const columns = [
 function Project(props){
     const dispatch = useDispatch();
     const {project} = props.match.params;
+    
     const status = useSelector(state=>state.authStatus);
+    const [authorized, setAuthorized] = useState(false);
+
     const [id, setId] = useState(0);
     const select = useMemo(selectEntitiesInProject, []);
     const entities = useSelector(state => select(state, id));
-    const [authorized, setAuthorized] = useState(false);
+
+    const [datas, setDatas] = useState([]);
 
     useEffect(()=>{
         if(status === CREATOR || status === MANAGER) setAuthorized(true);
@@ -168,19 +172,16 @@ function Project(props){
         });
     }, [project]);
 
-    let datas = [];
-    let i=1;
-    for(let entity of entities){
-        datas.push({
-            "#": i,
-            id: entity.id,
+    useEffect(()=>{
+        setDatas(entities.map((value, index) => ({
+            "#": (index+1),
+            id: value.id,
             projectName: project,
-            name: entity.name,
-            createdAt: entity.created,
-            updatedAt: entity.updated
-        });
-        i++;
-    }
+            name: value.name,
+            createdAt: value.created,
+            updatedAt: value.updated
+        })));
+    }, [entities]);
 
     // view all entities within project and their attribute
     // entity id

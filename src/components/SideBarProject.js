@@ -50,7 +50,7 @@ function SideBarProject(props){
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <List className={style.root} disablePadding>
                             {
-                                entities.map((value, index) => {
+                                entities.map((value) => {
                                     return <SideBarEntity
                                         key={value.id}
                                         name={value.name}
