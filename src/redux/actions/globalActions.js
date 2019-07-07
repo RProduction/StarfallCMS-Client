@@ -1,3 +1,8 @@
+// UI SideBar switch
+export function SwitchSideBar(status){
+    return {type: "SWITCH_SIDEBAR", status: status};
+}
+
 // UI Notification Dialog switch and content data
 export function ShowNotificationDialog(title, content){
     return {type: "SHOW_NOTIFICATION_DIALOG", title: title, content: content};

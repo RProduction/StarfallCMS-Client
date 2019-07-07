@@ -3,8 +3,7 @@ import {Route, Switch} from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideBar from './components/SideBar';
-import Axios from './Axios';
-import {InitDatabase} from './redux/actions/adminActions';
+import {InitDatabase} from './redux/actions/projectActions';
 import {useDispatch} from 'react-redux';
 import ContentContainer from './components/ContentContainer';
 import {makeStyles} from '@material-ui/core';
@@ -26,19 +25,9 @@ function Admin(props) {
 	const style = useStyle();
 	const {location} = props;
 	const dispatch = useDispatch();
-	async function fetchData(){
-		// fetch all projects with entities embedded
-		try{
-			const projects = await Axios.get('project');
-			dispatch(InitDatabase(projects.data));
-		}
-		catch(err){
-			console.log(err);
-		}
-	}
 
 	useEffect(()=>{
-		fetchData();
+		dispatch(InitDatabase());
 	}, []);
 
 	return (

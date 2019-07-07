@@ -1,7 +1,8 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import Ws from '@adonisjs/websocket-client';
-import {AddEntities, AddProjects, DeleteEntities, DeleteProject, RenameEntity, RenameProject} from './redux/actions/adminActions';
+import {AddProjects, DeleteProject, RenameProject} from './redux/actions/projectActions';
+import {AddEntities, DeleteEntities, RenameEntity} from './redux/actions/entityActions';
 
 function WebsocketClient(props) {
     const dispatch = useDispatch();
@@ -13,6 +14,7 @@ function WebsocketClient(props) {
             const project = ws.subscribe('project');
             const entity = ws.subscribe('entity');
             
+            // project socket listener
             project.on('add', (msg)=>{
                 console.log("add project");
                 console.log(msg);
@@ -42,6 +44,7 @@ function WebsocketClient(props) {
                 console.log(err);
             });
 
+            // entity socket listener
             entity.on('add', (msg)=>{
                 console.log("add entity");
                 console.log(msg);
