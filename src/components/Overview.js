@@ -4,7 +4,7 @@ import {Grid, Fab, Box} from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import OverviewCard from './OverviewCard';
 import {CREATOR} from '../redux/actions/authorizationActions';
-import {selectAllProjects} from '../redux/selectors/adminSelectors';
+import {selectAllProjects} from '../redux/selectors/projectSelectors';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog, ShowAddDialog, ShowNotificationDialog, HideNotificationDialog } from '../redux/actions/globalActions';
 import OverviewPopover from './OverviewPopover';

@@ -5,7 +5,7 @@ import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
 import SideBarEntity from './SideBarEntity';
 import clsx from 'clsx';
-import {selectEntitiesInProject} from '../redux/selectors/adminSelectors';
+import {selectEntitiesInProject} from '../redux/selectors/entitySelectors';
 
 const useStyle = makeStyles(theme => ({
     root: {

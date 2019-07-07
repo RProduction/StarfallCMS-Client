@@ -9,7 +9,7 @@ import OverviewList from './OverviewList';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetProjectPopover} from '../redux/actions/projectActions';
 import {SetTarget} from '../redux/actions/globalActions';
-import {selectEntitiesInProject} from '../redux/selectors/adminSelectors';
+import {selectEntitiesInProject} from '../redux/selectors/entitySelectors';
 
 function Index({index}){
     return <Avatar>{index}</Avatar>;

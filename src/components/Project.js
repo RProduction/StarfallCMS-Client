@@ -4,7 +4,7 @@ import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons'
 import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
 import {Link} from 'react-router-dom';
-import {selectEntitiesInProject} from '../redux/selectors/adminSelectors';
+import {selectEntitiesInProject} from '../redux/selectors/entitySelectors';
 import {GetProjectIdByName} from '../redux/indexes/database';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog

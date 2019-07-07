@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {List, ListItem, ListItemText} from '@material-ui/core';
 import {useSelector} from 'react-redux';
 import SideBarProject from './SideBarProject';
-import {selectAllProjects} from '../redux/selectors/adminSelectors';
+import {selectAllProjects} from '../redux/selectors/projectSelectors';
 
 function SideBarContent(props){
     const projects = useSelector(selectAllProjects);
