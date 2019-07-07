@@ -2,6 +2,11 @@ import {createReducer} from './helpers';
 import {ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG} from '../actions/globalActions';
 import {produce} from 'immer';
 
+// admin sidebar switch
+function SwitchSideBar(state, action) {
+    return action.status;
+}
+
 // target
 const SetTarget = (state, action) => produce(state, (draft)=>{
     const {id, name} = action;
@@ -40,6 +45,10 @@ const HideNotificationDialog = (state, action) => produce(state, (draft)=>{
 });
 
 // reducers
+export const sidebarReducer = createReducer(false, {
+    SWITCH_SIDEBAR: SwitchSideBar
+});
+
 export const targetReducer = createReducer({name: '', id: 0}, {
     SET_TARGET: SetTarget
 });
