@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add} from '@material-ui/icons'
 import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {selectDocumentsInEntity} from '../redux/selectors/documentSelectors';
 import {GetEntityIdByName} from '../redux/indexes/database';
 
@@ -68,6 +68,7 @@ function Entity(props){
     const notification = useSelector(state => state.notification);
 
     const [id, setId] = useState(0);
+    const [add, setAdd] = useState(false);
     const select = useMemo(selectDocumentsInEntity, []);
     const documents = useSelector(state => select(state, id));
 
@@ -102,6 +103,7 @@ function Entity(props){
     // view all documents within entity and their attribute
     // document id
     // document last modified
+    if(add) return <Redirect to={`/${project}/${entity}/add`}/>;
 
     return(
         <React.Fragment>
@@ -126,6 +128,7 @@ function Entity(props){
                         isFreeAction: true,
                         onClick: (e)=>{
                             // go to document page to create
+                            setAdd(true);
                         }
                     },
                     {

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Typography, AppBar, Toolbar, IconButton, Hidden, makeStyles, Box} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {Menu, AccountCircle} from '@material-ui/icons';
@@ -6,31 +6,32 @@ import clsx from 'clsx';
 import {SwitchSideBar} from '../redux/actions/globalActions';
 import {Link, matchPath} from 'react-router-dom';
 
-function HeaderLink({project, entity}){
+function HeaderLink({project, entity, document}){
     // from root => project => entity
-    if(project === undefined && entity === undefined){
-        return(<Link to='/'> StarfallCMS </Link>)
-    }
-    else if(entity === undefined){
-        return(
-            <React.Fragment>
-                <Link to='/'> StarfallCMS </Link>
-                /
-                <Link to={`/${project}`}> {project} </Link>
-            </React.Fragment>
-        )
-    }
-    else{
-        return(
-            <React.Fragment>
-                <Link to='/'> StarfallCMS </Link>
-                /
-                <Link to={`/${project}`}> {project} </Link>
-                /
-                <Link to={`/${project}/${entity}`}> {entity} </Link>
-            </React.Fragment>
-        )
-    }
+
+    return(
+        <React.Fragment>
+            <Link to='/'> StarfallCMS </Link>
+            {project ? 
+                <React.Fragment>
+                    /
+                    <Link to={`/${project}`}> {project} </Link>
+                </React.Fragment> : null
+            }
+            {entity ? 
+                <React.Fragment>
+                    /
+                    <Link to={`/${project}/${entity}`}> {entity} </Link>
+                </React.Fragment> : null
+            }
+            {document ? 
+                <React.Fragment>
+                    /
+                    <Link to={`/${project}/${entity}/${document}`}> {document} </Link>
+                </React.Fragment> : null
+            }
+        </React.Fragment>
+    )
 }
 
 const useStyle = makeStyles(theme=>({
@@ -41,22 +42,30 @@ const useStyle = makeStyles(theme=>({
 function Header(props){
     const style = useStyle();
     const dispatch = useDispatch();
-    const sidebar = useSelector(state => state.sidebar);
     const {location} = props;
-    
-    let matchResult = matchPath(location.pathname, {
-        path: "/", exact: true
-    });
-    if(!matchResult){
-        matchResult = matchPath(location.pathname, {
-            path: "/:project", exact: true
-        });
-        if(!matchResult){
-            matchResult = matchPath(location.pathname, {
+    const sidebar = useSelector(state => state.sidebar);
+    const [params, setParams] = useState({});
+
+    useEffect(()=>{
+        // calculate how many strip in pathname
+        // then apply matchPath function conditionally
+        const count = (location.pathname.match(/\/./g)||[]).length;
+        if(count === 0){
+            setParams({});
+        }else if(count === 1){
+            setParams(matchPath(location.pathname, {
+                path: "/:project", exact: true
+            }).params);
+        }else if(count === 2){
+            setParams(matchPath(location.pathname, {
                 path: "/:project/:entity", exact: true
-            });
+            }).params);
+        }else if(count === 3){
+            setParams(matchPath(location.pathname, {
+                path: "/:project/:entity/:document", exact: true
+            }).params);
         }
-    }
+    }, [location.pathname]);
 
     return(
         <AppBar position="fixed" className={style.root}>
@@ -75,7 +84,7 @@ function Header(props){
                 <Box display="flex" flexGrow={1} justifyContent="center"
                     container={Typography} variant="h6" align="center"
                 >
-                    <HeaderLink {...matchResult.params}/>
+                    <HeaderLink {...params}/>
                 </Box>
                 <IconButton
                     edge="end"
