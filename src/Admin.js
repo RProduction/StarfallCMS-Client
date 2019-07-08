@@ -4,11 +4,12 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import SideBar from './components/SideBar';
 import {InitDatabase} from './redux/actions/projectActions';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {CREATOR, MANAGER, USER} from './redux/actions/authorizationActions';
 import ContentContainer from './components/ContentContainer';
 import {makeStyles} from '@material-ui/core';
-import WebsocketClient from './WebsocketClient';
 
+const WebsocketClient = lazy(()=>import('./WebsocketClient'));
 const Overview = lazy(()=>import('./components/Overview'));
 const Project = lazy(()=>import('./components/Project'));
 const Entity = lazy(()=>import('./components/Entity'));
@@ -25,6 +26,7 @@ const useStyle = makeStyles(theme => ({
 function Admin(props) {
 	const style = useStyle();
 	const dispatch = useDispatch();
+	const auth = useSelector(state => state.authStatus);
 
 	useEffect(()=>{
 		dispatch(InitDatabase());
@@ -32,12 +34,15 @@ function Admin(props) {
 
 	return (
 		<React.Fragment>
-			<WebsocketClient/>
 			<Header {...props}/>
 			<SideBar/>
 			
 			<ContentContainer className={style.root}>
 				<Suspense fallback={<div></div>}>
+					{auth === CREATOR || auth === MANAGER || auth === USER
+						? <WebsocketClient/>
+						: null
+					}
 					<Switch>
 						<Route path='/:project/:entity' component={Entity}/>
 						<Route path='/:project' component={Project}/>
