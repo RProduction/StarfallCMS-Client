@@ -8,9 +8,9 @@ function AuthorizationCheck(){
 
 	switch (_status) {
 		case FIRST_BOOT:
-			return <Redirect to='signup'/>;
+			return <Redirect to='/signup'/>;
 		case NOT_AUTHORIZED:
-			return <Redirect to='signin'/>;
+			return <Redirect to='/signin'/>;
 		case USER:
 			return <Redirect to='/'/>;
 		default:

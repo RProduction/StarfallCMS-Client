@@ -53,7 +53,7 @@ const SignUp = (props)=>{
 	};
 
 	if(redirect){
-		return <Redirect to="/"/>
+		return <Redirect to="/signin"/>;
 	}else{
 		return (
 			<Grid component="form" container item

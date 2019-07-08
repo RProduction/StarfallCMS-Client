@@ -26,7 +26,7 @@ function SignIn(props) {
 	};
 
 	if(_status === FIRST_BOOT){
-		return <Redirect to="signup"/>
+		return <Redirect to="/signup"/>
 	}
 	else if(_status !== NOT_AUTHORIZED){
 		return <Redirect to="/"/>

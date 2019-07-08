@@ -40,8 +40,8 @@ function App() {
 			<AuthorizationCheck/>
 
 			<Switch>
-				<Route exact path="/signin" component={SignIn}/>
-				<Route exact path="/signup" component={SignUp}/>
+				<Route path="/signin" component={SignIn}/>
+				<Route path="/signup" component={SignUp}/>
 				<Route path="/" component={Admin}/>
 			</Switch>
 
