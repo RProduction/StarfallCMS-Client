@@ -13,3 +13,35 @@ export const selectDocumentsInEntity = ()=>{
         }
     );
 };
+
+const _selectCurrentDocument = state => state.currentDocument;
+// return key with their type
+export const selectCurrentDocumentKeys = ()=>{
+    return createSelector(
+        _selectCurrentDocument,
+        (_, keys = []) => keys,
+        (currentDocument, keys)=>{
+            let current = currentDocument.type;
+            keys.forEach((value)=>{
+                current = current[value];
+            });
+            return Object.entries(current).map(value =>({
+                key: value[0],
+                type: value[1],
+            }));
+        }
+    )
+};
+export const selectCurrentDocumentValue = ()=>{
+    return createSelector(
+        _selectCurrentDocument,
+        (_, keys = []) => keys,
+        (currentDocument, keys)=>{
+            let current = currentDocument.data;
+            keys.forEach((value)=>{
+                current = current[value];
+            });
+            return current;
+        }
+    )
+};

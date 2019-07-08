@@ -59,22 +59,56 @@ test = {
 }
 */
 
+// receive data and type
+const GenerateField = (state, action) => produce(state, (draft)=>{
+    const {data, fieldType} = action;
+
+    draft.data = data;
+    draft.type = fieldType;
+});
+
+// receive array of key and type
+// array type only for array(define what can of type array contain)
+const AddField = (state, action) => produce(state, (draft)=>{
+    const {keys, fieldType, arrayType} = action;
+
+    let currentType = draft.type;
+    let currentData = draft.data;
+    let targetKey;
+    keys.forEach((value, index)=>{
+        targetKey = value;
+        if(index+1 < keys.length){
+            currentType = currentType[targetKey];
+            currentData = currentData[targetKey];
+        }
+    });
+
+    if(fieldType === 'object'){
+        currentType[targetKey] = {};
+        currentData[targetKey] = {};
+    }else if(fieldType === 'array'){
+        currentType[targetKey] = [arrayType];
+        currentData[targetKey] = [];
+    }else{
+        currentType[targetKey] = fieldType;
+        if(fieldType === 'integer' || fieldType === 'float') currentData[targetKey] = 0;
+        else if(fieldType === 'string') currentData[targetKey] = '';
+        else if(fieldType === 'boolean') currentData[targetKey] = false;
+    }
+});
+
 // receive array of key and value
 // key must exist and have a right topology
 const SetField = (state, action) => produce(state, (draft)=>{
-    const {field} = action;
-    const {keys, value} = field;
+    const {keys, value} = action;
     
-    let current = draft;
+    let current = draft.data;
     let targetKey;
-    for(let key in keys){
-        const tempKey = keys[key];
-        if(keys.length === key+1){
-            targetKey = tempKey;
-            break;
-        }
-        current = current[tempKey];
-    }
+    keys.forEach((value, index)=>{
+        targetKey = value;
+        if(index+1 < keys.length)
+            current = current[targetKey];
+    });
 
     if(Array.isArray(current[targetKey])){
         current[targetKey].push(value);
@@ -85,21 +119,21 @@ const SetField = (state, action) => produce(state, (draft)=>{
 
 // receive array of key
 const DeleteField = (state, action) => produce(state, (draft)=>{
-    const {field} = action;
-    const {keys} = field;
+    const {keys} = action;
     
-    let current = draft;
+    let currentData = draft.data;
+    let currentType = draft.type;
     let targetKey;
-    for(let key in keys){
-        const tempKey = keys[key];
-        if(keys.length === key+1){
-            targetKey = tempKey;
-            break;
+    keys.forEach((value, index)=>{
+        targetKey = value;
+        if(index+1 < keys.length){
+            currentData = currentData[targetKey];
+            currentType = currentType[targetKey];
         }
-        current = current[tempKey];
-    }
+    });
 
-    delete current[targetKey];
+    delete currentData[targetKey];
+    delete currentType[targetKey];
 });
 
 // reducers
@@ -110,7 +144,9 @@ export const documentsReducer = createReducer({}, {
     MODIFY_DOCUMENT: ModifyDocument
 });
 
-export const currentDocumentReducer = createReducer({}, {
+export const currentDocumentReducer = createReducer({data: {}, type: {}}, {
+    GENERATE_FIELD: GenerateField,
+    ADD_FIELD: AddField,
     SET_FIELD: SetField,
     DELETE_FIELD: DeleteField
 });
