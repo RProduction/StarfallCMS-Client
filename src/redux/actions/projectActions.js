@@ -58,28 +58,29 @@ export const InitDatabase = () => async dispatch => {
     try{
         const _projects = await Axios.get('project');
         const normalized = normalizeProjects(_projects.data);
-        let projects = Object.values(normalized.entities.projects);
-        projects = projects.map(value => {
-            return {
-                id: value._id,
-                name: value.name,
-                created: value.created_at,
-                updated: value.updated_at,
-                publicKey: value.public_key
-            };
+        let projects = []
+        let entities = [];
+        normalized.result.forEach(value =>{
+            projects.push({
+                id: normalized.entities.projects[value]._id,
+                name: normalized.entities.projects[value].name,
+                created: normalized.entities.projects[value].created_at,
+                updated: normalized.entities.projects[value].updated_at,
+                publicKey: normalized.entities.projects[value].public_key
+            });
+
+            normalized.entities.projects[value].entities.forEach(value =>{
+                entities.push({
+                    id: normalized.entities.entities[value]._id,
+                    projectId: normalized.entities.entities[value].project_id,
+                    name: normalized.entities.entities[value].name,
+                    created: normalized.entities.entities[value].created_at,
+                    updated: normalized.entities.entities[value].updated_at,
+                    schema: normalized.entities.entities[value].schema||{}
+                });
+            });
         });
         
-        let entities = Object.values(normalized.entities.entities);
-        entities = entities.map(value => {
-            return {
-                id: value._id,
-                projectId: value.project_id,
-                name: value.name,
-                created: value.created_at,
-                updated: value.updated_at
-            };
-        });
-
         dispatch(AddProjects(projects));
         dispatch(AddEntities(entities));
     }catch(err){

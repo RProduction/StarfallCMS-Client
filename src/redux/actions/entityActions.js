@@ -37,3 +37,12 @@ export const RenameEntity = (id, name, updated) => async dispatch => {
         updated: updated
     });
 }
+
+export const SetEntitySchema = (id, schema, updated) => async dispatch => {
+    dispatch({
+        type: "SET_ENTITY_SCHEMA", 
+        id: id,
+        schema: schema,
+        updated: updated
+    });
+}

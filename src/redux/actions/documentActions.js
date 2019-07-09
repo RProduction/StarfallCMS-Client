@@ -43,13 +43,8 @@ function TraverseObject(object, type){
     });
 }
 
-export function GenerateField(document){
-    const {id, entityId, created, updated, ...rest} = document;
-
-    // traverse object to find type
-    let fieldType = {};
-    TraverseObject(rest, fieldType);
-    return {type: "GENERATE_FIELD", data: rest, fieldType: fieldType};
+export function GenerateField(schema, document = {}){
+    return {type: "GENERATE_FIELD", fieldType: schema, data: document};
 }
 
 // receive array of id, projectId, name, updated, created, ...rest

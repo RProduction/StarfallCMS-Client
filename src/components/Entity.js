@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import MaterialTable from 'material-table';
-import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add} from '@material-ui/icons'
+import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add, Create} from '@material-ui/icons'
 import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
 import {Link, Redirect} from 'react-router-dom';
 import {selectDocumentsInEntity} from '../redux/selectors/documentSelectors';
@@ -68,7 +68,7 @@ function Entity(props){
     const notification = useSelector(state => state.notification);
 
     const [id, setId] = useState(0);
-    const [add, setAdd] = useState(false);
+    const [redirect, setRedirect] = useState('');
     const select = useMemo(selectDocumentsInEntity, []);
     const documents = useSelector(state => select(state, id));
 
@@ -103,7 +103,8 @@ function Entity(props){
     // view all documents within entity and their attribute
     // document id
     // document last modified
-    if(add) return <Redirect to={`/${project}/${entity}/add`}/>;
+    if(redirect === 'add') return <Redirect to={`/${project}/${entity}/add`}/>;
+    else if(redirect === 'schema') return <Redirect to={`/${project}/${entity}/schema`}/>;
 
     return(
         <React.Fragment>
@@ -128,7 +129,16 @@ function Entity(props){
                         isFreeAction: true,
                         onClick: (e)=>{
                             // go to document page to create
-                            setAdd(true);
+                            setRedirect('add');
+                        }
+                    },
+                    {
+                        icon: ()=><Create/>,
+                        tooltip: "Edit Schema",
+                        isFreeAction: true,
+                        onClick: (e)=>{
+                            // go to document schema page to edit
+                            setRedirect('schema');
                         }
                     },
                     {

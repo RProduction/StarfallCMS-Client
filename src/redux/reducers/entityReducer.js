@@ -10,7 +10,8 @@ const AddEntities = (state, action) => produce(state, (draft)=>{
             projectId: entity.projectId,
             name: entity.name,
             created: entity.created,
-            updated: entity.updated
+            updated: entity.updated,
+            schema: entity.schema
         }
     }
 });
@@ -29,9 +30,16 @@ const RenameEntity = (state, action) => produce(state, (draft)=>{
     draft[id].updated = updated;
 });
 
+const SetEntitySchema = (state, action) => produce(state, (draft)=>{
+    const {id, schema, updated} = action; 
+    draft[id].schema = schema;
+    draft[id].updated = updated;
+});
+
 // reducers
 export const entitiesReducer = createReducer({}, {
     ADD_ENTITIES: AddEntities,
     DELETE_ENTITIES: DeleteEntities,
-    RENAME_ENTITY: RenameEntity
+    RENAME_ENTITY: RenameEntity,
+    SET_ENTITY_SCHEMA: SetEntitySchema
 });

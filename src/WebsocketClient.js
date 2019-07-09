@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import Ws from '@adonisjs/websocket-client';
 import {AddProjects, DeleteProject, RenameProject} from './redux/actions/projectActions';
-import {AddEntities, DeleteEntities, RenameEntity} from './redux/actions/entityActions';
+import {AddEntities, DeleteEntities, RenameEntity, SetEntitySchema} from './redux/actions/entityActions';
 import {AddDocuments, ModifyDocument} from './redux/actions/documentActions';
 import { DeleteDocuments } from './redux/indexes/database';
 
@@ -56,7 +56,8 @@ function WebsocketClient(props) {
                     projectId:msg.project_id,
                     name: msg.name,
                     created: msg.created_at,
-                    updated: msg.updated_at
+                    updated: msg.updated_at,
+                    schema: msg.schema
                 }]));
             });
             entity.on('delete', (msg)=>{
@@ -70,6 +71,15 @@ function WebsocketClient(props) {
                 dispatch(RenameEntity(
                     msg._id,
                     msg.name, 
+                    msg.updated_at
+                ));
+            });
+            entity.on('schema', (msg)=>{
+                console.log("set entity schema");
+                console.log(msg);
+                dispatch(SetEntitySchema(
+                    msg._id,
+                    msg.schema, 
                     msg.updated_at
                 ));
             });

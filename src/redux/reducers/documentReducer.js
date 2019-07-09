@@ -73,27 +73,20 @@ const AddField = (state, action) => produce(state, (draft)=>{
     const {keys, fieldType, arrayType} = action;
 
     let currentType = draft.type;
-    let currentData = draft.data;
     let targetKey;
     keys.forEach((value, index)=>{
         targetKey = value;
         if(index+1 < keys.length){
             currentType = currentType[targetKey];
-            currentData = currentData[targetKey];
         }
     });
 
     if(fieldType === 'object'){
         currentType[targetKey] = {};
-        currentData[targetKey] = {};
     }else if(fieldType === 'array'){
         currentType[targetKey] = [arrayType];
-        currentData[targetKey] = [];
     }else{
         currentType[targetKey] = fieldType;
-        if(fieldType === 'integer' || fieldType === 'float') currentData[targetKey] = 0;
-        else if(fieldType === 'string') currentData[targetKey] = '';
-        else if(fieldType === 'boolean') currentData[targetKey] = false;
     }
 });
 
@@ -121,18 +114,15 @@ const SetField = (state, action) => produce(state, (draft)=>{
 const DeleteField = (state, action) => produce(state, (draft)=>{
     const {keys} = action;
     
-    let currentData = draft.data;
     let currentType = draft.type;
     let targetKey;
     keys.forEach((value, index)=>{
         targetKey = value;
         if(index+1 < keys.length){
-            currentData = currentData[targetKey];
             currentType = currentType[targetKey];
         }
     });
 
-    delete currentData[targetKey];
     delete currentType[targetKey];
 });
 
