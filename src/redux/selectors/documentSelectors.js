@@ -25,10 +25,25 @@ export const selectCurrentDocumentKeys = ()=>{
             keys.forEach((value)=>{
                 current = current[value];
             });
-            return Object.entries(current).map(value =>({
-                key: value[0],
-                type: value[1],
-            }));
+
+            // check if current is object or array
+            // if array return index 0
+            // index 0 of array always contain type
+            if(current.constructor === Object){
+                return Object.entries(current).map(value =>({
+                    key: value[0],
+                    type: value[1].constructor === Object 
+                        ? 'object' : value[1].constructor === Array
+                        ? 'array': value[1]
+                }));
+            }else if(current.constructor == Array){
+                return {
+                    key: 0,
+                    type: current[0].constructor === Object 
+                        ? 'object' : current[0].constructor === Array
+                        ? 'array': current[0]
+                };
+            }
         }
     )
 };

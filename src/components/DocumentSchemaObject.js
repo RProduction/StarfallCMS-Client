@@ -12,7 +12,7 @@ import DocumentSchemaArray from './DocumentSchemaArray';
 import DocumentSchemaField from './DocumentSchemaField';
 
 function DocumentSchemaObject(props){
-    const {keys} = props;
+    const {keys, fromArray} = props;
     const dispatch = useDispatch();
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
     const curKeys = useSelector(state => selectKeys(state, keys));
@@ -20,27 +20,30 @@ function DocumentSchemaObject(props){
 
     return(
         <Grid container item xs={12}>
-            <Grid container item xs={12}>
-                <Grid item component={Typography} xs>{keys[keys.length - 1]}</Grid>
-                <IconButton
-                    color="inherit"
-                    aria-label={`Delete ${keys[keys.length - 1]}`}
-                    onClick={() => dispatch(DeleteField(keys))}
-                    edge="end"
-                >
-                    <Delete/>
-                </IconButton>
-            </Grid>
+            {
+                !fromArray ? 
+                <Grid container item xs={12}>
+                    <Grid item component={Typography} xs>{keys[keys.length - 1]}</Grid>
+                    <IconButton
+                        color="inherit"
+                        aria-label={`Delete ${keys[keys.length - 1]}`}
+                        onClick={() => dispatch(DeleteField(keys))}
+                        edge="end"
+                    >
+                        <Delete/>
+                    </IconButton>
+                </Grid>  : null
+            }
             {
                 curKeys.map(value => {
                     const {key, type} = value;
                     const temp = [...keys, key];
-                    if(type.constructor === Object){
+                    if(type === 'object'){
                         return(
                             <DocumentSchemaObject key={key} keys={temp}/>
                         )
                     }
-                    else if(type.constructor === Array){
+                    else if(type === 'array'){
                         return(
                             <DocumentSchemaArray key={key} keys={temp}/>
                         )
@@ -62,7 +65,8 @@ function DocumentSchemaObject(props){
 }
 
 DocumentSchemaObject.propTypes = {
-    keys: PropTypes.array.isRequired
+    keys: PropTypes.array.isRequired,
+    fromArray: PropTypes.bool
 }
 
 export default DocumentSchemaObject;

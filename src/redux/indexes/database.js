@@ -10,11 +10,13 @@ db.version(1).stores({
 
 // query function
 export async function GetProjectIdByName(name){ 
-    return await db.projects.get({name: name}, value => value.id);
+    const value = await db.projects.get({name: name}, value => value);
+    return value ? value.id : 0;
 };
 
 export async function GetEntityIdByName(name){
-    return await db.entities.get({name: name}, value => value.id);
+    const value = await db.entities.get({name: name}, value => value);
+    return value ? value.id : 0;
 };
 
 export async function GetRelatedEntities(projectId){

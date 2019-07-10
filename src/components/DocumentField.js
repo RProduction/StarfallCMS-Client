@@ -1,13 +1,13 @@
 import React, {useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {SetField, DeleteField} from '../redux/actions/documentActions';
+import {SetField} from '../redux/actions/documentActions';
 import {selectCurrentDocumentValue} from '../redux/selectors/documentSelectors';
 import {Grid, TextField, Typography, Checkbox, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
 function DocumentField(props){
-    const {keys, category} = props;
+    const {keys, category, arrayKeys, arrayValues} = props;
     const dispatch = useDispatch();
     const select = useMemo(selectCurrentDocumentValue, []);
     const value = useSelector(state => select(state, keys));
@@ -45,14 +45,20 @@ function DocumentField(props){
                         onChange={(e) => dispatch(SetField(keys, e.target.value))}
                     /> : null
             }
-            <IconButton
-                color="inherit"
-                aria-label={`Delete ${keys[keys.length - 1]}`}
-                onClick={() => dispatch(DeleteField(keys))}
-                edge="end"
-            >
-                <Delete/>
-            </IconButton>
+            {
+                arrayKeys && arrayValues ? <IconButton
+                    color="inherit"
+                    aria-label={`Delete ${keys[keys.length - 1]}`}
+                    onClick={() => {
+                        const temp = [...arrayValues];
+                        temp.splice(keys[keys.length - 1], 1);
+                        dispatch(SetField(arrayKeys, temp));
+                    }}
+                    edge="end"
+                >
+                    <Delete/>
+                </IconButton>: null
+            }
         </Grid>
     )
 }
@@ -61,7 +67,9 @@ DocumentField.propTypes = {
     keys: PropTypes.array.isRequired,
     category: PropTypes.oneOf([
         'integer', 'float', 'string', 'boolean', 'file'
-    ]).isRequired
+    ]).isRequired,
+    arrayKeys: PropTypes.array,
+    arrayValues: PropTypes.array
 }
 
 export default DocumentField;

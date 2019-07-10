@@ -48,12 +48,12 @@ function DocumentAddEdit(props){
                 keys.map(value => {
                     const {key, type} = value;
                     const temp = [key];
-                    if(type.constructor === Object){
+                    if(type === 'object'){
                         return(
                             <DocumentObject key={key} keys={temp}/>
                         )
                     }
-                    else if(type.constructor === Array){
+                    else if(type === 'array'){
                         return(
                             <DocumentArray key={key} keys={temp}/>
                         )

@@ -1,8 +1,8 @@
 import * as Indexes from '../indexes/database';
 import Axios from '../../Axios';
 
-export function AddField(keys, fieldType, arrayType){
-    return {type: "ADD_FIELD", keys: keys, fieldType: fieldType, arrayType: arrayType};
+export function AddField(keys, fieldType){
+    return {type: "ADD_FIELD", keys: keys, fieldType: fieldType};
 }
 
 export function SetField(keys, value){
@@ -11,36 +11,6 @@ export function SetField(keys, value){
 
 export function DeleteField(keys){
     return {type: "DELETE_FIELD", keys: keys};
-}
-
-//receive object as source of truth and type to be modified by reference
-function TraverseObject(object, type){
-    Object.entries(object).forEach(([key, value])=>{
-        // check type and assign
-        if(value.constructor == Number && value % 1 === 0){
-            type[key] = 'integer';
-        }
-        else if(value.constructor == Number && value % 1 !== 0){
-            type[key] = 'float';
-        }
-        else if(value.constructor == String){
-            type[key] = 'string';
-        }
-        else if(value.constructor == Boolean){
-            type[key] = 'boolean';
-        }
-        else if(value.constructor == Object){
-            type[key] = {};
-
-            // traverse object
-            TraverseObject(object[key], type[key]);
-        }
-        else if(value.constructor == Array){
-            // get what type of item array contain
-            
-            type[key] = [];
-        }
-    });
 }
 
 export function GenerateField(schema, document = {}){

@@ -41,14 +41,12 @@ function DocumentSchema(props){
 
     useEffect(()=>{
         GetEntityIdByName(entity).then((value)=>{
-            console.log(value);
             setId(value);
         });
     }, [entity]);
 
     useEffect(()=>{
         // generate schema
-        console.log(_entity);
         if(_entity) dispatch(GenerateField(_entity.schema));
     }, [_entity]);
 
@@ -69,12 +67,12 @@ function DocumentSchema(props){
                     keys.map(value => {
                         const {key, type} = value;
                         const temp = [key];
-                        if(type.constructor === Object){
+                        if(type === 'object'){
                             return(
                                 <DocumentSchemaObject key={key} keys={temp}/>
                             )
                         }
-                        else if(type.constructor === Array){
+                        else if(type === 'array'){
                             return(
                                 <DocumentSchemaArray key={key} keys={temp}/>
                             )

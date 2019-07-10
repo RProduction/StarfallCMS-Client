@@ -70,7 +70,7 @@ const GenerateField = (state, action) => produce(state, (draft)=>{
 // receive array of key and type
 // array type only for array(define what can of type array contain)
 const AddField = (state, action) => produce(state, (draft)=>{
-    const {keys, fieldType, arrayType} = action;
+    const {keys, fieldType} = action;
 
     let currentType = draft.type;
     let targetKey;
@@ -84,7 +84,7 @@ const AddField = (state, action) => produce(state, (draft)=>{
     if(fieldType === 'object'){
         currentType[targetKey] = {};
     }else if(fieldType === 'array'){
-        currentType[targetKey] = [arrayType];
+        currentType[targetKey] = ['integer'];
     }else{
         currentType[targetKey] = fieldType;
     }
@@ -103,11 +103,7 @@ const SetField = (state, action) => produce(state, (draft)=>{
             current = current[targetKey];
     });
 
-    if(Array.isArray(current[targetKey])){
-        current[targetKey].push(value);
-    }else{
-        current[targetKey] = value;
-    }
+    current[targetKey] = value;
 });
 
 // receive array of key

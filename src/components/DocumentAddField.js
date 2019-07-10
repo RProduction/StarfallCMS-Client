@@ -12,7 +12,6 @@ function DocumentAddField(props){
     const dispatch = useDispatch();
     const [key, setKey] = useState('');
     const [type, setType] = useState(fieldTypes[0]);
-    const [arrayType, setArrayType] = useState('');
 
     return(
         <Grid container item xs={12}>
@@ -36,7 +35,7 @@ function DocumentAddField(props){
                 aria-label={`Add ${key}`}
                 onClick={() => {
                     const temp = [...keys, key];
-                    dispatch(AddField(temp, type, arrayType));
+                    dispatch(AddField(temp, type));
                     cancel();
                 }}
                 edge="end"
