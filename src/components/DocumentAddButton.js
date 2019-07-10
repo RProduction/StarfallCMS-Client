@@ -1,14 +1,14 @@
 import React from 'react';
-import {ListItem, ListItemText} from '@material-ui/core';
+import FormButton from './FormButton';
 import PropTypes from 'prop-types';
 
 function DocumentAddButton(props){
     const {add} = props;
 
     return(
-        <ListItem button onClick={() => add()}>
-            <ListItemText primary='New Field'/>    
-        </ListItem>
+        <FormButton xs={12} onClick={()=>add()}>
+            New Field
+        </FormButton>
     )
 }
 

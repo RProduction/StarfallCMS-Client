@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
 import {DeleteField} from '../redux/actions/documentActions';
-import {ListItem, Typography, IconButton} from '@material-ui/core';
+import {Grid, Typography, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
@@ -10,9 +10,9 @@ function DocumentSchemaField(props){
     const dispatch = useDispatch();
 
     return(
-        <ListItem>
-            <Typography>{keys[keys.length - 1]}</Typography>
-            <Typography>{category}</Typography>
+        <Grid container item xs={12}>
+            <Grid item component={Typography} xs={3}>{keys[keys.length - 1]}</Grid>
+            <Grid item component={Typography} xs>{category}</Grid>
             <IconButton
                 color="inherit"
                 aria-label={`Delete ${keys[keys.length - 1]}`}
@@ -21,7 +21,7 @@ function DocumentSchemaField(props){
             >
                 <Delete/>
             </IconButton>
-        </ListItem>
+        </Grid>
     )
 }
 

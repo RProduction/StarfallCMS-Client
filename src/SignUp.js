@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import AuthorizationForm from './components/AuthorizationForm';
 import {Redirect} from 'react-router-dom';
-import {TextField, Button, Grid, MenuItem} from '@material-ui/core';
+import {TextField, Grid, MenuItem} from '@material-ui/core';
 import {useSelector} from 'react-redux';
 import {CREATOR, MANAGER, FIRST_BOOT} from './redux/actions/authorizationActions';
 import Axios from './Axios';
 import * as Yup from 'yup';
+import FormButton from './components/FormButton';
 
 const AUTHORITIES_CREATOR = ['Manager', 'User'];
 const AUTHORITIES_MANAGER = ['User'];
@@ -106,11 +107,9 @@ const SignUp = (props)=>{
 						</MenuItem>
 					))}
 				</Grid>
-				<Grid item xs={12} component={Button}
-					type="submit" disabled={!isValid}
-				>
+				<FormButton type="submit" disabled={!isValid} xs={12}>
 					Sign Up
-				</Grid>
+				</FormButton>
 			</Grid>
 		);
 	}

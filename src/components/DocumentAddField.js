@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {AddField} from '../redux/actions/documentActions';
-import {ListItem, TextField, IconButton, MenuItem} from '@material-ui/core';
+import {Grid, TextField, IconButton, MenuItem} from '@material-ui/core';
 import {Delete, Add} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
@@ -15,12 +15,12 @@ function DocumentAddField(props){
     const [arrayType, setArrayType] = useState('');
 
     return(
-        <ListItem>
-            <TextField 
+        <Grid container item xs={12}>
+            <Grid item component={TextField} xs={3}
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
             />
-            <TextField
+            <Grid item component={TextField} xs
                 required select margin="normal"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
@@ -30,7 +30,7 @@ function DocumentAddField(props){
                         {option}
                     </MenuItem>
                 ))}
-            </TextField>
+            </Grid>
             <IconButton
                 color="inherit"
                 aria-label={`Add ${key}`}
@@ -51,7 +51,7 @@ function DocumentAddField(props){
             >
                 <Delete/>
             </IconButton>
-        </ListItem>
+        </Grid>
     )
 }
 

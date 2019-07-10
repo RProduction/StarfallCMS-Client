@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
-import {List, ListItem} from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 
 import {GetEntityIdByName} from '../redux/indexes/database';
 import {selectEntity} from '../redux/selectors/entitySelectors';
@@ -10,6 +10,8 @@ import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/g
 import DialogNotification from './DialogNotification';
 
 import DocumentAddField from './DocumentAddField';
+import DocumentSaveButton from './DocumentSaveButton';
+import DocumentCancelButton from './DocumentCancelButton';
 import DocumentAddButton from './DocumentAddButton';
 import DocumentSchemaObject from './DocumentSchemaObject';
 import DocumentSchemaArray from './DocumentSchemaArray';
@@ -62,7 +64,7 @@ function DocumentSchema(props){
                     }}
                 /> : null
             }
-            <List>
+            <Grid container>
                 {
                     keys.map(value => {
                         const {key, type} = value;
@@ -89,10 +91,9 @@ function DocumentSchema(props){
                     : null
                 }
                 <DocumentAddButton add={() => setAdd(true)}/>
-                <ListItem button>
-                    Save Schema
-				</ListItem>
-			</List>
+                <DocumentCancelButton cancel={() => {}}/>
+                <DocumentSaveButton save={() => {}}/>
+			</Grid>
         </React.Fragment>
     )
 }

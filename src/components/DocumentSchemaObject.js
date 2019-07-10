@@ -1,7 +1,7 @@
 import React, {useState, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {DeleteField} from '../redux/actions/documentActions';
-import {List, ListItem, Typography, IconButton} from '@material-ui/core';
+import {Grid, Typography, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
@@ -19,9 +19,9 @@ function DocumentSchemaObject(props){
     const [add, setAdd] = useState(false);
 
     return(
-        <List>
-            <ListItem>
-                <Typography>{keys[keys.length - 1]}</Typography>
+        <Grid container item xs={12}>
+            <Grid container item xs={12}>
+                <Grid item component={Typography} xs>{keys[keys.length - 1]}</Grid>
                 <IconButton
                     color="inherit"
                     aria-label={`Delete ${keys[keys.length - 1]}`}
@@ -30,7 +30,7 @@ function DocumentSchemaObject(props){
                 >
                     <Delete/>
                 </IconButton>
-            </ListItem>
+            </Grid>
             {
                 curKeys.map(value => {
                     const {key, type} = value;
@@ -57,7 +57,7 @@ function DocumentSchemaObject(props){
                 : null
             }
             <DocumentAddButton add={() => setAdd(true)}/>
-        </List>
+        </Grid>
     )
 }
 

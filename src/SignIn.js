@@ -1,11 +1,12 @@
 import React from 'react';
 import AuthorizationForm from './components/AuthorizationForm';
-import {TextField, Button, Grid} from '@material-ui/core';
+import {TextField, Grid} from '@material-ui/core';
 import {Redirect} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {FIRST_BOOT, NOT_AUTHORIZED} from './redux/actions/authorizationActions';
 import Axios from './Axios';
 import * as Yup from 'yup';
+import FormButton from './components/FormButton';
 
 function SignIn(props) {
 	const _status = useSelector(state => state.authStatus);
@@ -63,11 +64,9 @@ function SignIn(props) {
 					helperText={touched.password ? errors.password : ""}
 					   error={touched.password && Boolean(errors.password)}
 				/>
-				<Grid item xs={12} component={Button}
-					type="submit" disabled={!isValid}
-				>
+				<FormButton type="submit" disabled={!isValid} xs={12}>
 					Sign In
-				</Grid>
+				</FormButton>
 			</Grid>
 		);
 	}

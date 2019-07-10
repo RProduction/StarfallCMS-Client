@@ -1,7 +1,7 @@
 import React, {useState, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {DeleteField} from '../redux/actions/documentActions';
-import {List, ListItem, Typography, IconButton} from '@material-ui/core';
+import {Grid, Typography, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
@@ -9,8 +9,9 @@ import {selectCurrentDocumentKeys} from '../redux/selectors/documentSelectors';
 import DocumentAddField from './DocumentAddField';
 import DocumentAddButton from './DocumentAddButton';
 import DocumentField from './DocumentField';
+import DocumentArray from './DocumentArray';
 
-function DocumentContainerField(props){
+function DocumentObject(props){
     const {keys} = props;
     const dispatch = useDispatch();
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
@@ -18,9 +19,9 @@ function DocumentContainerField(props){
     const [add, setAdd] = useState(false);
 
     return(
-        <List>
-            <ListItem>
-                <Typography>{keys[keys.length - 1]}</Typography>
+        <Grid container item xs={12}>
+            <Grid container item xs={12}>
+                <Grid item component={Typography} xs>{keys[keys.length - 1]}</Grid>
                 <IconButton
                     color="inherit"
                     aria-label={`Delete ${keys[keys.length - 1]}`}
@@ -29,14 +30,19 @@ function DocumentContainerField(props){
                 >
                     <Delete/>
                 </IconButton>
-            </ListItem>
+            </Grid>
             {
                 curKeys.map(value => {
                     const {key, type} = value;
                     const temp = [...keys, key];
-                    if(type.constructor === Object || type.constructor === Array){
+                    if(type.constructor === Object){
                         return(
-                            <DocumentContainerField key={key} keys={temp}/>
+                            <DocumentObject key={key} keys={temp}/>
+                        )
+                    }
+                    else if(type.constructor === Array){
+                        return(
+                            <DocumentArray key={key} keys={temp}/>
                         )
                     }else{
                         return(
@@ -51,12 +57,12 @@ function DocumentContainerField(props){
                 : null
             }
             <DocumentAddButton add={() => setAdd(true)}/>
-        </List>
+        </Grid>
     )
 }
 
-DocumentContainerField.propTypes = {
+DocumentObject.propTypes = {
     keys: PropTypes.array.isRequired
 }
 
-export default DocumentContainerField;
+export default DocumentObject;

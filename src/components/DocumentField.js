@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {SetField, DeleteField} from '../redux/actions/documentActions';
 import {selectCurrentDocumentValue} from '../redux/selectors/documentSelectors';
-import {ListItem, TextField, Typography, Box, Checkbox, IconButton} from '@material-ui/core';
+import {Grid, TextField, Typography, Checkbox, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
@@ -13,8 +13,8 @@ function DocumentField(props){
     const value = useSelector(state => select(state, keys));
 
     return(
-        <ListItem>
-            <Typography>{keys[keys.length - 1]}</Typography>
+        <Grid container item xs={12}>
+            <Grid item component={Typography} xs={3}>{keys[keys.length - 1]}</Grid>
             {
                 category === 'boolean' 
                 ?   <Checkbox
@@ -29,6 +29,7 @@ function DocumentField(props){
             {
                 category === 'integer' || category === 'float'
                 ?   <TextField 
+                        fullWidth
                         value={value}
                         step={category === 'float' ? 'any' : 1}
                         type='number'
@@ -38,6 +39,7 @@ function DocumentField(props){
             {
                 category === 'string' 
                 ?   <TextField 
+                        fullWidth
                         value={value}
                         multiline
                         onChange={(e) => dispatch(SetField(keys, e.target.value))}
@@ -51,7 +53,7 @@ function DocumentField(props){
             >
                 <Delete/>
             </IconButton>
-        </ListItem>
+        </Grid>
     )
 }
 

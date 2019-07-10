@@ -1,12 +1,14 @@
 import React, {useMemo, useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {selectDocument} from '../redux/selectors/documentSelectors';
-import {List, ListItem} from '@material-ui/core';
+import {Grid} from '@material-ui/core';
+import FormButton from './FormButton';
 
 import {selectCurrentDocumentKeys} from '../redux/selectors/documentSelectors';
 import {GenerateField} from '../redux/actions/documentActions';
 
-import DocumentContainerField from './DocumentContainerField';
+import DocumentObject from './DocumentObject';
+import DocumentArray from './DocumentArray';
 import DocumentField from './DocumentField';
 
 import {GetEntityIdByName} from '../redux/indexes/database';
@@ -41,14 +43,19 @@ function DocumentAddEdit(props){
     }, [_document, document, _entity]);
 
     return(
-        <List>
+        <Grid container>
             {
                 keys.map(value => {
                     const {key, type} = value;
                     const temp = [key];
-                    if(type.constructor === Object || type.constructor === Array){
+                    if(type.constructor === Object){
                         return(
-                            <DocumentContainerField key={key} keys={temp}/>
+                            <DocumentObject key={key} keys={temp}/>
+                        )
+                    }
+                    else if(type.constructor === Array){
+                        return(
+                            <DocumentArray key={key} keys={temp}/>
                         )
                     }else{
                         return(
@@ -57,10 +64,10 @@ function DocumentAddEdit(props){
                     }
                 })
             }
-            <ListItem button>
+            <FormButton xs={12}>
                 {document === 'add' ? 'Add' : 'Modify'}
-            </ListItem>
-        </List>
+            </FormButton>
+        </Grid>
     )
 }
 
