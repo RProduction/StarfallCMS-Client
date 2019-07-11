@@ -1,9 +1,10 @@
 import {createSelector} from 'reselect';
 
-const _selectDocuments = state => state.documents;
-export const selectDocumentIds = state => Object.keys(_selectDocuments(state));
-export const selectDocument = (state, id) => _selectDocuments(state)[id];
-export const selectAllDocuments = state => Object.values(_selectDocuments(state));
+const _selectDocumentsData = state => state.documents.data;
+const _selectDocumentsInit = state => state.documents.init;
+export const selectDocumentIds = state => Object.keys(_selectDocumentsData(state));
+export const selectDocument = (state, id) => _selectDocumentsData(state)[id];
+export const selectAllDocuments = state => Object.values(_selectDocumentsData(state));
 export const selectDocumentsInEntity = ()=>{
     return createSelector(
         selectAllDocuments,
@@ -14,14 +15,17 @@ export const selectDocumentsInEntity = ()=>{
     );
 };
 
+export const selectDocumentInit = (state, id) => _selectDocumentsInit(state)[id];
+
 const _selectCurrentDocument = state => state.currentDocument;
+export const selectCurrentDocumentType = state => _selectCurrentDocument(state).type;
+export const selectCurrentDocumentData = state => _selectCurrentDocument(state).data;
 // return key with their type
 export const selectCurrentDocumentKeys = ()=>{
     return createSelector(
-        _selectCurrentDocument,
+        selectCurrentDocumentType,
         (_, keys = []) => keys,
-        (currentDocument, keys)=>{
-            let current = currentDocument.type;
+        (current, keys)=>{
             keys.forEach((value)=>{
                 current = current[value];
             });
@@ -49,10 +53,9 @@ export const selectCurrentDocumentKeys = ()=>{
 };
 export const selectCurrentDocumentValue = ()=>{
     return createSelector(
-        _selectCurrentDocument,
+        selectCurrentDocumentData,
         (_, keys = []) => keys,
-        (currentDocument, keys)=>{
-            let current = currentDocument.data;
+        (current, keys)=>{
             keys.forEach((value)=>{
                 current = current[value];
             });

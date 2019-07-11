@@ -34,14 +34,13 @@ function HideDialog(state, action){
 // notification dialog switch
 const ShowNotificationDialog = (state, action) => produce(state, (draft)=>{
     const {title, content} = action;
-    draft = {
-        title: title,
-        content: content
-    };
+    draft.title = title;
+    draft.content = content;
 });
 
 const HideNotificationDialog = (state, action) => produce(state, (draft)=>{
-    draft = null;
+    draft.title = '';
+    draft.content = '';
 });
 
 // reducers
@@ -60,7 +59,7 @@ export const dialogReducer = createReducer(null, {
     HIDE_DIALOG: HideDialog
 });
 
-export const notificationReducer = createReducer(null, {
+export const notificationReducer = createReducer({title: '', content: ''}, {
     SHOW_NOTIFICATION_DIALOG: ShowNotificationDialog,
     HIDE_NOTIFICATION_DIALOG: HideNotificationDialog
 });

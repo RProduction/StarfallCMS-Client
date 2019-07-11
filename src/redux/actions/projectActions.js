@@ -76,7 +76,7 @@ export const InitDatabase = () => async dispatch => {
                     name: normalized.entities.entities[value].name,
                     created: normalized.entities.entities[value].created_at,
                     updated: normalized.entities.entities[value].updated_at,
-                    schema: normalized.entities.entities[value].schema||{}
+                    schema: normalized.entities.entities[value].schema || {}
                 });
             });
         });

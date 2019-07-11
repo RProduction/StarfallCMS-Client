@@ -2,62 +2,32 @@ import { createReducer } from './helpers';
 import {produce} from 'immer';
 
 // document reducer
-// receive array of id, entityId, ...data, updated, created
+// receive array of id, entityId, data, updated, created
 const AddDocuments = (state, action) => produce(state, (draft)=>{
     const {documents} = action;
     for(let document of documents){
-        const {id, entityId, created, updated, ...rest} = document;
-        draft[id] = {
-            id: id,
-            entityId: entityId,
-            created: created,
-            updated: updated,
-            ...rest
-        }
+        draft.data[document.id] = document
     }
+});
+
+const SetDocumentInit = (state, action) => produce(state, (draft)=>{
+    const {entityId} = action;
+    draft.init[entityId] = true;
 });
 
 // receive array of documents id
 const DeleteDocuments = (state, action) => produce(state, (draft)=>{
     const {documents} = action;
     for(let document of documents){
-        delete draft[document];
+        delete draft.data[document];
     }
 });
 
 const ModifyDocument = (state, action) => produce(state, (draft)=>{
-    const {document} = action;
-    const {id, entityId, created, updated, ...rest} = document;
-    draft[id] = {
-        id: id,
-        entityId: entityId,
-        created: created,
-        updated: updated,
-        ...rest
-    }
+    const {id, updated, data} = action;
+    draft.data[id].updated = updated;
+    draft.data[id].data = data;
 });
-
-/*
-test = {
-    id: '',
-    test1: {
-        test1_1: {
-            test1_1_1: ''
-        },
-        test1_2: [
-            {
-
-            }
-        ]
-    },
-    test2: 'test',
-    test3: [
-        '',
-        '',
-        ''
-    ]
-}
-*/
 
 // receive data and type
 const GenerateField = (state, action) => produce(state, (draft)=>{
@@ -124,10 +94,11 @@ const DeleteField = (state, action) => produce(state, (draft)=>{
 
 // reducers
 
-export const documentsReducer = createReducer({}, {
+export const documentsReducer = createReducer({data: {}, init: {}}, {
     ADD_DOCUMENTS: AddDocuments,
     DELETE_DOCUMENTS: DeleteDocuments,
-    MODIFY_DOCUMENT: ModifyDocument
+    MODIFY_DOCUMENT: ModifyDocument,
+    SET_DOCUMENT_INIT: SetDocumentInit
 });
 
 export const currentDocumentReducer = createReducer({data: {}, type: {}}, {
