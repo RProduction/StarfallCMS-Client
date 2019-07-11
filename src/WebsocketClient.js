@@ -3,8 +3,7 @@ import {useDispatch} from 'react-redux';
 import Ws from '@adonisjs/websocket-client';
 import {AddProjects, DeleteProject, RenameProject} from './redux/actions/projectActions';
 import {AddEntities, DeleteEntities, RenameEntity, SetEntitySchema} from './redux/actions/entityActions';
-import {AddDocuments, ModifyDocument} from './redux/actions/documentActions';
-import { DeleteDocuments } from './redux/indexes/database';
+import {AddDocuments, ModifyDocument, DeleteDocuments} from './redux/actions/documentActions';
 
 function WebsocketClient(props) {
     const dispatch = useDispatch();
@@ -91,14 +90,22 @@ function WebsocketClient(props) {
             document.on('add', (msg)=>{
                 console.log("add document");
                 console.log(msg);
-                const {id, entity_id, created_at, updated_at, ...rest} = msg;
                 dispatch(AddDocuments([{
-                    id: id,
-                    entityId: entity_id,
-                    created: created_at,
-                    updated: updated_at,
-                    ...rest
+                    id: msg._id,
+                    entityId: msg.entity_id,
+                    created: msg.created_at,
+                    updated: msg.updated_at,
+                    data: msg.data
                 }]));
+            });
+            document.on('modify', (msg)=>{
+                console.log("modify document");
+                console.log(msg);
+                dispatch(ModifyDocument(
+                    msg._id,
+                    msg.updated_at,
+                    msg.data
+                ));
             });
             document.on('delete', (msg)=>{
                 console.log("delete documents");

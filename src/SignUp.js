@@ -59,19 +59,18 @@ const SignUp = (props)=>{
 		return (
 			<Grid component="form" container item
 				xs={8} sm={6} spacing={2}
-				onSubmit={(e)=>{
+				onSubmit={async(e)=>{
 					e.preventDefault();
-					Axios.post('user', {
-						username: username,
-						password: password,
-						authority: authority
-					}).then((res)=>{
-						console.log(res.data);
+					try{
+						await Axios.post('user', {
+							username: username,
+							password: password,
+							authority: authority
+						});
 						setRedirect(true);
-					}).catch((error)=>{
-						console.log(error);
-						
-					});
+					}catch(err){
+						console.log(err);
+					}
 				}}
 			>
 				<Grid item xs={12} component={TextField} required 

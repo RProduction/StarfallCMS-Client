@@ -36,18 +36,17 @@ function SignIn(props) {
 		return (
 			<Grid component="form" container item 
 				xs={8} sm={6} spacing={2}
-				onSubmit={(e)=>{
+				onSubmit={async(e)=>{
 					e.preventDefault();
-					Axios.post('user/signin', {
-						username: username,
-						password: password
-					}).then((res)=>{
-						console.log(res);
+					try{
+						await Axios.post('user/signin', {
+							username: username,
+							password: password
+						});
 						window.location.reload();
-					}).catch((error)=>{
-						console.log(error);
-	
-					});
+					}catch(err){
+						console.log(err);
+					}
 				}}
 			>
 				<Grid item xs={12} component={TextField} required 
