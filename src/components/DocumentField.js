@@ -28,8 +28,7 @@ function DocumentField(props){
             }
             {
                 category === 'integer' || category === 'float'
-                ?   <TextField 
-                        fullWidth
+                ?   <Grid item component={TextField} xs
                         value={value}
                         step={category === 'float' ? 'any' : 1}
                         type='number'
@@ -38,8 +37,7 @@ function DocumentField(props){
             }
             {
                 category === 'string' 
-                ?   <TextField 
-                        fullWidth
+                ?   <Grid item component={TextField} xs
                         value={value}
                         multiline
                         onChange={(e) => dispatch(SetField(keys, e.target.value))}

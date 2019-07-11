@@ -1,22 +1,23 @@
-import React, {useState, useEffect, lazy} from 'react';
+import React, {lazy, useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
 import {Route, Switch} from 'react-router-dom';
 
-import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
-import DialogNotification from './DialogNotification';
+import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
+import {HideNotificationDialog} from '../redux/actions/globalActions';
 
+const DialogNotification = lazy(() => import('./DialogNotification'));
 const DocumentSchema = lazy(() => import('./DocumentSchema'));
-const DocumentAddEdit = lazy(() => import('./DocumentAddEdit'));
+const DocumentAdd = lazy(() => import('./DocumentAdd'));
+const DocumentEdit = lazy(() => import('./DocumentEdit'));
+
 
 function Document(props){
     const dispatch = useDispatch();
+    const notification = useSelector(state => state.notification);
 
     const status = useSelector(state=>state.authStatus);
     const [authorized, setAuthorized] = useState(false);
-
-    const notification = useSelector(state => state.notification);
-
+    
     useEffect(()=>{
         if(status !== FIRST_BOOT && status !== NOT_AUTHORIZED) setAuthorized(true);
         else setAuthorized(false);
@@ -26,17 +27,18 @@ function Document(props){
         <React.Fragment>
             {authorized ? 
                 <DialogNotification 
-                    title={notification ? notification.title : ''} 
-                    content={notification ? notification.content : ''}
+                    title={notification.title} 
+                    content={notification.content}
                     dialogProps={{
-                        open: Boolean(notification),
+                        open: notification.title !== '' && notification.content !== '',
                         onClose: ()=>dispatch(HideNotificationDialog())
                     }}
                 /> : null
             }
             <Switch>
                 <Route path='/:project/:entity/schema' component={DocumentSchema} />
-                <Route path='/:project/:entity/:document' component={DocumentAddEdit} />
+                <Route path='/:project/:entity/add' component={DocumentAdd} />
+                <Route path='/:project/:entity/:document' component={DocumentEdit} />
             </Switch>
         </React.Fragment>
     )

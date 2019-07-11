@@ -1,15 +1,17 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useMemo, lazy} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add, Create} from '@material-ui/icons'
 import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
 import {Link, Redirect} from 'react-router-dom';
-import {selectDocumentsInEntity} from '../redux/selectors/documentSelectors';
+import {selectDocumentsInEntity, selectDocumentInit} from '../redux/selectors/documentSelectors';
 import {GetEntityIdByName} from '../redux/indexes/database';
+import Axios from '../Axios';
 
-import {FetchDocuments, DeleteDocuments} from '../redux/actions/documentActions';
+import {FetchDocuments} from '../redux/actions/documentActions';
 import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
-import DialogNotification from './DialogNotification';
+
+const DialogNotification = lazy(() => import('./DialogNotification'));
 
 const columns = [
     {
@@ -72,6 +74,8 @@ function Entity(props){
     const select = useMemo(selectDocumentsInEntity, []);
     const documents = useSelector(state => select(state, id));
 
+    const init = useSelector(state => selectDocumentInit(state, id));
+
     const [datas, setDatas] = useState([]);
     
     useEffect(()=>{
@@ -79,14 +83,21 @@ function Entity(props){
         else setAuthorized(false);
     }, [status]);
 
+    const asyncSetId = async()=>{
+        try{
+            const id = await GetEntityIdByName(entity);
+            setId(id);
+        }catch(err){
+
+        }
+    };
+
     useEffect(()=>{
-        GetEntityIdByName(entity).then((value)=>{
-            setId(value);
-        });
+        asyncSetId();
     }, [entity]);
 
     useEffect(()=>{
-        if(documents === [])
+        if(!init)
             dispatch(FetchDocuments(id));
         else{
             setDatas(documents.map((value, index) => ({
@@ -110,10 +121,10 @@ function Entity(props){
         <React.Fragment>
             {authorized ? 
                 <DialogNotification 
-                    title={notification ? notification.title : ''} 
-                    content={notification ? notification.content : ''}
+                    title={notification.title} 
+                    content={notification.content}
                     dialogProps={{
-                        open: Boolean(notification),
+                        open: notification.title !== '' && notification.content !== '',
                         onClose: ()=>dispatch(HideNotificationDialog())
                     }}
                 /> : null
@@ -144,11 +155,23 @@ function Entity(props){
                     {
                         icon: ()=><DeleteForever/>, 
                         tooltip: "Delete Documents",
-                        onClick: (e, rowDatas)=>{
+                        onClick: async(e, rowDatas)=>{
                             // get selected row and delete batch
-                            console.log(rowDatas);
                             const ids = rowDatas.map(value => value.id);
-                            dispatch(DeleteDocuments(ids));
+                            try{
+                                const res = await Axios.delete('document', {
+                                    data: {ids: ids}
+                                });
+                                dispatch(ShowNotificationDialog(
+                                    'Delete Documents',
+                                    `Succeed deleting documents: ${res.data.count} count`
+                                ));
+                            }catch(err){
+                                dispatch(ShowNotificationDialog(
+                                    'Delete Documents',
+                                    `Failed deleting documents, ${err}`
+                                ));
+                            }
                         }
                     }
                 ]: []}

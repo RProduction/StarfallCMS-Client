@@ -1,22 +1,18 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useMemo, lazy} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
+import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
 import {Grid} from '@material-ui/core';
 
 import {GetEntityIdByName} from '../redux/indexes/database';
 import {selectEntity} from '../redux/selectors/entitySelectors';
 import {selectCurrentDocumentKeys} from '../redux/selectors/documentSelectors';
-import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
-import DialogNotification from './DialogNotification';
 
-import DocumentAddField from './DocumentAddField';
-import DocumentSaveButton from './DocumentSaveButton';
-import DocumentCancelButton from './DocumentCancelButton';
-import DocumentAddButton from './DocumentAddButton';
 import DocumentSchemaObject from './DocumentSchemaObject';
 import DocumentSchemaArray from './DocumentSchemaArray';
 import DocumentSchemaField from './DocumentSchemaField';
 import { GenerateField } from '../redux/actions/documentActions';
+
+const DocumentSchemaAuthorized = lazy(()=> import('./DocumentSchemaAuthorized'));
 
 function DocumentSchema(props){
     const dispatch = useDispatch();
@@ -25,17 +21,14 @@ function DocumentSchema(props){
     const status = useSelector(state=>state.authStatus);
     const [authorized, setAuthorized] = useState(false);
 
-    const notification = useSelector(state => state.notification);
-
     const [id, setId] = useState(0);
     const _entity = useSelector(state => selectEntity(state, id));
 
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
-    const keys = useSelector(state => selectKeys(state));
-    const [add, setAdd] = useState(false);
+    const keys = useSelector(selectKeys);
 
     useEffect(()=>{
-        if(status !== FIRST_BOOT && status !== NOT_AUTHORIZED) setAuthorized(true);
+        if(status === CREATOR || status === MANAGER) setAuthorized(true);
         else setAuthorized(false);
     }, [status]);
 
@@ -51,48 +44,29 @@ function DocumentSchema(props){
     }, [_entity]);
 
     return(
-        <React.Fragment>
-            {authorized ? 
-                <DialogNotification 
-                    title={notification ? notification.title : ''} 
-                    content={notification ? notification.content : ''}
-                    dialogProps={{
-                        open: Boolean(notification),
-                        onClose: ()=>dispatch(HideNotificationDialog())
-                    }}
-                /> : null
+        <Grid container>
+            {
+                keys.map(value => {
+                    const {key, type} = value;
+                    const temp = [key];
+                    if(type === 'object'){
+                        return(
+                            <DocumentSchemaObject key={key} keys={temp}/>
+                        )
+                    }
+                    else if(type === 'array'){
+                        return(
+                            <DocumentSchemaArray key={key} keys={temp}/>
+                        )
+                    }else{
+                        return(
+                            <DocumentSchemaField key={key} keys={temp} category={type}/>
+                        )
+                    }
+                })
             }
-            <Grid container>
-                {
-                    keys.map(value => {
-                        const {key, type} = value;
-                        const temp = [key];
-                        if(type === 'object'){
-                            return(
-                                <DocumentSchemaObject key={key} keys={temp}/>
-                            )
-                        }
-                        else if(type === 'array'){
-                            return(
-                                <DocumentSchemaArray key={key} keys={temp}/>
-                            )
-                        }else{
-                            return(
-                                <DocumentSchemaField key={key} keys={temp} category={type}/>
-                            )
-                        }
-                    })
-                }
-                {
-                    add 
-                    ? <DocumentAddField keys={[]} cancel={() => setAdd(false)}/> 
-                    : null
-                }
-                <DocumentAddButton add={() => setAdd(true)}/>
-                <DocumentCancelButton cancel={() => {}}/>
-                <DocumentSaveButton save={() => {}}/>
-			</Grid>
-        </React.Fragment>
+            {authorized ? <DocumentSchemaAuthorized id={id} {...props}/> : null}
+        </Grid>
     )
 }
 

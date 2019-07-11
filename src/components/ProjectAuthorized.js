@@ -83,10 +83,10 @@ function ProjectAuthorized(props){
                 }}
             />
             <DialogNotification 
-                title={notification ? notification.title : ''} 
-                content={notification ? notification.content : ''}
+                title={notification.title} 
+                content={notification.content}
                 dialogProps={{
-                    open: Boolean(notification),
+                    open: notification.title !== '' && notification.content !== '',
                     onClose: ()=>dispatch(HideNotificationDialog())
                 }}
             />

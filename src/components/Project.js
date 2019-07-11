@@ -77,10 +77,17 @@ function Project(props){
         else setAuthorized(false);
     }, [status]);
 
+    const asyncSetId = async()=>{
+        try{
+            const id = await GetProjectIdByName(project);
+            setId(id);
+        }catch(err){
+
+        }
+    };
+
     useEffect(()=>{
-        GetProjectIdByName(project).then((value)=>{
-            setId(value);
-        });
+        asyncSetId();
     }, [project]);
 
     useEffect(()=>{
