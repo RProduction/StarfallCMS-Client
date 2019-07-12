@@ -13,8 +13,8 @@ function DocumentField(props){
     const value = useSelector(state => select(state, keys));
 
     return(
-        <Grid container item xs={12}>
-            <Grid item component={Typography} xs={3}>{keys[keys.length - 1]}</Grid>
+        <Grid container item xs={12} alignItems="center">
+            <Grid item component={Typography} xs={4}>{keys[keys.length - 1]}</Grid>
             {
                 category === 'boolean' 
                 ?   <Checkbox

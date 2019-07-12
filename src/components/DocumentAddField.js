@@ -14,14 +14,12 @@ function DocumentAddField(props){
     const [type, setType] = useState(fieldTypes[0]);
 
     return(
-        <Grid container item xs={12}>
-            <Grid item component={TextField} xs={3}
-                value={key}
+        <Grid container item xs={12} alignItems="center" justify="space-evenly">
+            <Grid item component={TextField} xs={3} md={4} value={key}
                 onChange={(e) => setKey(e.target.value)}
             />
-            <Grid item component={TextField} xs
-                required select margin="normal"
-                value={type}
+            <Grid item component={TextField} xs={5} md={6}
+                required select margin="normal" value={type}
                 onChange={(e) => setType(e.target.value)}
             >
                 {fieldTypes.map(option => (

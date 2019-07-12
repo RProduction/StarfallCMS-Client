@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo, lazy} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
-import {Grid} from '@material-ui/core';
+import {Grid, makeStyles} from '@material-ui/core';
 
 import {GetEntityIdByName} from '../redux/indexes/database';
 import {selectEntity} from '../redux/selectors/entitySelectors';
@@ -14,7 +14,17 @@ import { GenerateField } from '../redux/actions/documentActions';
 
 const DocumentSchemaAuthorized = lazy(()=> import('./DocumentSchemaAuthorized'));
 
+const useStyle = makeStyles(theme => ({
+	root:{
+		'& > *':{
+			marginTop: theme.spacing(0.5),
+            marginBottom: theme.spacing(0.5)
+		}
+	}
+}));
+
 function DocumentSchema(props){
+    const style = useStyle();
     const dispatch = useDispatch();
     const {entity} = props.match.params;
 
@@ -44,27 +54,29 @@ function DocumentSchema(props){
     }, [_entity]);
 
     return(
-        <Grid container>
-            {
-                keys.map(value => {
-                    const {key, type} = value;
-                    const temp = [key];
-                    if(type === 'object'){
-                        return(
-                            <DocumentSchemaObject key={key} keys={temp}/>
-                        )
-                    }
-                    else if(type === 'array'){
-                        return(
-                            <DocumentSchemaArray key={key} keys={temp}/>
-                        )
-                    }else{
-                        return(
-                            <DocumentSchemaField key={key} keys={temp} category={type}/>
-                        )
-                    }
-                })
-            }
+        <Grid container className={style.root} direction="column">
+            <Grid container item direction="column" xs={12} sm={6} md={8} lg={6}>
+                {
+                    keys.map(value => {
+                        const {key, type} = value;
+                        const temp = [key];
+                        if(type === 'object'){
+                            return(
+                                <DocumentSchemaObject key={key} keys={temp}/>
+                            )
+                        }
+                        else if(type === 'array'){
+                            return(
+                                <DocumentSchemaArray key={key} keys={temp}/>
+                            )
+                        }else{
+                            return(
+                                <DocumentSchemaField key={key} keys={temp} category={type}/>
+                            )
+                        }
+                    })
+                }
+            </Grid>
             {authorized ? <DocumentSchemaAuthorized id={id} {...props}/> : null}
         </Grid>
     )

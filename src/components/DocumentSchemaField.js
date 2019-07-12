@@ -10,9 +10,13 @@ function DocumentSchemaField(props){
     const dispatch = useDispatch();
 
     return(
-        <Grid container item xs={12}>
-            <Grid item component={Typography} xs={3}>{keys[keys.length - 1]}</Grid>
-            <Grid item component={Typography} xs>{category}</Grid>
+        <Grid container item xs={12} alignItems="center">
+            <Grid item component={Typography} xs={4}>
+                {keys[keys.length - 1]}
+            </Grid>
+            <Grid item component={Typography} xs>
+                {category}
+            </Grid>
             <IconButton
                 color="inherit"
                 aria-label={`Delete ${keys[keys.length - 1]}`}

@@ -6,7 +6,7 @@ function DocumentAddButton(props){
     const {add} = props;
 
     return(
-        <FormButton xs={12} onClick={()=>add()}>
+        <FormButton xs={10} onClick={()=>add()} variant="contained">
             New Field
         </FormButton>
     )

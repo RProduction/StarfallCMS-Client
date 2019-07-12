@@ -6,7 +6,9 @@ function DocumentSaveButton(props){
     const {save} = props;
 
     return(
-        <FormButton xs onClick={()=>save()}>
+        <FormButton xs={5} onClick={()=>save()} 
+            variant="contained" color="secondary"
+        >
             Save Schema
         </FormButton>
     )

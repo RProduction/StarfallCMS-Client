@@ -6,7 +6,7 @@ function DocumentCancelButton(props){
     const {cancel} = props;
 
     return(
-        <FormButton xs onClick={()=>cancel()}>
+        <FormButton xs={5} onClick={()=>cancel()} color="error" variant="contained">
             Cancel
         </FormButton>
     )

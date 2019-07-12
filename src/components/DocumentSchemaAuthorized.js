@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import {Grid, makeStyles} from '@material-ui/core';
 
 import {selectCurrentDocumentType} from '../redux/selectors/documentSelectors';
 import {ShowNotificationDialog} from '../redux/actions/globalActions';
@@ -10,7 +11,17 @@ import DocumentCancelButton from './DocumentCancelButton';
 import DocumentAddButton from './DocumentAddButton';
 import Axios from '../Axios';
 
+const useStyle = makeStyles(theme => ({
+	root:{
+		'& > *':{
+			marginTop: theme.spacing(0.5),
+            marginBottom: theme.spacing(0.5)
+		}
+	}
+}));
+
 function DocumentSchemaAuthorized(props){
+    const style = useStyle();
     const dispatch = useDispatch();
     const {history, id} = props;
     const {entity, project} = props.match.params;
@@ -18,7 +29,7 @@ function DocumentSchemaAuthorized(props){
     const [add, setAdd] = useState(false);
 
     return(
-        <React.Fragment>
+        <Grid container item xs={12} justify="space-evenly" className={style.root}>
             {
                 add 
                 ? <DocumentAddField keys={[]} cancel={() => setAdd(false)}/> 
@@ -46,7 +57,7 @@ function DocumentSchemaAuthorized(props){
                     );
                 }
             }}/>
-        </React.Fragment>
+        </Grid>
     )
 }
 

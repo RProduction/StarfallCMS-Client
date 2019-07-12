@@ -1,6 +1,6 @@
 import React, {useMemo, useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Grid} from '@material-ui/core';
+import {Grid, makeStyles} from '@material-ui/core';
 import FormButton from './FormButton';
 import {ShowNotificationDialog} from '../redux/actions/globalActions';
 
@@ -15,7 +15,17 @@ import {GetEntityIdByName} from '../redux/indexes/database';
 import {selectEntity} from '../redux/selectors/entitySelectors';
 import Axios from '../Axios';
 
+const useStyle = makeStyles(theme => ({
+	root:{
+		'& > *':{
+			marginTop: theme.spacing(0.5),
+            marginBottom: theme.spacing(0.5)
+		}
+	}
+}));
+
 function DocumentEdit(props){
+    const style = useStyle()
     const dispatch = useDispatch();
     const {history} = props;
     const {document, entity, project} = props.match.params;
@@ -58,43 +68,47 @@ function DocumentEdit(props){
     if(!generate) return null;
     
     return(
-        <Grid container>
-            {
-                keys.map(value => {
-                    const {key, type} = value;
-                    const temp = [key];
-                    if(type === 'object'){
-                        return(
-                            <DocumentObject key={key} keys={temp}/>
-                        )
-                    }
-                    else if(type === 'array'){
-                        return(
-                            <DocumentArray key={key} keys={temp}/>
-                        )
-                    }else{
-                        return(
-                            <DocumentField key={key} keys={temp} category={type}/>
-                        )
-                    }
-                })
-            }
-            <FormButton xs={12} onClick={async() => {
-                try{
-                    await Axios.post(`document/${document}/modify`, {
-                        data: currentValue
-                    });
-                    dispatch(ShowNotificationDialog(
-                        'Edit Document', 
-                        'Succeed editing document'
-                    ));
-                }catch(err){
-                    dispatch(ShowNotificationDialog(
-                        'Edit Document', 
-                        `Failed editing document, ${err}`
-                    ));
+        <Grid container className={style.root} direction="column">
+            <Grid container item direction="column" xs={12} sm={6} md={8} lg={6}>
+                {
+                    keys.map(value => {
+                        const {key, type} = value;
+                        const temp = [key];
+                        if(type === 'object'){
+                            return(
+                                <DocumentObject key={key} keys={temp}/>
+                            )
+                        }
+                        else if(type === 'array'){
+                            return(
+                                <DocumentArray key={key} keys={temp}/>
+                            )
+                        }else{
+                            return(
+                                <DocumentField key={key} keys={temp} category={type}/>
+                            )
+                        }
+                    })
                 }
-            }}>
+            </Grid>
+            <FormButton xs={12} color="secondary" variant="contained"
+                onClick={async() => {
+                    try{
+                        await Axios.post(`document/${document}/modify`, {
+                            data: currentValue
+                        });
+                        dispatch(ShowNotificationDialog(
+                            'Edit Document', 
+                            'Succeed editing document'
+                        ));
+                    }catch(err){
+                        dispatch(ShowNotificationDialog(
+                            'Edit Document', 
+                            `Failed editing document, ${err}`
+                        ));
+                    }
+                }}
+            >
                 Modify
             </FormButton>
         </Grid>

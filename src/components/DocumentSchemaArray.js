@@ -1,13 +1,19 @@
 import React, {useState, useMemo, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {DeleteField} from '../redux/actions/documentActions';
-import {Grid, Typography, IconButton, TextField, MenuItem} from '@material-ui/core';
+import {Grid, Typography, IconButton, TextField, MenuItem, makeStyles} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
 import {AddField} from '../redux/actions/documentActions';
 import {selectCurrentDocumentKeys} from '../redux/selectors/documentSelectors';
 import DocumentSchemaObject from './DocumentSchemaObject';
+
+const useStyle = makeStyles(theme => ({
+	root:{
+        marginLeft: theme.spacing(3)
+	}
+}));
 
 const fieldTypes = ['integer', 'float', 'string', 'boolean', 'file', 'object', 'array'];
 
@@ -30,6 +36,7 @@ function Conditional(props){
 }
 
 function DocumentSchemaArray(props){
+    const style = useStyle();
     const {keys, fromArray} = props;
     const dispatch = useDispatch();
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
@@ -43,15 +50,11 @@ function DocumentSchemaArray(props){
     }, [type]);
 
     return(
-        <Grid container item xs={12}>
-            <Grid container item xs={12}>
-                {
-                    !fromArray ? 
-                    <Grid item component={Typography} xs={3}>
-                        {keys[keys.length - 1]}
-                    </Grid>
-                    : null
-                }
+        <React.Fragment>
+            <Grid container item xs={12} alignItems="center">
+                <Grid item component={Typography} xs={4}>
+                    {fromArray ? 'Root' : keys[keys.length - 1]}
+                </Grid>
                 <Grid item component={TextField} xs
                     required select margin="normal"
                     value={type}
@@ -76,8 +79,10 @@ function DocumentSchemaArray(props){
                     : null
                 }
             </Grid>
-            <Conditional type={curKeys.type} curKey={curKeys.key} keys={keys}/>
-        </Grid>
+            <Grid container item className={style.root} xs={12}>
+                <Conditional type={curKeys.type} curKey={curKeys.key} keys={keys}/>
+            </Grid>
+        </React.Fragment>
     )
 }
 
