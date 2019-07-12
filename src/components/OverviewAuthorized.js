@@ -11,6 +11,10 @@ import DialogDelete from './DialogDelete';
 import DialogAdd from './DialogAdd';
 import DialogNotification from './DialogNotification';
 
+const FAB = React.forwardRef((props, ref)=>{
+    return <Fab {...props} innerRef={ref} color="secondary"/>
+});
+
 function OverviewAuthorized(props){
     const dispatch = useDispatch();
     const target = useSelector(state => state.target);
@@ -94,7 +98,7 @@ function OverviewAuthorized(props){
                 }}
             />
             <OverviewPopover/>
-            <Box component={Fab} position="fixed" 
+            <Box component={FAB} position="fixed" 
                 bottom={30} right={30} zIndex={50}
                 onClick={()=>dispatch(ShowAddDialog())}
             >

@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthorizationForm from './components/AuthorizationForm';
-import {TextField, Grid} from '@material-ui/core';
+import {TextField, Grid, Paper, makeStyles} from '@material-ui/core';
 import {Redirect} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {FIRST_BOOT, NOT_AUTHORIZED} from './redux/actions/authorizationActions';
@@ -8,7 +8,25 @@ import Axios from './Axios';
 import * as Yup from 'yup';
 import FormButton from './components/FormButton';
 
+const useStyle = makeStyles(theme => ({
+	root:{
+		padding: theme.spacing(2.5),
+		'& > div':{
+			marginTop: theme.spacing(1),
+			marginBottom: theme.spacing(1),
+		}
+	},
+	btn:{
+		backgroundColor: theme.palette.primary
+	}
+}));
+
+const PaperForm = React.forwardRef((props, ref)=>{
+	return <Paper component='form' {...props} innerRef={ref}/>
+});
+
 function SignIn(props) {
+	const style = useStyle();
 	const _status = useSelector(state => state.authStatus);
 
 	const {
@@ -34,8 +52,9 @@ function SignIn(props) {
 	}
 	else{
 		return (
-			<Grid component="form" container item 
-				xs={8} sm={6} spacing={2}
+			<Grid component={PaperForm} container item 
+				xs={8} sm={6} className={style.root}
+				elevation={3}
 				onSubmit={async(e)=>{
 					e.preventDefault();
 					try{
@@ -52,18 +71,20 @@ function SignIn(props) {
 				<Grid item xs={12} component={TextField} required 
 					id="username" name="username" label="Username"
 					onChange={change.bind(null, "username")}
-					value={username}
+					value={username} variant="outlined" margin="dense"
 					helperText={touched.username ? errors.username : ""}
 					   error={touched.username && Boolean(errors.username)}
 				/>
 				<Grid item xs={12} component={TextField} required id="password" 
 					name="password" label="Password" type="password"
 					onChange={change.bind(null, "password")}
-					value={password}
+					value={password} variant="outlined" margin="dense"
 					helperText={touched.password ? errors.password : ""}
 					   error={touched.password && Boolean(errors.password)}
 				/>
-				<FormButton type="submit" disabled={!isValid} xs={12}>
+				<FormButton type="submit" disabled={!isValid} 
+					xs={12} color="secondary" variant="contained"
+				>
 					Sign In
 				</FormButton>
 			</Grid>

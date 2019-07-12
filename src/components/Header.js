@@ -8,7 +8,21 @@ import HeaderUserMenu from './HeaderUserMenu';
 import HeaderLink from './HeaderLink';
 
 const useStyle = makeStyles(theme=>({
-    root: theme.responsive,
+    root: {
+        backgroundColor: theme.palette.primary.light,
+        ...theme.responsive
+    },
+    link: {
+        '& a': {
+            color: 'black',
+            paddingLeft: theme.spacing(0.35),
+            paddingRight: theme.spacing(0.35),
+            fontSize: '115%'
+        },
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
+    },
     hide: theme.hide
 }));
 
@@ -33,8 +47,9 @@ function Header(props){
                             <Menu />
                         </IconButton>
                     </Hidden>
-                    <Box display="flex" flexGrow={1} justifyContent="center"
+                    <Box display="flex" flexGrow={1}
                         container={Typography} variant="h6" align="center"
+                        className={style.link}
                     >
                         <HeaderLink {...props}/>
                     </Box>

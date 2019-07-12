@@ -28,6 +28,31 @@ const theme = createMuiTheme({
     responsive: {},
     hide: {
         display: 'none'
+    },
+    palette:{
+        primary: {
+            main: '#a6e0ed'
+        },
+        secondary: {
+            main: '#56db96'
+        },
+        error: {
+            main: '#c91448'
+        },
+        background:{
+            dark:{
+                light: '#555954',
+                main: '#444743',
+                dark: '#2c2e2c'
+            },
+            light:{
+                light: '#f5f5f5',
+                main: '#ededed',
+                dark: '#e6e6e6'
+            }
+        },
+        tonalOffset:  0.2,
+        contrastThreshold: 3
     }
 });
 

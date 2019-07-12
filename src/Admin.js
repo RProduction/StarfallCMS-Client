@@ -20,6 +20,8 @@ const useStyle = makeStyles(theme => ({
 		marginTop: 65,
 		paddingTop: 15,
 		paddingBottom: 15,
+		backgroundColor: theme.palette.background.light.light,
+		overflow: 'auto',
 		...theme.responsive
 	}
 }));

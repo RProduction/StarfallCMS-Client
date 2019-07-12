@@ -14,7 +14,10 @@ FormButton.propTypes = {
     type: PropTypes.string,
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
-    xs: PropTypes.oneOf(['auto',true,1,2,3,4,5,6,7,8,9,10,11,12]).isRequired
+    xs: PropTypes.oneOf(['auto',true,1,2,3,4,5,6,7,8,9,10,11,12]).isRequired,
+    color: PropTypes.string,
+    variant: PropTypes.string,
+    classes: PropTypes.any
 }
 
 export default FormButton;

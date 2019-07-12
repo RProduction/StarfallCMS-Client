@@ -7,7 +7,10 @@ import SideBarContent from './SideBarContent';
 
 const useStyle = makeStyles(theme => ({
     root: theme.sidebar,
-    paper: theme.sidebarPaper,
+    paper: {
+        backgroundColor: theme.palette.primary.main,
+        ...theme.sidebarPaper
+    },
     direction: theme.direction,
     btn: {
         display: 'flex',

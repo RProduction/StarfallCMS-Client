@@ -47,7 +47,7 @@ function OverviewCard(props){
     
     return(
         <Grid item container xs={12} justify="center">
-            <Box component={Card} bgcolor='#F2F3F3' my={1.5} width={1}>
+            <Box component={Card} bgcolor='#fafafa' my={1.5} width={1} elevation={3}>
                 <CardHeader 
                     avatar={<Index index={index}/>} 
                     title={<Title name={name}/>}
