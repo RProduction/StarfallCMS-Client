@@ -11,8 +11,7 @@ import DocumentObject from './DocumentObject';
 import DocumentArray from './DocumentArray';
 import DocumentField from './DocumentField';
 
-import {GetEntityIdByName} from '../redux/indexes/database';
-import {selectEntity} from '../redux/selectors/entitySelectors';
+import {selectEntityByName} from '../redux/selectors/entitySelectors';
 import Axios from '../Axios';
 
 //receive type as blueprint and generate default value for it
@@ -37,7 +36,7 @@ function GenerateDefaultFromType(type, defaultValue){
             // traverse object
             GenerateDefaultFromType(type[key], defaultValue[key]);
         }
-        else if(value.constructor == Array){    
+        else if(value.constructor === Array){    
             defaultValue[key] = [];
         }
     });
@@ -57,9 +56,8 @@ function DocumentAdd(props){
     const dispatch = useDispatch();
     const {entity} = props.match.params;
 
-    const [id, setId] = useState(0);
-    const _entity = useSelector(state => selectEntity(state, id));
-
+    const selectEntity = useMemo(selectEntityByName, []);
+    const _entity = useSelector(state => selectEntity(state, entity));
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
     const keys = useSelector(state => selectKeys(state));
 
@@ -67,26 +65,11 @@ function DocumentAdd(props){
 
     const [generate, setGenerate] = useState(false);
 
-    const asyncSetId = async()=>{
-        try{
-            const id = await GetEntityIdByName(entity);
-            setId(id);
-        }catch(err){
-
-        }
-    };
-
     useEffect(()=>{
-        asyncSetId();
-    }, [entity]);
-
-    useEffect(()=>{
-        if(_entity){
-            let defaultValue = {};
-            GenerateDefaultFromType(_entity.schema, defaultValue);
-            dispatch(GenerateField(_entity.schema, defaultValue));
-            setGenerate(true);
-        }
+        let defaultValue = {};
+        GenerateDefaultFromType(_entity.schema, defaultValue);
+        dispatch(GenerateField(_entity.schema, defaultValue));
+        setGenerate(true);
     }, [_entity]);
 
     if(!generate) return null;
@@ -118,7 +101,7 @@ function DocumentAdd(props){
             <FormButton color="secondary" variant="contained" xs={12} 
                 onClick={async() => {
                     try{
-                        await Axios.post(`document/${id}`, {
+                        await Axios.post(`document/${_entity.id}`, {
                             data: currentValue
                         });
                         dispatch(ShowNotificationDialog(

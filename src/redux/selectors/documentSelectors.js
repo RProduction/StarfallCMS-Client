@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect';
+import {selectEntityByName} from './entitySelectors';
 
 const _selectDocumentsData = state => state.documents.data;
 const _selectDocumentsInit = state => state.documents.init;
@@ -11,6 +12,22 @@ export const selectDocumentsInEntity = ()=>{
         (_, id) => id,
         (documents, id)=>{
             return documents.filter(value => value.entityId === id);
+        }
+    );
+};
+// if empty then return entity
+export const selectDocumentsInEntityByName = ()=>{
+    return createSelector(
+        selectAllDocuments,
+        (state, name)=>{
+            const select = selectEntityByName();
+            return select(state, name);
+        },
+        (documents, entity)=>{
+            return {
+                entity: entity,
+                documents: documents.filter(value => value.entityId === entity.id)
+            };
         }
     );
 };

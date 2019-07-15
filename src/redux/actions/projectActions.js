@@ -1,5 +1,5 @@
-import * as Indexes from '../indexes/database';
 import {DeleteEntities, AddEntities} from './entityActions';
+import {selectEntitiesInProject} from '../selectors/entitySelectors';
 import Axios from '../../Axios';
 import {normalizeProjects} from '../schemas/database';
 
@@ -9,39 +9,32 @@ export function SetProjectPopover(anchor){
 }
 
 // receive array of id, name, updated, created, publicKey
-export const AddProjects = projects => async dispatch => {
-    await Indexes.AddProjects(projects.map(value => {
-        return {
-            id: value.id,
-            name: value.name
-        };
-    }));
-    dispatch({
+export const AddProjects = projects => {
+    return {
         type: "ADD_PROJECTS", 
         projects: projects
-    });
+    };
 }
 
-export const DeleteProject = id => async dispatch => {
+export const DeleteProject = id => async (dispatch, getState) => {
     // must delete entities first before deleting project
     // entities will search project indexes
     // then project can delete it's indexes
-    const ids = await Indexes.GetRelatedEntities(id);
-    dispatch(DeleteEntities(ids));
+    const select = selectEntitiesInProject();
+    const entities = select(getState(), id);
+    dispatch(DeleteEntities(entities.map(value => value.id)));
     
     // delete project
-    await Indexes.DeleteProject(id);
     dispatch({type: "DELETE_PROJECT", id: id});
 }
 
-export const RenameProject = (id, name, updated) => async dispatch => {
-    await Indexes.RenameProject(id, name);
-    dispatch({
+export const RenameProject = (id, name, updated) => {
+    return {
         type: "RENAME_PROJECT", 
         id: id, 
         name: name,
         updated: updated
-    });
+    };
 }
 
 // get data from server containing project with related entity

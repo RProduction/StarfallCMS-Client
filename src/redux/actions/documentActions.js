@@ -1,4 +1,3 @@
-import * as Indexes from '../indexes/database';
 import {normalizeDocuments} from '../schemas/database';
 import Axios from '../../Axios';
 
@@ -19,28 +18,21 @@ export function GenerateField(schema, document = {}){
 }
 
 // receive array of id, entityId, updated, created, data
-export const AddDocuments = documents => async dispatch => {
-    await Indexes.AddDocuments(documents.map(value => 
-        ({
-            id: value.id,
-            entityId: value.entityId
-        })
-    ));
-    dispatch({
+export const AddDocuments = documents => {
+    return {
         type: "ADD_DOCUMENTS", 
         documents: documents
-    });
+    };
 }
 
 // accept array of id
-export const DeleteDocuments = ids => async dispatch => {
-    await Indexes.DeleteDocuments(ids);
-    dispatch({type: "DELETE_DOCUMENTS", documents: ids});
+export const DeleteDocuments = ids => {
+    return {type: "DELETE_DOCUMENTS", documents: ids};
 }
 
 // receive object id, updated, data
-export const ModifyDocument = (id, updated, data) => async dispatch => {
-    dispatch({type: "MODIFY_DOCUMENT", id: id, updated: updated, data: data});
+export const ModifyDocument = (id, updated, data) => {
+    return {type: "MODIFY_DOCUMENT", id: id, updated: updated, data: data};
 }
 
 export const FetchDocuments = (entityId) => async dispatch => {

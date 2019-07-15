@@ -3,8 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
 import {Grid, makeStyles} from '@material-ui/core';
 
-import {GetEntityIdByName} from '../redux/indexes/database';
-import {selectEntity} from '../redux/selectors/entitySelectors';
+import {selectEntityByName} from '../redux/selectors/entitySelectors';
 import {selectCurrentDocumentKeys} from '../redux/selectors/documentSelectors';
 
 import DocumentSchemaObject from './DocumentSchemaObject';
@@ -31,9 +30,8 @@ function DocumentSchema(props){
     const status = useSelector(state=>state.authStatus);
     const [authorized, setAuthorized] = useState(false);
 
-    const [id, setId] = useState(0);
-    const _entity = useSelector(state => selectEntity(state, id));
-
+    const selectEntity = useMemo(selectEntityByName, []);
+    const _entity = useSelector(state => selectEntity(state, entity));
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
     const keys = useSelector(selectKeys);
 
@@ -41,12 +39,6 @@ function DocumentSchema(props){
         if(status === CREATOR || status === MANAGER) setAuthorized(true);
         else setAuthorized(false);
     }, [status]);
-
-    useEffect(()=>{
-        GetEntityIdByName(entity).then((value)=>{
-            setId(value);
-        });
-    }, [entity]);
 
     useEffect(()=>{
         // generate schema
@@ -77,7 +69,7 @@ function DocumentSchema(props){
                     })
                 }
             </Grid>
-            {authorized ? <DocumentSchemaAuthorized id={id} {...props}/> : null}
+            {authorized ? <DocumentSchemaAuthorized id={_entity.id} {...props}/> : null}
         </Grid>
     )
 }

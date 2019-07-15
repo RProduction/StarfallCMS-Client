@@ -4,8 +4,7 @@ import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add, Create} from '@material-ui/icons'
 import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
 import {Link, Redirect} from 'react-router-dom';
-import {selectDocumentsInEntity, selectDocumentInit} from '../redux/selectors/documentSelectors';
-import {GetEntityIdByName} from '../redux/indexes/database';
+import {selectDocumentsInEntityByName, selectDocumentInit} from '../redux/selectors/documentSelectors';
 import Axios from '../Axios';
 
 import {FetchDocuments} from '../redux/actions/documentActions';
@@ -69,12 +68,11 @@ function Entity(props){
 
     const notification = useSelector(state => state.notification);
 
-    const [id, setId] = useState(0);
     const [redirect, setRedirect] = useState('');
-    const select = useMemo(selectDocumentsInEntity, []);
-    const documents = useSelector(state => select(state, id));
+    const select = useMemo(selectDocumentsInEntityByName, []);
+    const documents = useSelector(state => select(state, entity));
 
-    const init = useSelector(state => selectDocumentInit(state, id));
+    const init = useSelector(state => selectDocumentInit(state, documents.entity.id));
 
     const [datas, setDatas] = useState([]);
     
@@ -83,24 +81,11 @@ function Entity(props){
         else setAuthorized(false);
     }, [status]);
 
-    const asyncSetId = async()=>{
-        try{
-            const id = await GetEntityIdByName(entity);
-            setId(id);
-        }catch(err){
-
-        }
-    };
-
-    useEffect(()=>{
-        asyncSetId();
-    }, [entity]);
-
     useEffect(()=>{
         if(!init)
-            dispatch(FetchDocuments(id));
+            dispatch(FetchDocuments(documents.entity.id));
         else{
-            setDatas(documents.map((value, index) => ({
+            setDatas(documents.documents.map((value, index) => ({
                 "#": (index+1),
                 id: value.id,
                 projectName: project,
@@ -109,7 +94,7 @@ function Entity(props){
                 updatedAt: value.updated
             })));
         }
-    }, [documents, id]);
+    }, [documents]);
 
     // view all documents within entity and their attribute
     // document id

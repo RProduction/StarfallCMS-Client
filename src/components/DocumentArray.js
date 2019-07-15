@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 import {SetField} from '../redux/actions/documentActions';
 import {selectCurrentDocumentKeys, selectCurrentDocumentValue} from '../redux/selectors/documentSelectors';
-import DocumentAddButton from './DocumentAddButton';
 import DocumentField from './DocumentField';
 import DocumentObject from './DocumentObject';
 

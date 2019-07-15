@@ -11,8 +11,7 @@ import DocumentObject from './DocumentObject';
 import DocumentArray from './DocumentArray';
 import DocumentField from './DocumentField';
 
-import {GetEntityIdByName} from '../redux/indexes/database';
-import {selectEntity} from '../redux/selectors/entitySelectors';
+import {selectEntityByName} from '../redux/selectors/entitySelectors';
 import Axios from '../Axios';
 
 const useStyle = makeStyles(theme => ({
@@ -30,9 +29,8 @@ function DocumentEdit(props){
     const {history} = props;
     const {document, entity, project} = props.match.params;
 
-    const [id, setId] = useState(0);
-    const _entity = useSelector(state => selectEntity(state, id));
-
+    const selectEntity = useMemo(selectEntityByName, []);
+    const _entity = useSelector(state => selectEntity(state, entity));
     const _document = useSelector(state => selectDocument(state, document));
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
     const keys = useSelector(state => selectKeys(state));
@@ -40,19 +38,6 @@ function DocumentEdit(props){
     const currentValue = useSelector(selectCurrentDocumentData);
 
     const [generate, setGenerate] = useState(false);
-
-    const asyncSetId = async()=>{
-        try{
-            const id = await GetEntityIdByName(entity);
-            setId(id);
-        }catch(err){
-
-        }
-    };
-
-    useEffect(()=>{
-        asyncSetId();
-    }, [entity]);
 
     useEffect(()=>{
         if(!_document){
@@ -63,7 +48,7 @@ function DocumentEdit(props){
             dispatch(GenerateField(_entity.schema, _document.data));
             setGenerate(true);
         }
-    }, [_document, document, _entity]);
+    }, [_document, _entity]);
 
     if(!generate) return null;
     

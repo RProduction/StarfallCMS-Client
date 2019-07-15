@@ -4,8 +4,7 @@ import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons'
 import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
 import {Link} from 'react-router-dom';
-import {selectEntitiesInProject} from '../redux/selectors/entitySelectors';
-import {GetProjectIdByName} from '../redux/indexes/database';
+import {selectEntitiesInProjectByName} from '../redux/selectors/entitySelectors';
 
 import {ShowAddDialog, ShowDeleteDialog, ShowRenameDialog
     , SetTarget} from '../redux/actions/globalActions';
@@ -66,9 +65,8 @@ function Project(props){
     const status = useSelector(state=>state.authStatus);
     const [authorized, setAuthorized] = useState(false);
 
-    const [id, setId] = useState(0);
-    const select = useMemo(selectEntitiesInProject, []);
-    const entities = useSelector(state => select(state, id));
+    const select = useMemo(selectEntitiesInProjectByName, []);
+    const entities = useSelector(state => select(state, project));
 
     const [datas, setDatas] = useState([]);
 
@@ -77,21 +75,8 @@ function Project(props){
         else setAuthorized(false);
     }, [status]);
 
-    const asyncSetId = async()=>{
-        try{
-            const id = await GetProjectIdByName(project);
-            setId(id);
-        }catch(err){
-
-        }
-    };
-
     useEffect(()=>{
-        asyncSetId();
-    }, [project]);
-
-    useEffect(()=>{
-        setDatas(entities.map((value, index) => ({
+        setDatas(entities.entities.map((value, index) => ({
             "#": (index+1),
             id: value.id,
             projectName: project,
@@ -138,7 +123,7 @@ function Project(props){
                         tooltip: "Add Entity",
                         isFreeAction: true,
                         onClick: (e)=>{
-                            dispatch(SetTarget(id, ""));
+                            dispatch(SetTarget(entities.project.id, ""));
                             dispatch(ShowAddDialog());
                         }
                     }
