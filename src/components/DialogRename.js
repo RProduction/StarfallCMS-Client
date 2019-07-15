@@ -8,15 +8,12 @@ import PropTypes from 'prop-types';
 const ValidationSchema = Yup.object({
     name: Yup.string(),
 	confirmName: Yup.string().required('re-enter name')
-	.matches(/^[a-z0-9_]*$/i, {
-		message: 'input letters, numbers, and underscore only',
-		excludeEmptyString: true,
-    }).oneOf([Yup.ref('name')], "Confirm Name does not match"),
+	.oneOf([Yup.ref('name')], "Confirm Name does not match"),
     newName: Yup.string().required('enter new name')
-	.matches(/^[a-z0-9_]*$/i, {
+	.matches(/^[a-zA-Z0-9_]+$/, {
 		message: 'input letters, numbers, and underscore only',
 		excludeEmptyString: true,
-    })
+    }).min(1, 'new name too short').max(50, 'new name too long')
 });
 
 function Form(props){

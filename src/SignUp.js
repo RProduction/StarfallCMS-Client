@@ -137,21 +137,17 @@ const SignUp = (props)=>{
 
 const ValidationSchema = Yup.object({
 	username: Yup.string().required('enter username')
-	.matches(/^[a-z0-9]*$/i, {
+	.matches(/^[a-zA-Z0-9]*$/, {
 		message: 'input letters and numbers only',
 		excludeEmptyString: true,
-	}),
+	}).min(5, 'username too short').max(30, 'username too long'),
 	password: Yup.string().required('enter password')
-	.matches(/^[a-z0-9]*$/i, {
+	.matches(/^[a-zA-Z0-9]*$/, {
 		message: 'input letters and numbers only',
 		excludeEmptyString: true,
-	}),
+	}).min(5, 'password too short').max(30, 'password too long'),
 	confirmPassword: Yup.string().required('re-enter your password')
 	.oneOf([Yup.ref("password")], "password does not match")
-	.matches(/^[a-z0-9]*$/i, {
-		message: 'input letters and numbers only',
-		excludeEmptyString: true,
-	})
 });
 
 const InitialValues = {

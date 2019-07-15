@@ -94,12 +94,12 @@ function SignIn(props) {
 
 const ValidationSchema = Yup.object({
 	username: Yup.string().required('enter username')
-	.matches(/^[a-z0-9]*$/i, {
+	.matches(/^[a-zA-Z0-9]*$/, {
 		message: 'input letters and numbers only',
 		excludeEmptyString: true,
 	}),
 	password: Yup.string().required('enter password')
-	.matches(/^[a-z0-9]*$/i, {
+	.matches(/^[a-zA-Z0-9]*$/, {
 		message: 'input letters and numbers only',
 		excludeEmptyString: true,
 	})
