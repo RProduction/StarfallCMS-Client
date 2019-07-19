@@ -69,7 +69,9 @@ function DocumentSchema(props){
                     })
                 }
             </Grid>
-            {authorized ? <DocumentSchemaAuthorized id={_entity.id} {...props}/> : null}
+            {authorized ? 
+                <DocumentSchemaAuthorized id={_entity ? _entity.id : 0} {...props}/> 
+            : null}
         </Grid>
     )
 }

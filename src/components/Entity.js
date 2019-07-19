@@ -72,7 +72,9 @@ function Entity(props){
     const select = useMemo(selectDocumentsInEntityByName, []);
     const documents = useSelector(state => select(state, entity));
 
-    const init = useSelector(state => selectDocumentInit(state, documents.entity.id));
+    const init = useSelector(state => selectDocumentInit(
+        state, documents.entity ? documents.entity.id : 0
+    ));
 
     const [datas, setDatas] = useState([]);
     
@@ -82,9 +84,9 @@ function Entity(props){
     }, [status]);
 
     useEffect(()=>{
-        if(!init)
+        if(!init && documents.entity)
             dispatch(FetchDocuments(documents.entity.id));
-        else{
+        else if(documents.documents){
             setDatas(documents.documents.map((value, index) => ({
                 "#": (index+1),
                 id: value.id,
