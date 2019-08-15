@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {SetField} from '../redux/actions/documentActions';
 import {selectCurrentDocumentValue} from '../redux/selectors/documentSelectors';
-import {Grid, TextField, Typography, Checkbox, IconButton} from '@material-ui/core';
+import {Grid, TextField, Typography, Checkbox, IconButton, Input} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
@@ -41,6 +41,14 @@ function DocumentField(props){
                         value={value}
                         multiline
                         onChange={(e) => dispatch(SetField(keys, e.target.value))}
+                    /> : null
+            }
+            {
+                category === 'file' 
+                ?   <Grid item component={Input} xs
+                        files={[value]}
+                        type='file'
+                        onChange={(e) => dispatch(SetField(keys, e.target.files[0]))}
                     /> : null
             }
             {

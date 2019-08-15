@@ -13,6 +13,7 @@ import DocumentField from './DocumentField';
 
 import {selectEntityByName} from '../redux/selectors/entitySelectors';
 import Axios from '../Axios';
+import {produce} from 'immer';
 
 const useStyle = makeStyles(theme => ({
 	root:{
@@ -22,6 +23,41 @@ const useStyle = makeStyles(theme => ({
 		}
 	}
 }));
+
+function ProcessData(data, files, root){
+    if(data.constructor === Object){
+        const pairs = Object.entries(data);
+        for(let i=0; i<pairs.length; i++){
+            const [key, value] = pairs[i];
+            if(value instanceof File){
+                // add file into files and change data[key] into file name
+                const filename = data[key].name.split(/(\\|\/)/g).pop();
+                root[filename] = value;
+                files.push(filename);
+                data[key] = filename;
+            }
+            else if(value.constructor === Object || value.constructor === Array){
+                // traverse object
+                ProcessData(data[key], files, root);
+            }
+        }
+    }
+    else if(data.constructor === Array){
+        for(let i=0; i<data.length; i++){
+            if(data[i] instanceof File){
+                // add file into files and change data[key] into file name
+                const filename = data[i].name.split(/(\\|\/)/g).pop();
+                root[filename] = data[i];
+                files.push(filename);
+                data[i] = filename;
+            }
+            else if(data[i].constructor === Object || data[i].constructor === Array){
+                // traverse object
+                ProcessData(data[i], files, root);
+            }
+        }    
+    }
+}
 
 function DocumentEdit(props){
     const style = useStyle()
@@ -79,9 +115,24 @@ function DocumentEdit(props){
             <FormButton xs={12} color="secondary" variant="contained"
                 onClick={async() => {
                     try{
-                        await Axios.post(`document/${document}/modify`, {
-                            data: currentValue
+                        const newState = produce({
+                            data: currentValue, 
+                            files: []
+                        }, draft => ProcessData(draft.data, draft.files, draft));
+
+                        const formdata = new FormData();
+                        const {data, files} = newState;
+                        formdata.set('data', JSON.stringify(data));
+                        files.forEach(value => {
+                            formdata.append('files[]', newState[value], value);
                         });
+
+                        await Axios.post(
+                            `document/${document}/modify`, 
+                            formdata, 
+                            {'Content-Type': 'multipart/form-data'}
+                        );
+
                         dispatch(ShowNotificationDialog(
                             'Edit Document', 
                             'Succeed editing document'

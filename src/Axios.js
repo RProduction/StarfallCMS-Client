@@ -1,6 +1,6 @@
 import axios from 'axios';
 export default axios.create({
-    baseURL: '/api/',
+    baseURL: '/',
     responseType: "json",
     headers: {
         'Content-Type': 'application/json'
