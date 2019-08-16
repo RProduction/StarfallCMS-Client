@@ -16,6 +16,7 @@ export function HideNotificationDialog(){
 export const ADD_DIALOG = "ADD_DIALOG";
 export const DELETE_DIALOG = "DELETE_DIALOG";
 export const RENAME_DIALOG = "RENAME_DIALOG";
+export const IMG_DIALOG = "IMG_DIALOG";
 
 export function ShowAddDialog(){
     return {type: "SHOW_ADD_DIALOG"};
@@ -27,6 +28,10 @@ export function ShowDeleteDialog(){
 
 export function ShowRenameDialog(){
     return {type: "SHOW_RENAME_DIALOG"};
+}
+
+export function ShowImgDialog(){
+    return {type: "SHOW_IMG_DIALOG"};
 }
 
 export function HideDialog(){

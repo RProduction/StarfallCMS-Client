@@ -1,5 +1,5 @@
 import {createReducer} from './helpers';
-import {ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG} from '../actions/globalActions';
+import {ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, IMG_DIALOG} from '../actions/globalActions';
 import {produce} from 'immer';
 
 // admin sidebar switch
@@ -25,6 +25,10 @@ function ShowDeleteDialog(state, action){
 
 function ShowRenameDialog(state, action){
     return RENAME_DIALOG;
+}
+
+function ShowImgDialog(state, action){
+    return IMG_DIALOG;
 }
 
 function HideDialog(state, action){
@@ -56,6 +60,7 @@ export const dialogReducer = createReducer(null, {
     SHOW_ADD_DIALOG: ShowAddDialog,
     SHOW_DELETE_DIALOG: ShowDeleteDialog,
     SHOW_RENAME_DIALOG: ShowRenameDialog,
+    SHOW_IMG_DIALOG: ShowImgDialog,
     HIDE_DIALOG: HideDialog
 });
 
