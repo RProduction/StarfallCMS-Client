@@ -8,14 +8,13 @@ import PropTypes from 'prop-types';
 import {AddField} from '../redux/actions/documentActions';
 import {selectCurrentDocumentKeys} from '../redux/selectors/documentSelectors';
 import DocumentSchemaObject from './DocumentSchemaObject';
+import {fieldTypes} from './DocumentConstant';
 
 const useStyle = makeStyles(theme => ({
 	root:{
         marginLeft: theme.spacing(3)
 	}
 }));
-
-const fieldTypes = ['integer', 'float', 'string', 'boolean', 'file', 'object', 'array'];
 
 function Conditional(props){
     const {keys, curKey, type} = props;

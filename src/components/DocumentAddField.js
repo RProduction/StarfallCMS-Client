@@ -4,8 +4,7 @@ import {AddField} from '../redux/actions/documentActions';
 import {Grid, TextField, IconButton, MenuItem} from '@material-ui/core';
 import {Delete, Add} from '@material-ui/icons';
 import PropTypes from 'prop-types';
-
-const fieldTypes = ['integer', 'float', 'string', 'boolean', 'file', 'object', 'array'];
+import {fieldTypes} from './DocumentConstant';
 
 function DocumentAddField(props){
     const {keys, cancel} = props;

@@ -32,7 +32,7 @@ function DocumentSchemaField(props){
 DocumentSchemaField.propTypes = {
     keys: PropTypes.array.isRequired,
     category: PropTypes.oneOf([
-        'integer', 'float', 'string', 'boolean', 'file'
+        'integer', 'float', 'string', 'boolean'
     ]).isRequired
 }
 

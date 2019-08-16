@@ -44,14 +44,6 @@ function DocumentField(props){
                     /> : null
             }
             {
-                category === 'file' 
-                ?   <Grid item component={Input} xs
-                        files={[value]}
-                        type='file'
-                        onChange={(e) => dispatch(SetField(keys, e.target.files[0]))}
-                    /> : null
-            }
-            {
                 arrayKeys && arrayValues ? <IconButton
                     color="inherit"
                     aria-label={`Delete ${keys[keys.length - 1]}`}
@@ -72,7 +64,7 @@ function DocumentField(props){
 DocumentField.propTypes = {
     keys: PropTypes.array.isRequired,
     category: PropTypes.oneOf([
-        'integer', 'float', 'string', 'boolean', 'file'
+        'integer', 'float', 'string', 'boolean'
     ]).isRequired,
     arrayKeys: PropTypes.array,
     arrayValues: PropTypes.array
