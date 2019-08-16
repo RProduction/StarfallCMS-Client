@@ -37,6 +37,15 @@ export const RenameProject = (id, name, updated) => {
     };
 }
 
+export const ImgProject = (id, img, updated) => {
+    return {
+        type: "IMG_PROJECT", 
+        id: id, 
+        img: img,
+        updated: updated
+    };
+}
+
 // get data from server containing project with related entity
 // and dispatch multiple action from this function
 export const InitDatabase = () => async dispatch => {
@@ -57,6 +66,7 @@ export const InitDatabase = () => async dispatch => {
             projects.push({
                 id: normalized.entities.projects[value]._id,
                 name: normalized.entities.projects[value].name,
+                img: normalized.entities.projects[value].img_url,
                 created: normalized.entities.projects[value].created_at,
                 updated: normalized.entities.projects[value].updated_at,
                 publicKey: normalized.entities.projects[value].public_key

@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import Ws from '@adonisjs/websocket-client';
-import {AddProjects, DeleteProject, RenameProject} from './redux/actions/projectActions';
+import {AddProjects, DeleteProject, RenameProject, ImgProject} from './redux/actions/projectActions';
 import {AddEntities, DeleteEntities, RenameEntity, SetEntitySchema} from './redux/actions/entityActions';
 import {AddDocuments, ModifyDocument, DeleteDocuments} from './redux/actions/documentActions';
 
@@ -23,6 +23,7 @@ function WebsocketClient(props) {
                 dispatch(AddProjects([{
                     id: msg._id,
                     name: msg.name,
+                    img: msg.img_url,
                     created: msg.created_at,
                     updated: msg.updated_at,
                     publicKey: msg.public_key
@@ -39,6 +40,15 @@ function WebsocketClient(props) {
                 dispatch(RenameProject(
                     msg._id, 
                     msg.name, 
+                    msg.updated_at
+                ));
+            });
+            project.on('img', (msg)=>{
+                console.log("change image of project");
+                console.log(msg);
+                dispatch(ImgProject(
+                    msg._id, 
+                    msg.img_url, 
                     msg.updated_at
                 ));
             });
