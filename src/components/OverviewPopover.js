@@ -1,8 +1,8 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {SetProjectPopover} from '../redux/actions/projectActions';
-import {ShowRenameDialog, ShowDeleteDialog} from '../redux/actions/globalActions';
-import {DeleteForever, Create} from '@material-ui/icons'
+import {ShowRenameDialog, ShowDeleteDialog, ShowImgDialog} from '../redux/actions/globalActions';
+import {DeleteForever, Create, Image} from '@material-ui/icons'
 import PopoverMenu from './PopoverMenu';
 
 function OverviewPopover(props){
@@ -22,6 +22,14 @@ function OverviewPopover(props){
                     onClick: () => {
                         dispatch(SetProjectPopover(null));
                         dispatch(ShowRenameDialog());
+                    }
+                },
+                {
+                    title: "Change Image",
+                    icon: Image,
+                    onClick: () => {
+                        dispatch(SetProjectPopover(null));
+                        dispatch(ShowImgDialog());
                     }
                 },
                 {

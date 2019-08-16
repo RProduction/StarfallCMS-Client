@@ -41,7 +41,7 @@ function Detail({primary}){
 // actions consist of renaming and deleting Project
 // and those action need Creator Authorization
 function OverviewCard(props){
-    const {name, index, id, updated, created, publicKey, authorized} = props;
+    const {name, index, id, img, updated, created, publicKey, authorized} = props;
     const select = useMemo(selectEntitiesInProject,[]);
     const entities = useSelector(state => select(state, id));
     
@@ -57,7 +57,7 @@ function OverviewCard(props){
                     }
                 />
                 <Box component={CardMedia} height={250} title={name}
-                    image={'https://via.placeholder.com/150'}
+                    image={img}
                 />
                 <CardContent component={List}>
                     <Detail primary={`Public Key: ${publicKey}`}/>

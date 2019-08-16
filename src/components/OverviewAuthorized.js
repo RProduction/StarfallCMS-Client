@@ -2,13 +2,14 @@ import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Fab, Box} from '@material-ui/core';
 import {Add} from '@material-ui/icons';
-import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG
+import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, IMG_DIALOG
     , HideDialog, ShowAddDialog, ShowNotificationDialog
     , HideNotificationDialog } from '../redux/actions/globalActions';
 import OverviewPopover from './OverviewPopover';
 import DialogRename from './DialogRename';
 import DialogDelete from './DialogDelete';
 import DialogAdd from './DialogAdd';
+import DialogImg from './DialogImg';
 import DialogNotification from './DialogNotification';
 
 const FAB = React.forwardRef((props, ref)=>{
@@ -86,6 +87,28 @@ function OverviewAuthorized(props){
                     dispatch(ShowNotificationDialog(
                         `Rename Project ${name}`, 
                         `Fail renaming project ${name} into ${newName}, error: ${err}`
+                    ));
+                }}
+            />
+            <DialogImg
+                dialogProps={{
+                    open: dialogType === IMG_DIALOG,
+                    onClose: () => dispatch(HideDialog())
+                }}
+                imgCategory="Project"
+                imgRequest={`project/${target.id}/img`}
+                onSucceed={(res) => {
+                    dispatch(HideDialog());
+                    dispatch(ShowNotificationDialog(
+                        'Change Project Image', 
+                        `Succeed changing project image`
+                    ));
+                }}
+                onFail={(err) => { 
+                    dispatch(HideDialog());
+                    dispatch(ShowNotificationDialog(
+                        'Change Project Image', 
+                        `Fail changing project image, error: ${err}`
                     ));
                 }}
             />
