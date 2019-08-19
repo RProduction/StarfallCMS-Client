@@ -1,30 +1,12 @@
-import React, {useMemo, lazy} from 'react';
+import React, {lazy} from 'react';
 import {Grid, Card, CardContent, CardHeader
     , CardMedia, Box, List, Avatar, Typography} from '@material-ui/core';
-import {Link} from 'react-router-dom';
-import OverviewContent from './OverviewContent';
 import OverviewList from './OverviewList';
-import {useSelector} from 'react-redux';
-import {selectEntitiesInProject} from '../redux/selectors/entitySelectors';
 
 const OverviewCardAction = lazy(() => import('./OverviewCardAction'));
 
-function Index({index}){
-    return <Avatar>{index}</Avatar>;
-}
-
-function Title({name}){
-    return(
-        <Typography 
-            variant="h4" 
-            component={Link}
-            to={`/${name}`} 
-            style={{ color: "black" }}
-        >
-            {name}
-        </Typography>
-    )
-}
+const Index = ({index}) => <Avatar>{index}</Avatar>;
+const Title = ({name}) => <Typography variant="h4" style={{ color: "black" }}>{name}</Typography>
 
 function Detail({primary}){
     return(
@@ -42,8 +24,6 @@ function Detail({primary}){
 // and those action need Creator Authorization
 function OverviewCard(props){
     const {name, index, id, img, updated, created, publicKey, authorized} = props;
-    const select = useMemo(selectEntitiesInProject,[]);
-    const entities = useSelector(state => select(state, id));
     
     return(
         <Grid item container xs={12} justify="center">
@@ -63,7 +43,6 @@ function OverviewCard(props){
                     <Detail primary={`Public Key: ${publicKey}`}/>
                     <Detail primary={`Created At: ${created}`}/>
                     <Detail primary={`Updated At: ${updated}`}/>
-                    <OverviewContent entities={entities} projectName={name}/>
                 </CardContent>
             </Box>
         </Grid>

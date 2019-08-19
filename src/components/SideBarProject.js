@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState, useMemo} from 'react';
 import {Link} from 'react-router-dom';
 import {ListItem, ListItemText, List, Collapse, IconButton, makeStyles, ButtonBase} from '@material-ui/core';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
@@ -25,42 +25,57 @@ function SideBarProject(props){
     const select = useMemo(selectEntitiesInProject,[]);
     const entities = useSelector(state => select(state, id));
     const [open, setOpen] = useState(false);
+    const [openEntities, setOpenEntities] = useState(false);
 
     return(
         <React.Fragment>
-            <ListItem divider>
-                <ButtonBase component={Link} 
-                    to={`/${name}`}
-                    className={style.btn}
-                >
-                    <ListItemText primary={name}/>
-                </ButtonBase>
-                <IconButton
-                    color="inherit"
-                    aria-label={`Expand ${name}`}
-                    onClick={() => setOpen(!open)}
-                    edge="end"
-                    className={clsx(entities.length === 0 && style.hide)}
-                >
-                    {open ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
+            <ListItem button divider onClick={() => setOpen(!open)}>
+                <ListItemText primary={name}/>
+                {open ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
-            {
-                entities.length > 0 ? 
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <List className={style.root} disablePadding>
-                            {
-                                entities.map((value) => {
-                                    return <SideBarEntity
-                                        key={value.id}
-                                        name={value.name}
-                                        projectName={name}
-                                    />
-                                })
-                            }
-                        </List>
-                    </Collapse> : null
-            }
+            <Collapse in={open} timeout="auto" unmountOnExit>
+                <List className={style.root} disablePadding>
+                    <ListItem button component={Link} to={`/${name}/authentication`} divider>
+                        <ListItemText primary="Authentication" />
+                    </ListItem>
+                    <ListItem button component={Link} to={`/${name}/storage`} divider>
+                        <ListItemText primary="Storage" />
+                    </ListItem>
+                    <ListItem divider>
+                        <ButtonBase component={Link} 
+                            to={`/${name}`}
+                            className={style.btn}
+                        >
+                            <ListItemText primary="Entities"/>
+                        </ButtonBase>
+                        <IconButton
+                            color="inherit"
+                            aria-label={`Expand ${name} entities`}
+                            onClick={() => setOpenEntities(!openEntities)}
+                            edge="end"
+                            className={clsx(entities.length === 0 && style.hide)}
+                        >
+                            {openEntities ? <ExpandLess /> : <ExpandMore />}
+                        </IconButton>
+                    </ListItem>
+                    {
+                        entities.length > 0 ? 
+                            <Collapse in={openEntities} timeout="auto" unmountOnExit>
+                                <List className={style.root} disablePadding>
+                                    {
+                                        entities.map((value) => {
+                                            return <SideBarEntity
+                                                key={value.id}
+                                                name={value.name}
+                                                projectName={name}
+                                            />
+                                        })
+                                    }
+                                </List>
+                            </Collapse> : null
+                    }
+                </List>
+            </Collapse>
         </React.Fragment>
     )
 }
