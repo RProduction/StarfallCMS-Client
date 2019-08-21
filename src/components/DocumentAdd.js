@@ -75,9 +75,11 @@ function DocumentAdd(props){
                 }
             </Grid>
             <FormButton color="secondary" variant="contained" xs={12} 
-                onClick={async() => {
+                onClick={async () => {
                     try{
-                        await Axios.post(`document/${_entity.id}`, currentValue);
+                        await Axios.post(`document/${_entity.id}`, {
+                            data: currentValue
+                        });
                         
                         dispatch(ShowNotificationDialog(
                             'Add Document', 

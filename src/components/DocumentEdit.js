@@ -79,7 +79,9 @@ function DocumentEdit(props){
             <FormButton xs={12} color="secondary" variant="contained"
                 onClick={async() => {
                     try{
-                        await Axios.post(`document/${document}/modify`, currentValue);
+                        await Axios.post(`document/${document}/modify`, {
+                            data: currentValue
+                        });
 
                         dispatch(ShowNotificationDialog(
                             'Edit Document', 
