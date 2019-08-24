@@ -4,6 +4,7 @@ import Ws from '@adonisjs/websocket-client';
 import {AddProjects, DeleteProject, RenameProject, ImgProject} from './redux/actions/projectActions';
 import {AddEntities, DeleteEntities, RenameEntity, SetEntitySchema} from './redux/actions/entityActions';
 import {AddDocuments, ModifyDocument, DeleteDocuments} from './redux/actions/documentActions';
+import {UploadStorage, FolderStorage, RenameStorage, MoveStorage, DeleteStorage} from './redux/actions/storageActions';
 
 function WebsocketClient(props) {
     const dispatch = useDispatch();
@@ -15,6 +16,7 @@ function WebsocketClient(props) {
             const project = ws.subscribe('project');
             const entity = ws.subscribe('entity');
             const document = ws.subscribe('document');
+            const storage = ws.subscribe('storage');
             
             // project socket listener
             project.on('add', (msg)=>{
@@ -121,6 +123,33 @@ function WebsocketClient(props) {
                 console.log("delete documents");
                 console.log(msg);
                 dispatch(DeleteDocuments(msg.ids));
+            });
+
+            // storage socket listener
+            storage.on('upload', (msg)=>{
+                console.log("upload into storage");
+                console.log(msg);
+                dispatch(UploadStorage(msg._id, msg.path, msg.files));
+            });
+            storage.on('folder', (msg)=>{
+                console.log("new folder into storage");
+                console.log(msg);
+                dispatch(FolderStorage(msg._id, msg.path));
+            });
+            storage.on('move', (msg)=>{
+                console.log("move storage");
+                console.log(msg);
+                dispatch(MoveStorage(msg._id, msg.path, msg.targets));
+            });
+            storage.on('rename', (msg)=>{
+                console.log("rename storage");
+                console.log(msg);
+                dispatch(RenameStorage(msg._id, msg.path, msg.name, msg.new_name));
+            });
+            storage.on('delete', (msg)=>{
+                console.log("delete storage");
+                console.log(msg);
+                dispatch(DeleteStorage(msg._id, msg.paths));
             });
         });
 

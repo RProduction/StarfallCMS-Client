@@ -1,5 +1,6 @@
 import {DeleteEntities, AddEntities} from './entityActions';
 import {FetchDocuments} from './documentActions';
+import {FetchStorage} from './storageActions';
 import {selectEntitiesInProject} from '../selectors/entitySelectors';
 import Axios from '../../Axios';
 import {normalizeProjects} from '../schemas/database';
@@ -88,6 +89,7 @@ export const InitDatabase = () => async dispatch => {
         dispatch(AddEntities(entities));
 
         entities.forEach(value => dispatch(FetchDocuments(value.id)));
+        projects.forEach(value => dispatch(FetchStorage(value.id)));
     }catch(err){
         console.log(err);
     }
