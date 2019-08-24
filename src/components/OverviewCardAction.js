@@ -13,7 +13,7 @@ function OverviewCardAction({id, name}){
             aria-label="More Action"
             onClick={
                 (e)=>{
-                    dispatch(SetTarget(id, name));
+                    dispatch(SetTarget({id: id, name: name}));
                     dispatch(SetProjectPopover(e.currentTarget));
                 }
             }

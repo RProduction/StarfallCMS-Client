@@ -3,10 +3,8 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, HideDialog
     , ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
-import DialogRename from './DialogRename';
-import DialogDelete from './DialogDelete';
-import DialogAdd from './DialogAdd';
-import DialogNotification from './DialogNotification';
+import DialogCustom from './DialogCustom';
+import Axios from '../Axios';
 
 function ProjectAuthorized(props){
     const dispatch = useDispatch();
@@ -16,73 +14,90 @@ function ProjectAuthorized(props){
 
     return(
         <React.Fragment>
-            <DialogAdd
+            <DialogCustom
                 dialogProps={{
                     open: dialogType === ADD_DIALOG,
                     onClose: () => dispatch(HideDialog())
                 }}
-                addCategory="Entity"
-                addRequest={`entity/${target.id}`}
-                onSucceed={(res, name) => {
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Add New Entity ${name}`, 
-                        `Succeed adding new entity ${name}`
-                    ));
-                }}
-                onFail={(err, name) => { 
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Add New Entity ${name}`, 
-                        `Fail adding new entity ${name}, error: ${err}`
-                    ));
+                category="add"
+                title="Add New Entity"
+                btn="Add New Entity"
+                request={async({name})=>{
+                    try{
+                        await Axios.post(`entity/${target.id}`, {
+                            name: name
+                        });
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Add New Entity ${name}`, 
+                            `Succeed adding new entity ${name}`
+                        ));
+                    }catch(err){
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Add New Entity ${name}`, 
+                            `Fail adding new entity ${name}, error: ${err}`
+                        ));
+                    }
                 }}
             />
-            <DialogDelete
+            <DialogCustom
                 dialogProps={{
                     open: dialogType === DELETE_DIALOG,
                     onClose: () => dispatch(HideDialog())
                 }}
+                category="delete"
+                title={`PERMANENTLY DELETE "${target.name}"`}
+                btn={`PERMANENTLY DELETE "${target.name}"`}
+                content={`This action will PERMANENTLY DELETE "${target.name}". Proceed with caution!`}
                 targetName={target.name}
-                deleteRequest={`entity/${target.id}`}
-                onSucceed={(res, name) => {
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Delete Entity ${name}`, 
-                        `Succeed deleting entity ${name}`
-                    ));
-                }}
-                onFail={(err, name) => { 
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Delete Entity ${name}`, 
-                        `Fail deleting entity ${name}, error: ${err}`
-                    ));
+                request={async({name})=>{
+                    try{
+                        await Axios.delete(`entity/${target.id}`);
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Delete Entity ${name}`, 
+                            `Succeed deleting entity ${name}`
+                        ));
+                    }catch(err){
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Delete Entity ${name}`, 
+                            `Fail deleting entity ${name}, error: ${err}`
+                        ));
+                    }
                 }}
             />
-            <DialogRename
+            <DialogCustom
                 dialogProps={{
                     open: dialogType === RENAME_DIALOG,
                     onClose: () => dispatch(HideDialog())
                 }}
-                renameRequest={`entity/${target.id}/rename`}
+                category="rename"
+                title={`Rename "${target.name}"`}
+                btn={`Rename "${target.name}"`}
                 targetName={target.name}
-                onSucceed={(res, name, newName) => {
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Rename Entity ${name}`, 
-                        `Succeed renaming entity ${name} into ${newName}`
-                    ));
-                }}
-                onFail={(err, name, newName) => { 
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Rename Entity ${name}`, 
-                        `Fail renaming entity ${name} into ${newName}, error: ${err}`
-                    ));
+                request={async({name, newName})=>{
+                    try{
+                        await Axios.post(`entity/${target.id}/rename`, {
+                            name: newName
+                        });
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Rename Entity ${name}`, 
+                            `Succeed renaming entity ${name} into ${newName}`
+                        ));
+                    }catch(err){
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Rename Entity ${name}`, 
+                            `Fail renaming entity ${name} into ${newName}, error: ${err}`
+                        ));
+                    }
                 }}
             />
-            <DialogNotification 
+            <DialogCustom
+                category="notification"
                 title={notification.title} 
                 content={notification.content}
                 dialogProps={{

@@ -9,9 +9,8 @@ function SwitchSideBar(state, action) {
 
 // target
 const SetTarget = (state, action) => produce(state, (draft)=>{
-    const {id, name} = action;
-    draft.id = id;
-    draft.name = name;
+    const {data} = action;
+    Object.entries(data).forEach(([key, value]) => draft[key] = value);
 });
 
 // add, delete, rename dialog
@@ -52,7 +51,7 @@ export const sidebarReducer = createReducer(false, {
     SWITCH_SIDEBAR: SwitchSideBar
 });
 
-export const targetReducer = createReducer({name: '', id: 0}, {
+export const targetReducer = createReducer({}, {
     SET_TARGET: SetTarget
 });
 

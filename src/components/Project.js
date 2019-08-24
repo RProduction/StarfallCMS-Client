@@ -105,7 +105,7 @@ function Project(props){
                         tooltip: "Rename Entity", 
                         onClick: (e, rowData)=>{
                             const {id, name} = rowData;
-                            dispatch(SetTarget(id, name));
+                            dispatch(SetTarget({id: id, name: name}));
                             dispatch(ShowRenameDialog());
                         }
                     },
@@ -114,7 +114,7 @@ function Project(props){
                         tooltip: "Delete Entity",
                         onClick: (e, rowData)=>{
                             const {id, name} = rowData;
-                            dispatch(SetTarget(id, name));
+                            dispatch(SetTarget({id: id, name: name}));
                             dispatch(ShowDeleteDialog());
                         }
                     },
@@ -123,7 +123,7 @@ function Project(props){
                         tooltip: "Add Entity",
                         isFreeAction: true,
                         onClick: (e)=>{
-                            dispatch(SetTarget(entities.project.id, ""));
+                            dispatch(SetTarget({id: entities.project.id}));
                             dispatch(ShowAddDialog());
                         }
                     }

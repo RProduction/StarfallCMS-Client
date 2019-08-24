@@ -10,7 +10,7 @@ import Axios from '../Axios';
 import {FetchDocuments} from '../redux/actions/documentActions';
 import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
 
-const DialogNotification = lazy(() => import('./DialogNotification'));
+const DialogCustom = lazy(() => import('./DialogCustom'));
 
 const columns = [
     {
@@ -107,7 +107,8 @@ function Entity(props){
     return(
         <React.Fragment>
             {authorized ? 
-                <DialogNotification 
+                <DialogCustom
+                    category="notification" 
                     title={notification.title} 
                     content={notification.content}
                     dialogProps={{

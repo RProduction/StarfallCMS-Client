@@ -5,7 +5,7 @@ import {Route, Switch} from 'react-router-dom';
 import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
 import {HideNotificationDialog} from '../redux/actions/globalActions';
 
-const DialogNotification = lazy(() => import('./DialogNotification'));
+const DialogCustom = lazy(() => import('./DialogCustom'));
 const DocumentSchema = lazy(() => import('./DocumentSchema'));
 const DocumentAdd = lazy(() => import('./DocumentAdd'));
 const DocumentEdit = lazy(() => import('./DocumentEdit'));
@@ -26,7 +26,8 @@ function Document(props){
     return(
         <React.Fragment>
             {authorized ? 
-                <DialogNotification 
+                <DialogCustom
+                    category="notification"
                     title={notification.title} 
                     content={notification.content}
                     dialogProps={{

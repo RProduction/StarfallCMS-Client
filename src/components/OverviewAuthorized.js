@@ -6,11 +6,10 @@ import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, IMG_DIALOG
     , HideDialog, ShowAddDialog, ShowNotificationDialog
     , HideNotificationDialog } from '../redux/actions/globalActions';
 import OverviewPopover from './OverviewPopover';
-import DialogRename from './DialogRename';
-import DialogDelete from './DialogDelete';
-import DialogAdd from './DialogAdd';
+import DialogCustom from './DialogCustom';
 import DialogImg from './DialogImg';
-import DialogNotification from './DialogNotification';
+
+import Axios from '../Axios';
 
 const FAB = React.forwardRef((props, ref)=>{
     return <Fab {...props} innerRef={ref} color="secondary"/>
@@ -24,70 +23,86 @@ function OverviewAuthorized(props){
 
     return(
         <React.Fragment>
-            <DialogAdd
+            <DialogCustom
                 dialogProps={{
                     open: dialogType === ADD_DIALOG,
                     onClose: () => dispatch(HideDialog())
                 }}
-                addCategory="Project"
-                addRequest="project"
-                onSucceed={(res, name) => {
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Add New Project ${name}`, 
-                        `Succeed adding new project ${name}`
-                    ));
-                }}
-                onFail={(err, name) => { 
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Add New Project ${name}`, 
-                        `Fail adding new project ${name}, error: ${err}`
-                    ));
+                category="add"
+                title="Add New Project"
+                btn="Add New Project"
+                request={async({name})=>{
+                    try{
+                        await Axios.post("project", {
+                            name: name
+                        });
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Add New Project ${name}`, 
+                            `Succeed adding new project ${name}`
+                        ));
+                    }catch(err){
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Add New Project ${name}`, 
+                            `Fail adding new project ${name}, error: ${err}`
+                        ));
+                    }
                 }}
             />
-            <DialogDelete
+            <DialogCustom
                 dialogProps={{
                     open: dialogType === DELETE_DIALOG,
                     onClose: () => dispatch(HideDialog())
                 }}
+                category="delete"
+                title={`PERMANENTLY DELETE "${target.name}"`}
+                btn={`PERMANENTLY DELETE "${target.name}"`}
+                content={`This action will PERMANENTLY DELETE "${target.name}". Proceed with caution!`}
                 targetName={target.name}
-                deleteRequest={`project/${target.id}`}
-                onSucceed={(res, name) => {
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Delete Project ${name}`, 
-                        `Succeed deleting project ${name}`
-                    ));
-                }}
-                onFail={(err, name) => { 
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Delete Project ${name}`, 
-                        `Fail deleting project ${name}, error: ${err}`
-                    ));
+                request={async({name})=>{
+                    try{
+                        await Axios.delete(`project/${target.id}`);
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Delete Project ${name}`, 
+                            `Succeed deleting project ${name}`
+                        ));
+                    }catch(err){
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Delete Project ${name}`, 
+                            `Fail deleting project ${name}, error: ${err}`
+                        ));
+                    }
                 }}
             />
-            <DialogRename
+            <DialogCustom
                 dialogProps={{
                     open: dialogType === RENAME_DIALOG,
                     onClose: () => dispatch(HideDialog())
                 }}
-                renameRequest={`project/${target.id}/rename`}
+                category="rename"
+                title={`Rename "${target.name}"`}
+                btn={`Rename "${target.name}"`}
                 targetName={target.name}
-                onSucceed={(res, name, newName) => {
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Rename Project ${name}`, 
-                        `Succeed renaming project ${name} into ${newName}`
-                    ));
-                }}
-                onFail={(err, name, newName) => { 
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        `Rename Project ${name}`, 
-                        `Fail renaming project ${name} into ${newName}, error: ${err}`
-                    ));
+                request={async({name, newName})=>{
+                    try{
+                        await Axios.post(`project/${target.id}/rename`, {
+                            name: newName
+                        });
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Rename Project ${name}`, 
+                            `Succeed renaming project ${name} into ${newName}`
+                        ));
+                    }catch(err){
+                        dispatch(HideDialog());
+                        dispatch(ShowNotificationDialog(
+                            `Rename Project ${name}`, 
+                            `Fail renaming project ${name} into ${newName}, error: ${err}`
+                        ));
+                    }
                 }}
             />
             <DialogImg
@@ -112,7 +127,8 @@ function OverviewAuthorized(props){
                     ));
                 }}
             />
-            <DialogNotification 
+            <DialogCustom
+                category="notification"
                 title={notification.title} 
                 content={notification.content}
                 dialogProps={{

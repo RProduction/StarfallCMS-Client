@@ -39,7 +39,6 @@ export function HideDialog(){
 }
 
 // current target information
-// id can be projectId or id for certain condition
-export function SetTarget(id, name){
-    return {type: "SET_TARGET", id: id, name: name};
+export function SetTarget(data){
+    return {type: "SET_TARGET", data: data};
 }
