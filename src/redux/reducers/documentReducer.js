@@ -6,27 +6,22 @@ import {produce} from 'immer';
 const AddDocuments = (state, action) => produce(state, (draft)=>{
     const {documents} = action;
     for(let document of documents){
-        draft.data[document.id] = document
+        draft[document.id] = document
     }
-});
-
-const SetDocumentInit = (state, action) => produce(state, (draft)=>{
-    const {entityId} = action;
-    draft.init[entityId] = true;
 });
 
 // receive array of documents id
 const DeleteDocuments = (state, action) => produce(state, (draft)=>{
     const {documents} = action;
     for(let document of documents){
-        delete draft.data[document];
+        delete draft[document];
     }
 });
 
 const ModifyDocument = (state, action) => produce(state, (draft)=>{
     const {id, updated, data} = action;
-    draft.data[id].updated = updated;
-    draft.data[id].data = data;
+    draft[id].updated = updated;
+    draft[id].data = data;
 });
 
 // receive data and type
@@ -43,21 +38,17 @@ const AddField = (state, action) => produce(state, (draft)=>{
     const {keys, fieldType} = action;
 
     let currentType = draft.type;
-    let targetKey;
-    keys.forEach((value, index)=>{
-        targetKey = value;
+    keys.forEach((key, index)=>{
         if(index+1 < keys.length){
-            currentType = currentType[targetKey];
+            currentType = currentType[key];
+        }else if (fieldType === 'object'){
+            currentType[key] = {};
+        }else if(fieldType === 'array'){
+            currentType[key] = ['integer'];
+        }else{
+            currentType[key] = fieldType;
         }
     });
-
-    if(fieldType === 'object'){
-        currentType[targetKey] = {};
-    }else if(fieldType === 'array'){
-        currentType[targetKey] = ['integer'];
-    }else{
-        currentType[targetKey] = fieldType;
-    }
 });
 
 // receive array of key and value
@@ -66,14 +57,12 @@ const SetField = (state, action) => produce(state, (draft)=>{
     const {keys, value} = action;
     
     let current = draft.data;
-    let targetKey;
-    keys.forEach((value, index)=>{
-        targetKey = value;
+    keys.forEach((key, index)=>{
         if(index+1 < keys.length)
-            current = current[targetKey];
+            current = current[key];
+        else
+            current[key] = value;
     });
-
-    current[targetKey] = value;
 });
 
 // receive array of key
@@ -81,24 +70,20 @@ const DeleteField = (state, action) => produce(state, (draft)=>{
     const {keys} = action;
     
     let currentType = draft.type;
-    let targetKey;
-    keys.forEach((value, index)=>{
-        targetKey = value;
-        if(index+1 < keys.length){
-            currentType = currentType[targetKey];
-        }
+    keys.forEach((key, index)=>{
+        if(index+1 < keys.length)
+            currentType = currentType[key];
+        else
+            delete currentType[key];
     });
-
-    delete currentType[targetKey];
 });
 
 // reducers
 
-export const documentsReducer = createReducer({data: {}, init: {}}, {
+export const documentsReducer = createReducer({}, {
     ADD_DOCUMENTS: AddDocuments,
     DELETE_DOCUMENTS: DeleteDocuments,
-    MODIFY_DOCUMENT: ModifyDocument,
-    SET_DOCUMENT_INIT: SetDocumentInit
+    MODIFY_DOCUMENT: ModifyDocument
 });
 
 export const currentDocumentReducer = createReducer({data: {}, type: {}}, {

@@ -1,4 +1,5 @@
 import {DeleteEntities, AddEntities} from './entityActions';
+import {FetchDocuments} from './documentActions';
 import {selectEntitiesInProject} from '../selectors/entitySelectors';
 import Axios from '../../Axios';
 import {normalizeProjects} from '../schemas/database';
@@ -60,7 +61,7 @@ export const InitDatabase = () => async dispatch => {
     try{
         const _projects = await Axios.get('project');
         const normalized = normalizeProjects(_projects.data);
-        let projects = []
+        let projects = [];
         let entities = [];
         normalized.result.forEach(value =>{
             projects.push({
@@ -71,6 +72,7 @@ export const InitDatabase = () => async dispatch => {
                 updated: normalized.entities.projects[value].updated_at,
                 publicKey: normalized.entities.projects[value].public_key
             });
+            dispatch(AddProjects(projects));
 
             normalized.entities.projects[value].entities.forEach(value =>{
                 entities.push({
@@ -83,9 +85,9 @@ export const InitDatabase = () => async dispatch => {
                 });
             });
         });
-        
-        dispatch(AddProjects(projects));
         dispatch(AddEntities(entities));
+
+        entities.forEach(value => dispatch(FetchDocuments(value.id)));
     }catch(err){
         console.log(err);
     }

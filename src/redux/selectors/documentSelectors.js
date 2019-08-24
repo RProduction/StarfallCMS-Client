@@ -1,11 +1,10 @@
 import {createSelector} from 'reselect';
 import {selectEntityByName} from './entitySelectors';
 
-const _selectDocumentsData = state => state.documents.data;
-const _selectDocumentsInit = state => state.documents.init;
-export const selectDocumentIds = state => Object.keys(_selectDocumentsData(state));
-export const selectDocument = (state, id) => _selectDocumentsData(state)[id];
-export const selectAllDocuments = state => Object.values(_selectDocumentsData(state));
+const _selectDocuments = state => state.documents;
+export const selectDocumentIds = state => Object.keys(_selectDocuments(state));
+export const selectDocument = (state, id) => _selectDocuments(state)[id];
+export const selectAllDocuments = state => Object.values(_selectDocuments(state));
 export const selectDocumentsInEntity = ()=>{
     return createSelector(
         selectAllDocuments,
@@ -15,6 +14,7 @@ export const selectDocumentsInEntity = ()=>{
         }
     );
 };
+
 // if empty then return entity
 export const selectDocumentsInEntityByName = ()=>{
     return createSelector(
@@ -31,8 +31,6 @@ export const selectDocumentsInEntityByName = ()=>{
         }
     );
 };
-
-export const selectDocumentInit = (state, id) => _selectDocumentsInit(state)[id];
 
 const _selectCurrentDocument = state => state.currentDocument;
 export const selectCurrentDocumentType = state => _selectCurrentDocument(state).type;

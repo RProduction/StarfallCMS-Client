@@ -4,10 +4,9 @@ import MaterialTable from 'material-table';
 import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add, Create} from '@material-ui/icons'
 import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
 import {Link, Redirect} from 'react-router-dom';
-import {selectDocumentsInEntityByName, selectDocumentInit} from '../redux/selectors/documentSelectors';
+import {selectDocumentsInEntityByName} from '../redux/selectors/documentSelectors';
 import Axios from '../Axios';
 
-import {FetchDocuments} from '../redux/actions/documentActions';
 import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
 
 const DialogCustom = lazy(() => import('./DialogCustom'));
@@ -72,10 +71,6 @@ function Entity(props){
     const select = useMemo(selectDocumentsInEntityByName, []);
     const documents = useSelector(state => select(state, entity));
 
-    const init = useSelector(state => selectDocumentInit(
-        state, documents.entity ? documents.entity.id : 0
-    ));
-
     const [datas, setDatas] = useState([]);
     
     useEffect(()=>{
@@ -84,9 +79,7 @@ function Entity(props){
     }, [status]);
 
     useEffect(()=>{
-        if(!init && documents.entity)
-            dispatch(FetchDocuments(documents.entity.id));
-        else if(documents.documents){
+        if(documents.documents){
             setDatas(documents.documents.map((value, index) => ({
                 "#": (index+1),
                 id: value.id,
@@ -152,7 +145,7 @@ function Entity(props){
                                 });
                                 dispatch(ShowNotificationDialog(
                                     'Delete Documents',
-                                    `Succeed deleting documents: ${res.data.count} count`
+                                    'Succeed deleting documents'
                                 ));
                             }catch(err){
                                 dispatch(ShowNotificationDialog(
