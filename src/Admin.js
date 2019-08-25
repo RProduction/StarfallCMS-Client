@@ -14,6 +14,7 @@ const Overview = lazy(()=>import('./components/Overview'));
 const Project = lazy(()=>import('./components/Project'));
 const Entity = lazy(()=>import('./components/Entity'));
 const Document = lazy(()=>import('./components/Document'));
+const Storage = lazy(()=>import('./components/Storage'));
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -48,6 +49,7 @@ function Admin(props) {
 					}
 					<Switch>
 						<Route path='/:project/:entity/:document' component={Document}/>
+						<Route path='/:project/storage' component={Storage}/>
 						<Route path='/:project/:entity' component={Entity}/>
 						<Route path='/:project' component={Project}/>
 						<Route path='/' component={Overview}/>
