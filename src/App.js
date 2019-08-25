@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useEffect, useState} from 'react';
+import React, {lazy, Suspense, useEffect} from 'react';
 import {Route, Switch} from 'react-router-dom';
 import {CssBaseline} from '@material-ui/core';
 import {useDispatch} from 'react-redux';
@@ -12,13 +12,11 @@ const SignUp = lazy(()=>import('./SignUp'));
 
 function App() {
 	const dispatch = useDispatch();
-	const [status, setStatus] = useState(null);
 
 	async function fetchStatus(){
 		try{
 			const {data} = await Axios.get('user/status');
-			// set status only if status value change
-			if(status !== data) setStatus(data);
+			dispatch(SetAuthStatus(AUTHORIZATION_STATUS[data]));
 		}
 		catch(err){
 			console.log(err);
@@ -28,11 +26,6 @@ function App() {
 	useEffect(()=>{
 		fetchStatus();
 	}, []);
-
-	useEffect(()=>{
-		if(status !== null) 
-			dispatch(SetAuthStatus(AUTHORIZATION_STATUS[status]));
-	}, [status]);
 	  
 	return (
     	<Suspense fallback={<div></div>}>

@@ -10,7 +10,7 @@ function WebsocketClient(props) {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        const ws = Ws("ws://localhost:3333/");
+        const ws = process.env.NODE_ENV === 'development' ? Ws('ws://localhost:3333/') : Ws();
         
         ws.on("open", ()=>{
             const project = ws.subscribe('project');

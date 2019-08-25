@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import AuthorizationForm from './components/AuthorizationForm';
-import {Redirect} from 'react-router-dom';
 import {TextField, Grid, MenuItem, makeStyles, Paper} from '@material-ui/core';
-import {useSelector} from 'react-redux';
-import {CREATOR, MANAGER, FIRST_BOOT} from './redux/actions/authorizationActions';
+import {useSelector, useDispatch} from 'react-redux';
+import {CREATOR, MANAGER, FIRST_BOOT, AUTHORIZATION_STATUS, SetAuthStatus} from './redux/actions/authorizationActions';
 import Axios from './Axios';
 import * as Yup from 'yup';
 import FormButton from './components/FormButton';
@@ -31,10 +30,10 @@ const PaperForm = React.forwardRef((props, ref)=>{
 
 const SignUp = (props)=>{
 	const style = useStyle();
+	const dispatch = useDispatch();
 	const _status = useSelector(state => state.authStatus);
 	const [authorities, setAuthorities] = useState([]);
 	const [authority, setAuthority] = useState('');
-	const [redirect, setRedirect] = useState(false);
 
 	useEffect(()=>{
 		switch(_status){
@@ -71,68 +70,64 @@ const SignUp = (props)=>{
 		setFieldTouched(name, true, false);
 	};
 
-	if(redirect){
-		return <Redirect to="/signin"/>;
-	}else{
-		return (
-			<Grid component={PaperForm} container item
-				xs={8} sm={6} className={style.root}
-				elevation={3}
-				onSubmit={async(e)=>{
-					e.preventDefault();
-					try{
-						await Axios.post('user', {
-							username: username,
-							password: password,
-							authority: authority
-						});
-						setRedirect(true);
-					}catch(err){
-						console.log(err);
-					}
-				}}
+	return (
+		<Grid component={PaperForm} container item
+			xs={8} sm={6} className={style.root}
+			elevation={3}
+			onSubmit={async(e)=>{
+				e.preventDefault();
+				try{
+					const res = await Axios.post('user', {
+						username: username,
+						password: password,
+						authority: authority
+					});
+					dispatch(SetAuthStatus(AUTHORIZATION_STATUS[res.data.status]));
+				}catch(err){
+					console.log(err);
+				}
+			}}
+		>
+			<Grid item xs={12} component={TextField} required 
+				id="username" name="username" label="Username"
+				onChange={change.bind(null, "username")}
+				value={username} variant="outlined" margin="dense"
+				helperText={touched.username ? errors.username : ""}
+					error={touched.username && Boolean(errors.username)}
+			/>
+			<Grid item xs={12} component={TextField} required id="password" 
+				name="password" label="Password" type="password"
+				onChange={change.bind(null, "password")}
+				value={password} variant="outlined" margin="dense"
+				helperText={touched.password ? errors.password : ""}
+					error={touched.password && Boolean(errors.password)}
+			/>
+			<Grid item xs={12} component={TextField} required id="confirmPassword" 
+				name="confirmPassword" label="Confirm Password" type="password"
+				onChange={change.bind(null, "confirmPassword")}
+				value={confirmPassword} variant="outlined" margin="dense"
+				helperText={touched.confirmPassword ? errors.confirmPassword : ""}
+					error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+			/>
+			<Grid item xs={12} component={TextField}
+				required select id="authority" label="Authority" 
+				helperText="Select your authority" margin="dense"
+				value={authority} variant="outlined"
+				onChange={(event)=>{setAuthority(event.target.value)}}
 			>
-				<Grid item xs={12} component={TextField} required 
-					id="username" name="username" label="Username"
-					onChange={change.bind(null, "username")}
-					value={username} variant="outlined" margin="dense"
-					helperText={touched.username ? errors.username : ""}
-					   error={touched.username && Boolean(errors.username)}
-				/>
-				<Grid item xs={12} component={TextField} required id="password" 
-					name="password" label="Password" type="password"
-					onChange={change.bind(null, "password")}
-					value={password} variant="outlined" margin="dense"
-					helperText={touched.password ? errors.password : ""}
-					   error={touched.password && Boolean(errors.password)}
-				/>
-				<Grid item xs={12} component={TextField} required id="confirmPassword" 
-					name="confirmPassword" label="Confirm Password" type="password"
-					onChange={change.bind(null, "confirmPassword")}
-					value={confirmPassword} variant="outlined" margin="dense"
-					helperText={touched.confirmPassword ? errors.confirmPassword : ""}
-					   error={touched.confirmPassword && Boolean(errors.confirmPassword)}
-				/>
-				<Grid item xs={12} component={TextField}
-					required select id="authority" label="Authority" 
-					helperText="Select your authority" margin="dense"
-					value={authority} variant="outlined"
-					onChange={(event)=>{setAuthority(event.target.value)}}
-				>
-					{authorities.map(option => (
-						<MenuItem key={option} value={option}>
-							{option}
-						</MenuItem>
-					))}
-				</Grid>
-				<FormButton type="submit" disabled={!isValid} 
-					xs={12} variant="contained" color="secondary"
-				>
-					Sign Up
-				</FormButton>
+				{authorities.map(option => (
+					<MenuItem key={option} value={option}>
+						{option}
+					</MenuItem>
+				))}
 			</Grid>
-		);
-	}
+			<FormButton type="submit" disabled={!isValid} 
+				xs={12} variant="contained" color="secondary"
+			>
+				Sign Up
+			</FormButton>
+		</Grid>
+	);
 };
 
 const ValidationSchema = Yup.object({
