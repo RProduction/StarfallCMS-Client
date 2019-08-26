@@ -1,17 +1,53 @@
-// authorization status
-export const FIRST_BOOT = "FIRST_BOOT";
-export const NOT_AUTHORIZED = "NOT_AUTHORIZED";
-export const USER = "USER";
-export const MANAGER = "MANAGER";
-export const CREATOR = "CREATOR";
-export const AUTHORIZATION_STATUS = {
-    "0": FIRST_BOOT,
-    "-1": NOT_AUTHORIZED,
-    "1": USER,
-    "2": MANAGER,
-    "3": CREATOR
-};
+import Axios from '../../Axios';
 
-export function SetAuthStatus(status){
-    return {type: "SET_AUTHORIZATION_STATUS", status: status};
+// authorization status
+export const FIRST_BOOT = 0;
+export const NOT_AUTHORIZED = -1;
+export const CREATOR = 1;
+export const USER = 2;
+
+export const CheckAuthStatus = () => async dispatch => {
+    try{
+        const {data} = await Axios.get('user/status');
+        dispatch({type: "SET_AUTHORIZATION_STATUS", status: data});
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+export const AuthSignIn = (username, password) => async dispatch => {
+    try{
+        await Axios.post('user/signin', {
+            username: username,
+            password: password
+        });
+        dispatch(CheckAuthStatus());
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+export const AuthSignUp = (username, password) => async dispatch => {
+    try{
+        await Axios.post('user', {
+            username: username,
+            password: password
+        });
+        dispatch(CheckAuthStatus());
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+export const AuthSignOut = () => async dispatch => {
+    try{
+        await Axios.post('user/signout');
+        dispatch(CheckAuthStatus());
+    }
+    catch(err){
+        console.log(err);
+    }
 }

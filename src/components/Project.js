@@ -1,15 +1,14 @@
-import React, {useState, useEffect, useMemo, lazy} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import MaterialTable from 'material-table';
-import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons'
-import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
+import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons';
 import {Link} from 'react-router-dom';
 import {selectEntitiesInProjectByName} from '../redux/selectors/entitySelectors';
 
 import {ShowAddDialog, ShowDeleteDialog, ShowRenameDialog
     , SetTarget} from '../redux/actions/globalActions';
 
-const ProjectAuthorized = lazy(() => import('./ProjectAuthorized'));
+import ProjectDialog from './ProjectDialog';
 
 const columns = [
     {
@@ -61,19 +60,11 @@ const columns = [
 function Project(props){
     const dispatch = useDispatch();
     const {project} = props.match.params;
-    
-    const status = useSelector(state=>state.authStatus);
-    const [authorized, setAuthorized] = useState(false);
 
     const select = useMemo(selectEntitiesInProjectByName, []);
     const entities = useSelector(state => select(state, project));
 
     const [datas, setDatas] = useState([]);
-
-    useEffect(()=>{
-        if(status === CREATOR || status === MANAGER) setAuthorized(true);
-        else setAuthorized(false);
-    }, [status]);
 
     useEffect(()=>{
         setDatas(entities.entities.map((value, index) => ({
@@ -94,12 +85,12 @@ function Project(props){
 
     return(
         <React.Fragment>
-            {authorized ? <ProjectAuthorized/> : null}
+            <ProjectDialog/>
             <MaterialTable 
                 title="Entities" 
                 columns={columns} 
                 data={datas}
-                actions={authorized ? [
+                actions={[
                     {
                         icon: ()=><Create/>, 
                         tooltip: "Rename Entity", 
@@ -127,7 +118,7 @@ function Project(props){
                             dispatch(ShowAddDialog());
                         }
                     }
-                ]: []}
+                ]}
                 icons={{
                     Search: Search,
                     ResetSearch: Clear,

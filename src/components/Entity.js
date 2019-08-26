@@ -1,15 +1,14 @@
-import React, {useState, useEffect, useMemo, lazy} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import MaterialTable from 'material-table';
-import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add, Create} from '@material-ui/icons'
-import {FIRST_BOOT, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
+import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add, Create} from '@material-ui/icons';
 import {Link, Redirect} from 'react-router-dom';
 import {selectDocumentsInEntityByName} from '../redux/selectors/documentSelectors';
 import Axios from '../Axios';
 
 import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
 
-const DialogCustom = lazy(() => import('./DialogCustom'));
+import DialogCustom from './DialogCustom';
 
 const columns = [
     {
@@ -61,9 +60,6 @@ const columns = [
 function Entity(props){
     const dispatch = useDispatch();
     const {project, entity} = props.match.params;
-    
-    const status = useSelector(state=>state.authStatus);
-    const [authorized, setAuthorized] = useState(false);
 
     const notification = useSelector(state => state.notification);
 
@@ -72,11 +68,6 @@ function Entity(props){
     const documents = useSelector(state => select(state, entity));
 
     const [datas, setDatas] = useState([]);
-    
-    useEffect(()=>{
-        if(status !== FIRST_BOOT && status !== NOT_AUTHORIZED) setAuthorized(true);
-        else setAuthorized(false);
-    }, [status]);
 
     useEffect(()=>{
         if(documents.documents){
@@ -99,39 +90,31 @@ function Entity(props){
 
     return(
         <React.Fragment>
-            {authorized ? 
-                <DialogCustom
-                    category="notification" 
-                    title={notification.title} 
-                    content={notification.content}
-                    dialogProps={{
-                        open: notification.title !== '' && notification.content !== '',
-                        onClose: ()=>dispatch(HideNotificationDialog())
-                    }}
-                /> : null
-            }
+            <DialogCustom
+                category="notification"
+                title={notification.title}
+                content={notification.content}
+                dialogProps={{
+                    open: notification.title !== '' && notification.content !== '',
+                    onClose: () => dispatch(HideNotificationDialog())
+                }}
+            />
             <MaterialTable 
                 title="Documents" 
                 columns={columns} 
                 data={datas}
-                actions={authorized ? [
+                actions={[
                     {
                         icon: ()=><Add/>,
                         tooltip: "Add Document",
                         isFreeAction: true,
-                        onClick: (e)=>{
-                            // go to document page to create
-                            setRedirect('add');
-                        }
+                        onClick: (e)=>setRedirect('add')
                     },
                     {
                         icon: ()=><Create/>,
                         tooltip: "Edit Schema",
                         isFreeAction: true,
-                        onClick: (e)=>{
-                            // go to document schema page to edit
-                            setRedirect('schema');
-                        }
+                        onClick: (e)=>setRedirect('schema')
                     },
                     {
                         icon: ()=><DeleteForever/>, 
@@ -155,7 +138,7 @@ function Entity(props){
                             }
                         }
                     }
-                ]: []}
+                ]}
                 icons={{
                     Search: Search,
                     ResetSearch: Clear,

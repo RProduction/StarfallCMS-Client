@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import AuthorizationForm from './components/AuthorizationForm';
-import {TextField, Grid, MenuItem, makeStyles, Paper} from '@material-ui/core';
-import {useSelector, useDispatch} from 'react-redux';
-import {CREATOR, MANAGER, FIRST_BOOT, AUTHORIZATION_STATUS, SetAuthStatus} from './redux/actions/authorizationActions';
-import Axios from './Axios';
+import {TextField, Grid, makeStyles, Paper} from '@material-ui/core';
+import {useDispatch, useSelector} from 'react-redux';
+import {AuthSignUp, FIRST_BOOT, CREATOR, USER, NOT_AUTHORIZED} from './redux/actions/authorizationActions';
 import * as Yup from 'yup';
 import FormButton from './components/FormButton';
-
-const AUTHORITIES_CREATOR = ['Manager', 'User'];
-const AUTHORITIES_MANAGER = ['User'];
-const AUTHORITIES_FIRST_BOOT = ['Creator'];
+import {Redirect} from 'react-router-dom';
 
 const useStyle = makeStyles(theme => ({
 	root:{
@@ -32,28 +28,6 @@ const SignUp = (props)=>{
 	const style = useStyle();
 	const dispatch = useDispatch();
 	const _status = useSelector(state => state.authStatus);
-	const [authorities, setAuthorities] = useState([]);
-	const [authority, setAuthority] = useState('');
-
-	useEffect(()=>{
-		switch(_status){
-			case CREATOR:
-				setAuthorities(AUTHORITIES_CREATOR);
-			break;
-			case MANAGER:
-				setAuthorities(AUTHORITIES_MANAGER);
-			break;
-			case FIRST_BOOT:
-				setAuthorities(AUTHORITIES_FIRST_BOOT);
-			break;
-		}
-	}, [_status]);
-
-	useEffect(()=>{
-		// setdefault value for authorization if authorizations get loaded
-		if(authorities !== [] && authorities[0] !== undefined) 
-			setAuthority(authorities[0]);
-	}, [authorities]);
 
 	const {
 		values: { username, password, confirmPassword },
@@ -70,22 +44,17 @@ const SignUp = (props)=>{
 		setFieldTouched(name, true, false);
 	};
 
-	return (
+	if(_status === NOT_AUTHORIZED)
+		return <Redirect to='/signin'/>;
+	else if(_status === USER)
+		return <Redirect to='/'/>;
+	else return (
 		<Grid component={PaperForm} container item
 			xs={8} sm={6} className={style.root}
 			elevation={3}
-			onSubmit={async(e)=>{
+			onSubmit={(e)=>{
 				e.preventDefault();
-				try{
-					const res = await Axios.post('user', {
-						username: username,
-						password: password,
-						authority: authority
-					});
-					dispatch(SetAuthStatus(AUTHORIZATION_STATUS[res.data.status]));
-				}catch(err){
-					console.log(err);
-				}
+				dispatch(AuthSignUp(username, password));
 			}}
 		>
 			<Grid item xs={12} component={TextField} required 
@@ -109,18 +78,6 @@ const SignUp = (props)=>{
 				helperText={touched.confirmPassword ? errors.confirmPassword : ""}
 					error={touched.confirmPassword && Boolean(errors.confirmPassword)}
 			/>
-			<Grid item xs={12} component={TextField}
-				required select id="authority" label="Authority" 
-				helperText="Select your authority" margin="dense"
-				value={authority} variant="outlined"
-				onChange={(event)=>{setAuthority(event.target.value)}}
-			>
-				{authorities.map(option => (
-					<MenuItem key={option} value={option}>
-						{option}
-					</MenuItem>
-				))}
-			</Grid>
 			<FormButton type="submit" disabled={!isValid} 
 				xs={12} variant="contained" color="secondary"
 			>

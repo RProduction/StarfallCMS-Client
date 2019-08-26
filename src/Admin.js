@@ -1,15 +1,15 @@
 import React, {useEffect, lazy, Suspense} from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Switch, Redirect} from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideBar from './components/SideBar';
 import {InitDatabase} from './redux/actions/projectActions';
 import {useDispatch, useSelector} from 'react-redux';
-import {CREATOR, MANAGER, USER} from './redux/actions/authorizationActions';
 import ContentContainer from './components/ContentContainer';
 import {makeStyles} from '@material-ui/core';
+import WebsocketClient from './WebsocketClient';
+import {NOT_AUTHORIZED, FIRST_BOOT} from './redux/actions/authorizationActions';
 
-const WebsocketClient = lazy(()=>import('./WebsocketClient'));
 const Overview = lazy(()=>import('./components/Overview'));
 const Project = lazy(()=>import('./components/Project'));
 const Entity = lazy(()=>import('./components/Entity'));
@@ -30,25 +30,27 @@ const useStyle = makeStyles(theme => ({
 function Admin(props) {
 	const style = useStyle();
 	const dispatch = useDispatch();
-	const auth = useSelector(state => state.authStatus);
+	const _status = useSelector(state => state.authStatus);
 
 	useEffect(()=>{
 		dispatch(InitDatabase());
 	}, []);
 
-	return (
+	if(_status === FIRST_BOOT)
+		return <Redirect to='/signup'/>;
+	else if(_status === NOT_AUTHORIZED)
+		return <Redirect to='/signin'/>;
+	else return (
 		<React.Fragment>
 			<Header {...props}/>
 			<SideBar/>
 			
+			<WebsocketClient/>
 			<ContentContainer className={style.root}>
 				<Suspense fallback={<div></div>}>
-					{auth === CREATOR || auth === MANAGER || auth === USER
-						? <WebsocketClient/>
-						: null
-					}
 					<Switch>
 						<Route path='/:project/:entity/:document' component={Document}/>
+						<Route path='/:project/authentication' component={null}/>
 						<Route path='/:project/storage' component={Storage}/>
 						<Route path='/:project/:entity' component={Entity}/>
 						<Route path='/:project' component={Project}/>

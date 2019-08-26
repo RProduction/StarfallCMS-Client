@@ -1,6 +1,5 @@
-import React, {useState, useEffect, useMemo, lazy} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {CREATOR, MANAGER} from '../redux/actions/authorizationActions';
 import {Grid, makeStyles} from '@material-ui/core';
 
 import {selectEntityByName} from '../redux/selectors/entitySelectors';
@@ -11,7 +10,7 @@ import DocumentSchemaArray from './DocumentSchemaArray';
 import DocumentSchemaField from './DocumentSchemaField';
 import { GenerateField } from '../redux/actions/documentActions';
 
-const DocumentSchemaAuthorized = lazy(()=> import('./DocumentSchemaAuthorized'));
+import DocumentSchemaButtons from './DocumentSchemaButtons';
 
 const useStyle = makeStyles(theme => ({
 	root:{
@@ -27,18 +26,10 @@ function DocumentSchema(props){
     const dispatch = useDispatch();
     const {entity} = props.match.params;
 
-    const status = useSelector(state=>state.authStatus);
-    const [authorized, setAuthorized] = useState(false);
-
     const selectEntity = useMemo(selectEntityByName, []);
     const _entity = useSelector(state => selectEntity(state, entity));
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
     const keys = useSelector(selectKeys);
-
-    useEffect(()=>{
-        if(status === CREATOR || status === MANAGER) setAuthorized(true);
-        else setAuthorized(false);
-    }, [status]);
 
     useEffect(()=>{
         // generate schema
@@ -69,9 +60,7 @@ function DocumentSchema(props){
                     })
                 }
             </Grid>
-            {authorized ? 
-                <DocumentSchemaAuthorized id={_entity ? _entity.id : 0} {...props}/> 
-            : null}
+            <DocumentSchemaButtons id={_entity ? _entity.id : 0} {...props}/>
         </Grid>
     )
 }

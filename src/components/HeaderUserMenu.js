@@ -1,28 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {ExitToApp, Settings} from '@material-ui/icons';
 import PopoverMenu from './PopoverMenu';
-import Axios from '../Axios';
-import {Redirect} from 'react-router-dom';
 
 import {useDispatch} from 'react-redux';
-import {SetAuthStatus, NOT_AUTHORIZED} from '../redux/actions/authorizationActions';
+import {AuthSignOut} from '../redux/actions/authorizationActions';
 
 function HeaderUserMenu(props){
     const {anchor, close} = props;
     const dispatch = useDispatch();
-    const [account, setAccount] = useState(false);
-    
-    const postSignout = async()=>{
-        try{
-            await Axios.post('user/signout');
-            dispatch(SetAuthStatus(NOT_AUTHORIZED));
-        }
-        catch(err){
-            console.log(err);
-        }
-    };
-    
-    //if(account) return <Redirect/>
 
     return(
         <PopoverMenu
@@ -32,7 +17,7 @@ function HeaderUserMenu(props){
             anchorEl={anchor}
             menus={[
                 {
-                    title: "Account",
+                    title: "User List",
                     icon: Settings,
                     onClick: () => {
                         
@@ -41,7 +26,7 @@ function HeaderUserMenu(props){
                 {
                     title: "Sign Out",
                     icon: ExitToApp,
-                    onClick: ()=>{postSignout()}
+                    onClick: () => dispatch(AuthSignOut())
                 }
             ]}
         />

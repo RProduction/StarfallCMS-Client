@@ -1,12 +1,11 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
 import AuthorizationForm from './components/AuthorizationForm';
 import {TextField, Grid, Paper, makeStyles} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
-import {FIRST_BOOT, NOT_AUTHORIZED, AUTHORIZATION_STATUS, SetAuthStatus} from './redux/actions/authorizationActions';
-import Axios from './Axios';
+import {AuthSignIn, FIRST_BOOT, CREATOR, USER} from './redux/actions/authorizationActions';
 import * as Yup from 'yup';
 import FormButton from './components/FormButton';
+import {Redirect} from 'react-router-dom';
 
 const useStyle = makeStyles(theme => ({
 	root:{
@@ -45,50 +44,40 @@ function SignIn(props) {
 		setFieldTouched(name, true, false);
 	};
 
-	if(_status === FIRST_BOOT){
-		return <Redirect to="/signup"/>
-	}
-	else if(_status !== NOT_AUTHORIZED){
-		return <Redirect to="/"/>
-	}
-	else{
-		return <Grid component={PaperForm} container item 
+	if(_status === FIRST_BOOT)
+		return <Redirect to='/signup'/>
+	else if(_status === CREATOR || _status === USER)
+		return <Redirect to='/'/>
+	else return (
+		<Grid component={PaperForm} container item
 			xs={8} sm={6} className={style.root}
 			elevation={3}
-			onSubmit={async(e)=>{
+			onSubmit={(e) => {
 				e.preventDefault();
-				try{
-					const res = await Axios.post('user/signin', {
-						username: username,
-						password: password
-					});
-					dispatch(SetAuthStatus(AUTHORIZATION_STATUS[res.data.status]));
-				}catch(err){
-					console.log(err);
-				}
+				dispatch(AuthSignIn(username, password));
 			}}
 		>
-			<Grid item xs={12} component={TextField} required 
+			<Grid item xs={12} component={TextField} required
 				id="username" name="username" label="Username"
 				onChange={change.bind(null, "username")}
 				value={username} variant="outlined" margin="dense"
 				helperText={touched.username ? errors.username : ""}
-					error={touched.username && Boolean(errors.username)}
+				error={touched.username && Boolean(errors.username)}
 			/>
-			<Grid item xs={12} component={TextField} required id="password" 
+			<Grid item xs={12} component={TextField} required id="password"
 				name="password" label="Password" type="password"
 				onChange={change.bind(null, "password")}
 				value={password} variant="outlined" margin="dense"
 				helperText={touched.password ? errors.password : ""}
-					error={touched.password && Boolean(errors.password)}
+				error={touched.password && Boolean(errors.password)}
 			/>
-			<FormButton type="submit" disabled={!isValid} 
+			<FormButton type="submit" disabled={!isValid}
 				xs={12} color="secondary" variant="contained"
 			>
 				Sign In
 			</FormButton>
 		</Grid>
-	}
+	)
 }
 
 const ValidationSchema = Yup.object({
