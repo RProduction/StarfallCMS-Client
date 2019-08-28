@@ -42,9 +42,11 @@ export const selectCurrentDocumentKeys = ()=>{
         (_, keys = []) => keys,
         (current, keys)=>{
             keys.forEach((value)=>{
-                current = current[value];
+                if(current.constructor === Object)
+                    current = current[value];
+                else if(current.constructor === Array)
+                    current = current[0];
             });
-
             // check if current is object or array
             // if array return index 0
             // index 0 of array always contain type
@@ -55,7 +57,7 @@ export const selectCurrentDocumentKeys = ()=>{
                         ? 'object' : value[1].constructor === Array
                         ? 'array': value[1]
                 }));
-            }else if(current.constructor == Array){
+            }else if(current.constructor === Array){
                 return {
                     key: 0,
                     type: current[0].constructor === Object 
@@ -72,7 +74,8 @@ export const selectCurrentDocumentValue = ()=>{
         (_, keys = []) => keys,
         (current, keys)=>{
             keys.forEach((value)=>{
-                current = current[value];
+                if(current[value])
+                    current = current[value];
             });
             return current;
         }

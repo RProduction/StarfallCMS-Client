@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Grid, Typography, IconButton, makeStyles} from '@material-ui/core';
+import {Grid, Typography, IconButton} from '@material-ui/core';
 import {Delete, Add} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
@@ -9,14 +9,7 @@ import {selectCurrentDocumentKeys, selectCurrentDocumentValue} from '../redux/se
 import DocumentField from './DocumentField';
 import DocumentObject from './DocumentObject';
 
-const useStyle = makeStyles(theme => ({
-	root:{
-        marginLeft: theme.spacing(3)
-	}
-}));
-
 function DocumentArray(props){
-    const style = useStyle();
     const {keys, arrayValues, arrayKeys} = props;
     const dispatch = useDispatch();
     const selectKeys = useMemo(selectCurrentDocumentKeys, []);
@@ -75,32 +68,30 @@ function DocumentArray(props){
                     </IconButton>: null
                 }
             </Grid>
-            <Grid container item className={style.root} xs={12}>
-                {
-                    values.map((value, index)=>{
-                        const {type} = curKeys;
-                        const temp = [...keys, index];
-                        if(type === 'object'){
-                            return(
-                                <DocumentObject key={index} keys={temp}
-                                    arrayKeys={keys} arrayValues={values}/>
-                            )
-                        }
-                        else if(type === 'array'){
-                            return(
-                                <DocumentArray key={index} keys={temp}
-                                    arrayKeys={keys} arrayValues={values}/>
-                            )
-                        }else{
-                            return(
-                                <DocumentField key={index} keys={temp} category={type} 
-                                    arrayKeys={keys} arrayValues={values}
-                                />
-                            )
-                        }
-                    })
-                }
-            </Grid>
+            {
+                values.map((value, index)=>{
+                    const {type} = curKeys;
+                    const temp = [...keys, index];
+                    if(type === 'object'){
+                        return(
+                            <DocumentObject key={index} keys={temp}
+                                arrayKeys={keys} arrayValues={values}/>
+                        )
+                    }
+                    else if(type === 'array'){
+                        return(
+                            <DocumentArray key={index} keys={temp}
+                                arrayKeys={keys} arrayValues={values}/>
+                        )
+                    }else{
+                        return(
+                            <DocumentField key={index} keys={temp} category={type} 
+                                arrayKeys={keys} arrayValues={values}
+                            />
+                        )
+                    }
+                })
+            }
         </React.Fragment>
     )
 }

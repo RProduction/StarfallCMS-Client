@@ -57,9 +57,21 @@ const SetField = (state, action) => produce(state, (draft)=>{
     const {keys, value} = action;
     
     let current = draft.data;
+    let currentType = draft.type;
     keys.forEach((key, index)=>{
-        if(index+1 < keys.length)
+        if(index+1 < keys.length){
+            if(currentType.constructor === Object)
+                currentType = currentType[key];
+            else if(currentType.constructor === Array)
+                currentType = currentType[0];
+            
+            if(!current[key] && currentType.constructor === Object)
+                current[key] = {};
+            else if(!current[key] && currentType.constructor === Array)
+                current[key] = [];
+
             current = current[key];
+        }
         else
             current[key] = value;
     });
