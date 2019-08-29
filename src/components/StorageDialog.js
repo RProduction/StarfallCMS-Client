@@ -7,7 +7,7 @@ import DialogCustom from './DialogCustom';
 
 import Axios from '../Axios';
 
-function StorageAuthorized(props){
+function StorageDialog(props){
     const dispatch = useDispatch();
     const target = useSelector(state => state.target);
     const dialogType = useSelector(state => state.dialog);
@@ -51,22 +51,27 @@ function StorageAuthorized(props){
                 title={`Rename "${target.name}"`}
                 btn={`Rename ${target.name}`}
                 request={async({name})=>{
+                    // check if this is file or folder
+                    // if file then add extension behind name
+                    const extension = target.name.split('.')[1];
+                    const new_name = extension ? `${name}.${extension}` : name;
+
                     try{
                         await Axios.post(`storage/${target.id}/rename`, {
                             path: target.path,
                             name: target.name, 
-                            new_name: name
+                            new_name: new_name
                         });
                         dispatch(HideDialog());
                         dispatch(ShowNotificationDialog(
-                            `Rename "${target.name}" into "${name}"`, 
-                            `Succeed renaming "${target.name}" into "${name}"`
+                            `Rename "${target.name}" into "${new_name}"`, 
+                            `Succeed renaming "${target.name}" into "${new_name}"`
                         ));
                     }catch(err){
                         dispatch(HideDialog());
                         dispatch(ShowNotificationDialog(
-                            `Rename "${target.name}" into "${name}"`, 
-                            `Fail renaming "${target.name}" into "${name}, error: ${err}"`
+                            `Rename "${target.name}" into "${new_name}"`, 
+                            `Fail renaming "${target.name}" into "${new_name}, error: ${err}"`
                         ));
                     }
                 }}
@@ -84,4 +89,4 @@ function StorageAuthorized(props){
     )
 }
 
-export default StorageAuthorized;
+export default StorageDialog;

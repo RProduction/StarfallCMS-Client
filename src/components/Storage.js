@@ -16,14 +16,14 @@ import {InitStoragePath} from '../redux/actions/storageActions';
 
 import { ShowAddDialog, ShowRenameDialog, SetTarget, ShowNotificationDialog} from '../redux/actions/globalActions';
 
-import StorageNotification from './StorageNotification';
+import StorageDialog from './StorageDialog';
 import Axios from '../Axios';
 
 const columns = [
     {
 		title: "Name",
         field: "name", 
-        searchable: true,
+		searchable: true,
 		render: rowData => <StorageCustomRowName rowData={rowData}/>
 	},
 	{
@@ -67,13 +67,18 @@ function Storage(props) {
 
 	return (
 		<React.Fragment>
-			<StorageNotification/>
+			<StorageDialog/>
 			<MaterialTable 
 				title={<StorageCustomHeaderTitle title={
 					storagePath.partialpath ? storagePath.partialpath : '/'
 				}/>}
 				columns={columns}
-				data={storage}
+				data={storage.map(value => ({
+					name: value.name,
+					size: value.size,
+					created: value.created,
+					modified: value.modified
+				}))}
 				actions={[
 					{
 						icon: ()=><CloudUpload/>,

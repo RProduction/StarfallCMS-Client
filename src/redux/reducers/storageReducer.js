@@ -15,17 +15,19 @@ const InitStorage = (state, action) => produce(state, (draft)=>{
 const UploadStorage = (state, action) => produce(state, (draft)=>{
     const {id, path, files} = action;
     
+    if(!draft[id]) draft[id] = {};
+
     let currentPath = draft[id];
-    let keys = path.split('/');
+    let keys = path ? path.split('/') : [];
     keys.forEach((key)=>{
         currentPath = currentPath[key];
     });
 
-    files.forEach(value => currentPath[value.name] = {
-        name: value.name,
-        size: value.size,
-        created: value.created,
-        modified: value.modified
+    files.forEach(file => currentPath[file.name] = {
+        name: file.name,
+        size: file.size,
+        created: file.created,
+        modified: file.modified
     });
 });
 
@@ -35,6 +37,8 @@ const UploadStorage = (state, action) => produce(state, (draft)=>{
 const FolderStorage = (state, action) => produce(state, (draft)=>{
     const {id, path} = action;
     
+    if(!draft[id]) draft[id] = {};
+
     let currentPath = draft[id];
     let keys = path.split('/');
     keys.forEach((key, index)=>{
@@ -53,7 +57,7 @@ const MoveStorage = (state, action) => produce(state, (draft)=>{
     const {id, path, targets} = action;
 
     let currentPath = draft[id];
-    let keys = path.split('/');
+    let keys = path ? path.split('/') : [];
     keys.forEach((key)=>{
         currentPath = currentPath[key];
     });
@@ -78,13 +82,17 @@ const RenameStorage = (state, action) => produce(state, (draft)=>{
     const {id, path, name, new_name} = action;
     
     let currentPath = draft[id];
-    let keys = path.split('/');
+    let keys = path ? path.split('/') : [];
     keys.forEach((key)=>{
-        currentPath = currentPath[key];
+        currentPath = currentPath[key];        
     });
 
     currentPath[new_name] = currentPath[name];
     delete currentPath[name];
+
+    // check if file then set new name
+    if(currentPath[new_name].name && currentPath[new_name].name.constructor === String)
+        currentPath[new_name].name = new_name;
 });
 
 // receive project id, and target paths
