@@ -7,7 +7,6 @@ import { ADD_DIALOG, DELETE_DIALOG, RENAME_DIALOG, IMG_DIALOG
     , HideNotificationDialog } from '../redux/actions/globalActions';
 import OverviewPopover from './OverviewPopover';
 import DialogCustom from './DialogCustom';
-import DialogImg from './DialogImg';
 
 import Axios from '../Axios';
 
@@ -103,28 +102,6 @@ function OverviewAuthorized(props){
                             `Fail renaming project ${name} into ${newName}, error: ${err}`
                         ));
                     }
-                }}
-            />
-            <DialogImg
-                dialogProps={{
-                    open: dialogType === IMG_DIALOG,
-                    onClose: () => dispatch(HideDialog())
-                }}
-                imgCategory="Project"
-                imgRequest={`project/${target.id}/img`}
-                onSucceed={(res) => {
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        'Change Project Image', 
-                        `Succeed changing project image`
-                    ));
-                }}
-                onFail={(err) => { 
-                    dispatch(HideDialog());
-                    dispatch(ShowNotificationDialog(
-                        'Change Project Image', 
-                        `Fail changing project image, error: ${err}`
-                    ));
                 }}
             />
             <DialogCustom
