@@ -3,7 +3,7 @@ import {combineReducers} from 'redux';
 import authorizationReducer from './authorizationReducer';
 import {projectPopoverReducer, projectsReducer} from './projectReducer';
 import {entitiesReducer} from './entityReducer';
-import {documentsReducer, currentDocumentReducer} from './documentReducer';
+import {documentsReducer} from './documentReducer';
 import {storageReducer, storagePathReducer} from './storageReducer';
 import {notificationReducer, dialogReducer, targetReducer, sidebarReducer} from './globalReducer';
 
@@ -13,7 +13,6 @@ const reducers = combineReducers(
         projects: projectsReducer,
         entities: entitiesReducer,
         documents: documentsReducer,
-        currentDocument: currentDocumentReducer,
         storage: storageReducer,
         storagePath: storagePathReducer,
         dialog: dialogReducer,

@@ -1,22 +1,6 @@
 import {normalizeDocuments} from '../schemas/database';
 import Axios from '../../Axios';
 
-export function AddField(keys, fieldType){
-    return {type: "ADD_FIELD", keys: keys, fieldType: fieldType};
-}
-
-export function SetField(keys, value){
-    return {type: "SET_FIELD", keys: keys, value: value};
-}
-
-export function DeleteField(keys){
-    return {type: "DELETE_FIELD", keys: keys};
-}
-
-export function GenerateField(schema, document = {}){
-    return {type: "GENERATE_FIELD", fieldType: schema, data: document};
-}
-
 // receive array of id, entityId, updated, created, data
 export const AddDocuments = documents => {
     return {

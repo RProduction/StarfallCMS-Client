@@ -81,8 +81,7 @@ export const InitDatabase = () => async dispatch => {
                     projectId: normalized.entities.entities[value].project_id,
                     name: normalized.entities.entities[value].name,
                     created: normalized.entities.entities[value].created_at,
-                    updated: normalized.entities.entities[value].updated_at,
-                    schema: normalized.entities.entities[value].schema || {}
+                    updated: normalized.entities.entities[value].updated_at
                 });
             });
         });

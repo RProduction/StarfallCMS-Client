@@ -31,12 +31,3 @@ export const RenameEntity = (id, name, updated) => {
         updated: updated
     };
 }
-
-export const SetEntitySchema = (id, schema, updated) => {
-    return {
-        type: "SET_ENTITY_SCHEMA", 
-        id: id,
-        schema: schema,
-        updated: updated
-    };
-}

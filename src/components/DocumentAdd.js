@@ -1,20 +1,11 @@
-import React, {useMemo, useState, useEffect} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Grid, makeStyles} from '@material-ui/core';
-import FormButton from './FormButton';
+import {Grid, makeStyles, Button} from '@material-ui/core';
 import {ShowNotificationDialog} from '../redux/actions/globalActions';
-
-import {selectCurrentDocumentKeys, selectCurrentDocumentData} from '../redux/selectors/documentSelectors';
-import {GenerateField} from '../redux/actions/documentActions';
-
-import DocumentObject from './DocumentObject';
-import DocumentArray from './DocumentArray';
-import DocumentField from './DocumentField';
-
 import {selectEntityByName} from '../redux/selectors/entitySelectors';
 import Axios from '../Axios';
 
-import {GenerateDefaultFromType} from './DocumentConstant';
+import DocumentJSONEditor from './DocumentJSONEditor';
 
 const useStyle = makeStyles(theme => ({
 	root:{
@@ -32,53 +23,23 @@ function DocumentAdd(props){
 
     const selectEntity = useMemo(selectEntityByName, []);
     const _entity = useSelector(state => selectEntity(state, entity));
-    const selectKeys = useMemo(selectCurrentDocumentKeys, []);
-    const keys = useSelector(state => selectKeys(state));
-
-    const currentValue = useSelector(selectCurrentDocumentData);
-
-    const [generate, setGenerate] = useState(false);
-
-    useEffect(()=>{
-        if(_entity){
-            let defaultValue = {};
-            GenerateDefaultFromType(_entity.schema, defaultValue);
-            dispatch(GenerateField(_entity.schema, defaultValue));
-            setGenerate(true);
-        }
-    }, [_entity]);
-
-    if(!generate) return null;
     
+    const [data, setData] = useState(`{}`);
+    const [valid, setValid] = useState(false);
+
     return(
         <Grid container className={style.root} direction="column">
-            <Grid container item direction="column" xs={12} sm={6} md={8} lg={6}>
-                {
-                    keys.map(value => {
-                        const {key, type} = value;
-                        const temp = [key];
-                        if(type === 'object'){
-                            return(
-                                <DocumentObject key={key} keys={temp}/>
-                            )
-                        }
-                        else if(type === 'array'){
-                            return(
-                                <DocumentArray key={key} keys={temp}/>
-                            )
-                        }else{
-                            return(
-                                <DocumentField key={key} keys={temp} category={type}/>
-                            )
-                        }
-                    })
-                }
-            </Grid>
-            <FormButton color="secondary" variant="contained" xs={12} 
+            <DocumentJSONEditor 
+                data={data} 
+                onChange={(value) => setData(value)}
+                onValidation={(annotations) => setValid(annotations.length === 0)}
+            />
+            <Grid item component={Button} color="secondary" 
+                variant="contained" xs={12} disabled={!valid}
                 onClick={async () => {
                     try{
                         await Axios.post(`document/${_entity.id}`, {
-                            data: currentValue
+                            data: JSON.parse(data)
                         });
                         
                         dispatch(ShowNotificationDialog(
@@ -94,7 +55,7 @@ function DocumentAdd(props){
                 }}
             >
                 Add
-            </FormButton>
+            </Grid>
         </Grid>
     )
 }

@@ -5,7 +5,6 @@ import {Route, Switch} from 'react-router-dom';
 import {HideNotificationDialog} from '../redux/actions/globalActions';
 import DialogCustom from './DialogCustom';
 
-const DocumentSchema = lazy(() => import('./DocumentSchema'));
 const DocumentAdd = lazy(() => import('./DocumentAdd'));
 const DocumentEdit = lazy(() => import('./DocumentEdit'));
 
@@ -25,7 +24,6 @@ function Document(props){
                 }}
             />
             <Switch>
-                <Route path='/:project/:entity/schema' component={DocumentSchema} />
                 <Route path='/:project/:entity/add' component={DocumentAdd} />
                 <Route path='/:project/:entity/:document' component={DocumentEdit} />
             </Switch>

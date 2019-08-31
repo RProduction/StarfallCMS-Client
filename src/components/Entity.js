@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import MaterialTable from 'material-table';
-import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add, Create} from '@material-ui/icons';
+import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add} from '@material-ui/icons';
 import {Link, Redirect} from 'react-router-dom';
 import {selectDocumentsInEntityByName} from '../redux/selectors/documentSelectors';
 import Axios from '../Axios';
@@ -109,12 +109,6 @@ function Entity(props){
                         tooltip: "Add Document",
                         isFreeAction: true,
                         onClick: (e)=>setRedirect('add')
-                    },
-                    {
-                        icon: ()=><Create/>,
-                        tooltip: "Edit Schema",
-                        isFreeAction: true,
-                        onClick: (e)=>setRedirect('schema')
                     },
                     {
                         icon: ()=><DeleteForever/>, 
