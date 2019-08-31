@@ -30,12 +30,13 @@ export const DeleteProject = id => async (dispatch, getState) => {
     dispatch({type: "DELETE_PROJECT", id: id});
 }
 
-export const RenameProject = (id, name, updated) => {
+export const RenameProject = (id, name, updated, publicKey) => {
     return {
         type: "RENAME_PROJECT", 
         id: id, 
         name: name,
-        updated: updated
+        updated: updated,
+        publicKey: publicKey
     };
 }
 

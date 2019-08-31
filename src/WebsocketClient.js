@@ -42,7 +42,8 @@ function WebsocketClient(props) {
                 dispatch(RenameProject(
                     msg._id, 
                     msg.name, 
-                    msg.updated_at
+                    msg.updated_at,
+                    msg.public_key
                 ));
             });
             project.on('img', (msg)=>{

@@ -27,9 +27,10 @@ const DeleteProject = (state, action) => produce(state, (draft)=>{
 });
 
 const RenameProject = (state, action) => produce(state, (draft)=>{
-    const {id, name, updated} = action;
+    const {id, name, updated, publicKey} = action;
     draft[id].name = name;
     draft[id].updated = updated;
+    draft[id].publicKey = publicKey;
 });
 
 const ImgProject = (state, action) => produce(state, (draft)=>{
