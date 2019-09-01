@@ -30,12 +30,18 @@ export const selectEntitiesInProjectByName = ()=>{
         }
     );
 };
-export const selectEntityByName = ()=>{
+export const selectEntityInProjectByName = ()=>{
     return createSelector(
         selectAllEntities,
-        (_, name) => name,
-        (entities, name)=>{
-            return entities.find(value => value.name === name);
+        (state, project, _) => {
+            const select = selectProjectByName();
+            return select(state, project);
+        },
+        (_, __, name) => name,
+        (entities, project, name)=>{
+            return entities.find(
+                value => value.name === name && value.projectId === project.id
+            );
         }
     );
 };

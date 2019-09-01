@@ -1,16 +1,16 @@
 import {schema, normalize} from 'normalizr';
 
-const document = new schema.Entity('documents', {}, {idAttribute: '_id'});
+const document = new schema.Entity('documents', {}, {idAttribute: 'id'});
 const documentList = new schema.Array(document);
 
 const entity = new schema.Entity('entities', {
     documents: documentList
-}, {idAttribute: '_id'});
+}, {idAttribute: 'id'});
 const entityList = new schema.Array(entity);
 
 const project = new schema.Entity('projects', {
     entities: entityList
-}, {idAttribute: '_id'});
+}, {idAttribute: 'id'});
 const projectList = new schema.Array(project);
 
 export function normalizeProjects(input){

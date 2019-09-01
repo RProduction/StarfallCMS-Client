@@ -26,7 +26,7 @@ export const FetchDocuments = (entityId) => async dispatch => {
         let documents = [];
         normalized.result.forEach(value =>{
             documents.push({
-                id: normalized.entities.documents[value]._id,
+                id: normalized.entities.documents[value].id,
                 entityId: normalized.entities.documents[value].entity_id,
                 created: normalized.entities.documents[value].created_at,
                 updated: normalized.entities.documents[value].updated_at,

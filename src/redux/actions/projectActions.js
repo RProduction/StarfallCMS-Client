@@ -67,7 +67,7 @@ export const InitDatabase = () => async dispatch => {
         let entities = [];
         normalized.result.forEach(value =>{
             projects.push({
-                id: normalized.entities.projects[value]._id,
+                id: normalized.entities.projects[value].id,
                 name: normalized.entities.projects[value].name,
                 img: normalized.entities.projects[value].img_url,
                 created: normalized.entities.projects[value].created_at,
@@ -78,7 +78,7 @@ export const InitDatabase = () => async dispatch => {
 
             normalized.entities.projects[value].entities.forEach(value =>{
                 entities.push({
-                    id: normalized.entities.entities[value]._id,
+                    id: normalized.entities.entities[value].id,
                     projectId: normalized.entities.entities[value].project_id,
                     name: normalized.entities.entities[value].name,
                     created: normalized.entities.entities[value].created_at,

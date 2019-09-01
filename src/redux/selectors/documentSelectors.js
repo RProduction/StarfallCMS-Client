@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect';
-import {selectEntityByName} from './entitySelectors';
+import {selectEntityInProjectByName} from './entitySelectors';
 
 const _selectDocuments = state => state.documents;
 export const selectDocumentIds = state => Object.keys(_selectDocuments(state));
@@ -19,9 +19,9 @@ export const selectDocumentsInEntity = ()=>{
 export const selectDocumentsInEntityByName = ()=>{
     return createSelector(
         selectAllDocuments,
-        (state, name)=>{
-            const select = selectEntityByName();
-            return select(state, name);
+        (state, project, name)=>{
+            const select = selectEntityInProjectByName();
+            return select(state, project, name);
         },
         (documents, entity)=>{
             return {

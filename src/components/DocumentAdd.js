@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Grid, makeStyles, Button} from '@material-ui/core';
 import {ShowNotificationDialog} from '../redux/actions/globalActions';
-import {selectEntityByName} from '../redux/selectors/entitySelectors';
+import {selectEntityInProjectByName} from '../redux/selectors/entitySelectors';
 import Axios from '../Axios';
 
 import DocumentJSONEditor from './DocumentJSONEditor';
@@ -19,10 +19,10 @@ const useStyle = makeStyles(theme => ({
 function DocumentAdd(props){
     const style = useStyle();
     const dispatch = useDispatch();
-    const {entity} = props.match.params;
+    const {project, entity} = props.match.params;
 
-    const selectEntity = useMemo(selectEntityByName, []);
-    const _entity = useSelector(state => selectEntity(state, entity));
+    const selectEntity = useMemo(selectEntityInProjectByName, []);
+    const _entity = useSelector(state => selectEntity(state, project, entity));
     
     const [data, setData] = useState(`{}`);
     const [valid, setValid] = useState(false);

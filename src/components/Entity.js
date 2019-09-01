@@ -65,7 +65,7 @@ function Entity(props){
 
     const [redirect, setRedirect] = useState('');
     const select = useMemo(selectDocumentsInEntityByName, []);
-    const documents = useSelector(state => select(state, entity));
+    const documents = useSelector(state => select(state, project, entity));
 
     const [datas, setDatas] = useState([]);
 

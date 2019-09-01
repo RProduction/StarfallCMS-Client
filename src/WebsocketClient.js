@@ -10,7 +10,9 @@ function WebsocketClient(props) {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        const ws = process.env.NODE_ENV === 'development' ? Ws('ws://localhost:3333/') : Ws();
+        const ws = process.env.NODE_ENV === 'development' 
+            ? Ws('ws://localhost:3333/', {path: 'starfall-cms-ws'}) 
+            : Ws({path: 'starfall-cms-ws'});
         
         ws.on("open", ()=>{
             const project = ws.subscribe('project');
@@ -23,7 +25,7 @@ function WebsocketClient(props) {
                 console.log("add project");
                 console.log(msg);
                 dispatch(AddProjects([{
-                    id: msg._id,
+                    id: msg.id,
                     name: msg.name,
                     img: msg.img_url,
                     created: msg.created_at,
@@ -34,13 +36,13 @@ function WebsocketClient(props) {
             project.on('delete', (msg)=>{
                 console.log("delete project");
                 console.log(msg);
-                dispatch(DeleteProject(msg._id));
+                dispatch(DeleteProject(msg.id));
             });
             project.on('rename', (msg)=>{
                 console.log("rename project");
                 console.log(msg);
                 dispatch(RenameProject(
-                    msg._id, 
+                    msg.id, 
                     msg.name, 
                     msg.updated_at,
                     msg.public_key
@@ -50,7 +52,7 @@ function WebsocketClient(props) {
                 console.log("change image of project");
                 console.log(msg);
                 dispatch(ImgProject(
-                    msg._id, 
+                    msg.id, 
                     msg.img_url, 
                     msg.updated_at
                 ));
@@ -64,7 +66,7 @@ function WebsocketClient(props) {
                 console.log("add entity");
                 console.log(msg);
                 dispatch(AddEntities([{
-                    id: msg._id,
+                    id: msg.id,
                     projectId:msg.project_id,
                     name: msg.name,
                     created: msg.created_at,
@@ -74,13 +76,13 @@ function WebsocketClient(props) {
             entity.on('delete', (msg)=>{
                 console.log("delete entity");
                 console.log(msg);
-                dispatch(DeleteEntities([msg._id]));
+                dispatch(DeleteEntities([msg.id]));
             });
             entity.on('rename', (msg)=>{
                 console.log("rename entity");
                 console.log(msg);
                 dispatch(RenameEntity(
-                    msg._id,
+                    msg.id,
                     msg.name, 
                     msg.updated_at
                 ));
@@ -94,7 +96,7 @@ function WebsocketClient(props) {
                 console.log("add document");
                 console.log(msg);
                 dispatch(AddDocuments([{
-                    id: msg._id,
+                    id: msg.id,
                     entityId: msg.entity_id,
                     created: msg.created_at,
                     updated: msg.updated_at,
@@ -105,7 +107,7 @@ function WebsocketClient(props) {
                 console.log("modify document");
                 console.log(msg);
                 dispatch(ModifyDocument(
-                    msg._id,
+                    msg.id,
                     msg.updated_at,
                     msg.data
                 ));
@@ -120,27 +122,27 @@ function WebsocketClient(props) {
             storage.on('upload', (msg)=>{
                 console.log("upload into storage");
                 console.log(msg);
-                dispatch(UploadStorage(msg._id, msg.path, msg.files));
+                dispatch(UploadStorage(msg.id, msg.path, msg.files));
             });
             storage.on('folder', (msg)=>{
                 console.log("new folder into storage");
                 console.log(msg);
-                dispatch(FolderStorage(msg._id, msg.path));
+                dispatch(FolderStorage(msg.id, msg.path));
             });
             storage.on('move', (msg)=>{
                 console.log("move storage");
                 console.log(msg);
-                dispatch(MoveStorage(msg._id, msg.path, msg.targets));
+                dispatch(MoveStorage(msg.id, msg.path, msg.targets));
             });
             storage.on('rename', (msg)=>{
                 console.log("rename storage");
                 console.log(msg);
-                dispatch(RenameStorage(msg._id, msg.path, msg.name, msg.new_name));
+                dispatch(RenameStorage(msg.id, msg.path, msg.name, msg.new_name));
             });
             storage.on('delete', (msg)=>{
                 console.log("delete storage");
                 console.log(msg);
-                dispatch(DeleteStorage(msg._id, msg.paths));
+                dispatch(DeleteStorage(msg.id, msg.paths));
             });
         });
 
