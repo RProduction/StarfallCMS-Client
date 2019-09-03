@@ -1,12 +1,18 @@
 import React, {useEffect, lazy, Suspense} from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
+
+import Route from 'react-router-dom/Route';
+import Switch from 'react-router-dom/Switch';
+import Redirect from 'react-router-dom/Redirect';
+
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
+import {useDispatch, useSelector} from 'react-redux';
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideBar from './components/SideBar';
 import {InitDatabase} from './redux/actions/projectActions';
-import {useDispatch, useSelector} from 'react-redux';
 import ContentContainer from './components/ContentContainer';
-import {makeStyles} from '@material-ui/core';
 import WebsocketClient from './WebsocketClient';
 import {NOT_AUTHORIZED, FIRST_BOOT} from './redux/actions/authorizationActions';
 

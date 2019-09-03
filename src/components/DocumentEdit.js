@@ -1,10 +1,15 @@
 import React, {useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {Grid, makeStyles, Button} from '@material-ui/core';
-import {ShowNotificationDialog} from '../redux/actions/globalActions';
-import {selectDocument} from '../redux/selectors/documentSelectors';
+
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
+import {useDispatch, useSelector} from 'react-redux';
+
 import Axios from '../Axios';
 
+import {ShowNotificationDialog} from '../redux/actions/globalActions';
+import {selectDocument} from '../redux/selectors/documentSelectors';
 import DocumentJSONEditor from './DocumentJSONEditor';
 
 const useStyle = makeStyles(theme => ({

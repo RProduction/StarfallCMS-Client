@@ -1,7 +1,15 @@
 import React from 'react';
-import {Drawer, IconButton, Divider, Hidden, makeStyles} from '@material-ui/core';
-import {ChevronLeft, ChevronRight} from '@material-ui/icons';
+
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+
 import {useDispatch, useSelector} from 'react-redux';
+
 import {SwitchSideBar} from '../redux/actions/globalActions';
 import SideBarContent from './SideBarContent';
 

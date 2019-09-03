@@ -1,11 +1,21 @@
 import React from 'react';
-import AuthorizationForm from './components/AuthorizationForm';
-import {TextField, Grid, Paper, makeStyles} from '@material-ui/core';
+
+import Redirect from 'react-router-dom/Redirect';
+
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
 import {useDispatch, useSelector} from 'react-redux';
-import {AuthSignIn, FIRST_BOOT, CREATOR, USER} from './redux/actions/authorizationActions';
+
 import * as Yup from 'yup';
+
+import AuthorizationForm from './components/AuthorizationForm';
+import {AuthSignIn, FIRST_BOOT, CREATOR, USER} from './redux/actions/authorizationActions';
+import {HideNotificationDialog} from './redux/actions/globalActions';
 import FormButton from './components/FormButton';
-import {Redirect} from 'react-router-dom';
+import DialogCustom from './components/DialogCustom';
 
 const useStyle = makeStyles(theme => ({
 	root:{
@@ -27,6 +37,7 @@ const PaperForm = React.forwardRef((props, ref)=>{
 function SignIn(props) {
 	const style = useStyle();
 	const dispatch = useDispatch();
+	const notification = useSelector(state => state.notification);
 	const _status = useSelector(state => state.authStatus);
 
 	const {
@@ -49,34 +60,45 @@ function SignIn(props) {
 	else if(_status === CREATOR || _status === USER)
 		return <Redirect to='/'/>
 	else return (
-		<Grid component={PaperForm} container item
-			xs={8} sm={6} className={style.root}
-			elevation={3}
-			onSubmit={(e) => {
-				e.preventDefault();
-				dispatch(AuthSignIn(username, password));
-			}}
-		>
-			<Grid item xs={12} component={TextField} required
-				id="username" name="username" label="Username"
-				onChange={change.bind(null, "username")}
-				value={username} variant="outlined" margin="dense"
-				helperText={touched.username ? errors.username : ""}
-				error={touched.username && Boolean(errors.username)}
+		<React.Fragment>
+			<DialogCustom
+				category="notification"
+				title={notification.title} 
+				content={notification.content}
+				dialogProps={{
+					open: notification.title !== '' && notification.content !== '',
+					onClose: ()=>dispatch(HideNotificationDialog())
+				}}
 			/>
-			<Grid item xs={12} component={TextField} required id="password"
-				name="password" label="Password" type="password"
-				onChange={change.bind(null, "password")}
-				value={password} variant="outlined" margin="dense"
-				helperText={touched.password ? errors.password : ""}
-				error={touched.password && Boolean(errors.password)}
-			/>
-			<FormButton type="submit" disabled={!isValid}
-				xs={12} color="secondary" variant="contained"
+			<Grid component={PaperForm} container item
+				xs={8} sm={6} className={style.root}
+				elevation={3}
+				onSubmit={(e) => {
+					e.preventDefault();
+					dispatch(AuthSignIn(username, password));
+				}}
 			>
-				Sign In
-			</FormButton>
-		</Grid>
+				<Grid item xs={12} component={TextField} required
+					id="username" name="username" label="Username"
+					onChange={change.bind(null, "username")}
+					value={username} variant="outlined" margin="dense"
+					helperText={touched.username ? errors.username : ""}
+					error={touched.username && Boolean(errors.username)}
+				/>
+				<Grid item xs={12} component={TextField} required id="password"
+					name="password" label="Password" type="password"
+					onChange={change.bind(null, "password")}
+					value={password} variant="outlined" margin="dense"
+					helperText={touched.password ? errors.password : ""}
+					error={touched.password && Boolean(errors.password)}
+				/>
+				<FormButton type="submit" disabled={!isValid}
+					xs={12} color="secondary" variant="contained"
+				>
+					Sign In
+				</FormButton>
+			</Grid>
+		</React.Fragment>
 	)
 }
 

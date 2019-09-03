@@ -1,6 +1,9 @@
 import React, {useEffect, useState, lazy} from 'react';
+
+import Grid from '@material-ui/core/Grid';
+
 import {useSelector} from 'react-redux';
-import {Grid} from '@material-ui/core';
+
 import OverviewCard from './OverviewCard';
 import {CREATOR} from '../redux/actions/authorizationActions';
 import {selectAllProjects} from '../redux/selectors/projectSelectors';

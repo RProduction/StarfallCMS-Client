@@ -1,8 +1,11 @@
 import React from 'react';
-import {MTableBodyRow} from 'material-table';
+
+import Box from '@material-ui/core/Box';
+import MTableBodyRow from 'material-table/dist/components/m-table-body-row';
+
 import {useDispatch} from 'react-redux';
+
 import {ForwardStoragePath} from '../redux/actions/storageActions';
-import {Box} from '@material-ui/core';
 
 function StorageCustomRow(props){
 	const dispatch = useDispatch();

@@ -1,6 +1,9 @@
 import React, {lazy} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {Route, Switch} from 'react-router-dom';
+
+import Route from 'react-router-dom/Route';
+import Switch from 'react-router-dom/Switch';
+
+import {useDispatch, useSelector} from 'react-redux';
 
 import {HideNotificationDialog} from '../redux/actions/globalActions';
 import DialogCustom from './DialogCustom';

@@ -1,11 +1,16 @@
 import React, {useRef} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {SetProjectPopover} from '../redux/actions/projectActions';
-import {ShowRenameDialog, ShowDeleteDialog, ShowNotificationDialog} from '../redux/actions/globalActions';
-import {DeleteForever, Create, Image} from '@material-ui/icons'
-import PopoverMenu from './PopoverMenu';
+
+import DeleteForever from '@material-ui/icons/DeleteForever';
+import Create from '@material-ui/icons/Create';
+import Image from '@material-ui/icons/Image';
+
+import {useDispatch, useSelector} from 'react-redux';
 
 import Axios from '../Axios';
+
+import {SetProjectPopover} from '../redux/actions/projectActions';
+import {ShowRenameDialog, ShowDeleteDialog, ShowNotificationDialog} from '../redux/actions/globalActions';
+import PopoverMenu from './PopoverMenu';
 
 const maxSize = 10 * 1024 * 1024;
 const formats = [

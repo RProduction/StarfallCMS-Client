@@ -1,5 +1,8 @@
 import React from 'react';
-import { ListItem, ListItemText} from '@material-ui/core';
+
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
 import PropTypes from 'prop-types';
 
 function OverviewList(props){

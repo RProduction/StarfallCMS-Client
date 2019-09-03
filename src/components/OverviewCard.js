@@ -1,6 +1,15 @@
 import React, {lazy} from 'react';
-import {Grid, Card, CardContent, CardHeader
-    , CardMedia, Box, List, Avatar, Typography} from '@material-ui/core';
+
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import List from '@material-ui/core/List';
+import Avatar from '@material-ui/core/Avatar';
+
 import OverviewList from './OverviewList';
 
 const OverviewCardAction = lazy(() => import('./OverviewCardAction'));

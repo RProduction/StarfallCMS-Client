@@ -1,4 +1,5 @@
 import Axios from '../../Axios';
+import {ShowNotificationDialog} from './globalActions';
 
 // authorization status
 export const FIRST_BOOT = 0;
@@ -25,6 +26,10 @@ export const AuthSignIn = (username, password) => async dispatch => {
         dispatch(CheckAuthStatus());
     }
     catch(err){
+        dispatch(ShowNotificationDialog(
+            `Sign In`, 
+            `Fail to sign in`
+        ));
         console.log(err);
     }
 }
@@ -38,6 +43,10 @@ export const AuthSignUp = (username, password) => async dispatch => {
         dispatch(CheckAuthStatus());
     }
     catch(err){
+        dispatch(ShowNotificationDialog(
+            `Sign Up`, 
+            `Fail to sign up`
+        ));
         console.log(err);
     }
 }

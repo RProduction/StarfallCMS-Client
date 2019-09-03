@@ -1,7 +1,13 @@
 import React, {useState} from 'react';
-import { ListItem, ListItemText, Collapse} from '@material-ui/core';
-import {ExpandLess, ExpandMore} from '@material-ui/icons';
+
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+
 import {Link} from 'react-router-dom';
+
 import OverviewList from './OverviewList';
 
 function Content({index, projectName, name}){

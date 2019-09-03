@@ -1,7 +1,13 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {List, ListItem, ListItemText} from '@material-ui/core';
+
+import Link from 'react-router-dom/Link';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
 import {useSelector} from 'react-redux';
+
 import SideBarProject from './SideBarProject';
 import {selectAllProjects} from '../redux/selectors/projectSelectors';
 

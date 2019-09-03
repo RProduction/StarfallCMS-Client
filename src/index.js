@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HashRouter} from 'react-router-dom';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+
+import {HashRouter} from 'react-router-dom';
 
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
-import reducers from './redux/reducers';
 import thunk from 'redux-thunk';
 
-import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+import reducers from './redux/reducers';
+import App from './App';
+
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 const store = createStore(
     reducers, 

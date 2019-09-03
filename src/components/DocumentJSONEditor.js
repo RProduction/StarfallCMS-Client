@@ -1,5 +1,7 @@
 import React from 'react';
-import {Grid} from '@material-ui/core';
+
+import Grid from '@material-ui/core/Grid';
+
 import AceEditor from "react-ace";
 import 'brace/mode/json';
 import 'brace/theme/github';

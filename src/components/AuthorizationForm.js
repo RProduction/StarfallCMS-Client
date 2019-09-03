@@ -1,7 +1,11 @@
 import React from 'react';
-import ContentContainer from './ContentContainer';
-import {Grid, makeStyles} from '@material-ui/core';
+
+import Grid from '@material-ui/core/Grid';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
 import {Formik} from 'formik';
+
+import ContentContainer from './ContentContainer';
 
 const useStyle = makeStyles(theme => ({
 	root:{

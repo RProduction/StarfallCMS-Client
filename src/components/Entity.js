@@ -1,13 +1,24 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+
+import Link from 'react-router-dom/Link';
+import Redirect from 'react-router-dom/Redirect';
+
+import Search from '@material-ui/icons/Search';
+import Clear from '@material-ui/icons/Clear';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import DeleteForever from '@material-ui/icons/DeleteForever';
+import Add from '@material-ui/icons/Add';
 import MaterialTable from 'material-table';
-import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Add} from '@material-ui/icons';
-import {Link, Redirect} from 'react-router-dom';
-import {selectDocumentsInEntityByName} from '../redux/selectors/documentSelectors';
+
+import {useDispatch, useSelector} from 'react-redux';
+
 import Axios from '../Axios';
 
+import {selectDocumentsInEntityByName} from '../redux/selectors/documentSelectors';
 import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
-
 import DialogCustom from './DialogCustom';
 
 const columns = [

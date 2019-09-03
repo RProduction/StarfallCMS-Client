@@ -1,9 +1,15 @@
 import React, {useMemo, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {Grid, makeStyles, Button} from '@material-ui/core';
+
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
+import Axios from '../Axios';
+
+import {useDispatch, useSelector} from 'react-redux';
+
 import {ShowNotificationDialog} from '../redux/actions/globalActions';
 import {selectEntityInProjectByName} from '../redux/selectors/entitySelectors';
-import Axios from '../Axios';
 
 import DocumentJSONEditor from './DocumentJSONEditor';
 

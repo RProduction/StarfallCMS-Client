@@ -1,13 +1,22 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+
+import Link from 'react-router-dom/Link';
+
+import Search from '@material-ui/icons/Search';
+import Clear from '@material-ui/icons/Clear';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import DeleteForever from '@material-ui/icons/DeleteForever';
+import Add from '@material-ui/icons/Add';
+import Create from '@material-ui/icons/Create';
 import MaterialTable from 'material-table';
-import {Search, Clear, ArrowForward, ArrowBack, FirstPage, LastPage, DeleteForever, Create, Add} from '@material-ui/icons';
-import {Link} from 'react-router-dom';
+
+import {useDispatch, useSelector} from 'react-redux';
+
 import {selectEntitiesInProjectByName} from '../redux/selectors/entitySelectors';
-
-import {ShowAddDialog, ShowDeleteDialog, ShowRenameDialog
-    , SetTarget} from '../redux/actions/globalActions';
-
+import {ShowAddDialog, ShowDeleteDialog, ShowRenameDialog, SetTarget} from '../redux/actions/globalActions';
 import ProjectDialog from './ProjectDialog';
 
 const columns = [

@@ -1,23 +1,31 @@
 import React, {useEffect, useMemo, useRef} from 'react';
-import { CloudUpload, Search, Clear, CreateNewFolder
-	, ArrowForward, ArrowBack, FirstPage, LastPage
-	, DeleteForever, Create, SwapHoriz} from '@material-ui/icons';
+
+import Search from '@material-ui/icons/Search';
+import Clear from '@material-ui/icons/Clear';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import DeleteForever from '@material-ui/icons/DeleteForever';
+import CloudUpload from '@material-ui/icons/CloudUpload';
+import CreateNewFolder from '@material-ui/icons/CreateNewFolder';
+import Create from '@material-ui/icons/Create';
+import SwapHoriz from '@material-ui/icons/SwapHoriz';
 import MaterialTable from 'material-table';
+
+import {useDispatch, useSelector} from 'react-redux';
+
+import Axios from '../Axios';
 
 import StorageCustomBody from './StorageCustomBody';
 import StorageCustomHeaderTitle from './StorageCustomHeaderTitle';
 import StorageCustomRow from './StorageCustomRow';
 import StorageCustomRowName from './StorageCustomRowName';
-
-import {useSelector, useDispatch} from 'react-redux';
 import {selectProjectByName} from '../redux/selectors/projectSelectors';
 import {selectStoragePath, selectStorage} from '../redux/selectors/storageSelectors';
 import {InitStoragePath} from '../redux/actions/storageActions';
-
 import { ShowAddDialog, ShowRenameDialog, SetTarget, ShowNotificationDialog} from '../redux/actions/globalActions';
-
 import StorageDialog from './StorageDialog';
-import Axios from '../Axios';
 
 const columns = [
     {

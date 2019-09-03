@@ -1,8 +1,15 @@
 import React from 'react';
-import {Dialog, DialogTitle, DialogContent, DialogContentText} from '@material-ui/core';
+
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+
 import PropTypes from 'prop-types';
+
 import DialogCustomForm from './DialogCustomForm';
 
 const addSchema = Yup.object({

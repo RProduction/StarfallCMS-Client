@@ -1,6 +1,9 @@
 import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+
 import Ws from '@adonisjs/websocket-client';
+
+import {useDispatch} from 'react-redux';
+
 import {AddProjects, DeleteProject, RenameProject, ImgProject} from './redux/actions/projectActions';
 import {AddEntities, DeleteEntities, RenameEntity} from './redux/actions/entityActions';
 import {AddDocuments, ModifyDocument, DeleteDocuments} from './redux/actions/documentActions';
@@ -12,7 +15,7 @@ function WebsocketClient(props) {
     useEffect(()=>{
         const ws = process.env.NODE_ENV === 'development' 
             ? Ws('ws://localhost:3333/', {path: 'starfall-cms-ws'}) 
-            : Ws({path: 'starfall-cms-ws'});
+            : Ws(null, {path: 'starfall-cms-ws'});
         
         ws.on("open", ()=>{
             const project = ws.subscribe('project');

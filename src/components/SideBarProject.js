@@ -1,10 +1,21 @@
 import React, {useState, useMemo} from 'react';
-import {Link} from 'react-router-dom';
-import {ListItem, ListItemText, List, Collapse, IconButton, makeStyles, ButtonBase} from '@material-ui/core';
-import {ExpandLess, ExpandMore} from '@material-ui/icons';
-import {useSelector} from 'react-redux';
-import SideBarEntity from './SideBarEntity';
+import Link from 'react-router-dom/Link';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+
 import clsx from 'clsx';
+
+import {useSelector} from 'react-redux';
+
+import SideBarEntity from './SideBarEntity';
 import {selectEntitiesInProject} from '../redux/selectors/entitySelectors';
 
 const useStyle = makeStyles(theme => ({

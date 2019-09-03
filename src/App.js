@@ -1,7 +1,12 @@
 import React, {lazy, Suspense, useEffect} from 'react';
-import {Route, Switch} from 'react-router-dom';
-import {CssBaseline} from '@material-ui/core';
+
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+import Route from 'react-router-dom/Route';
+import Switch from 'react-router-dom/Switch';
+
 import {useDispatch} from 'react-redux';
+
 import {CheckAuthStatus} from './redux/actions/authorizationActions';
 
 const Admin = lazy(()=>import('./Admin'));

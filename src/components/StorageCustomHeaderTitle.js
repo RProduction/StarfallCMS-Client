@@ -1,7 +1,13 @@
 import React from 'react';
-import {IconButton, Typography, Box, makeStyles} from '@material-ui/core';
-import {ArrowBack} from '@material-ui/icons';
+
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+
 import {useDispatch} from 'react-redux';
+
 import {BackwardStoragePath} from '../redux/actions/storageActions';
 
 const useStyle = makeStyles(theme => ({

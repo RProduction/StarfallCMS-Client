@@ -1,6 +1,7 @@
 import React, {useRef, useEffect} from 'react';
-import {MTableBody} from 'material-table';
-import {RootRef} from '@material-ui/core';
+
+import RootRef from '@material-ui/core/RootRef';
+import MTableBody from 'material-table/dist/components/m-table-body';
 
 function StorageCustomBody(props){
 	const body = useRef(null);

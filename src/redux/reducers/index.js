@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import combineReducers from 'redux/src/combineReducers';
 
 import authorizationReducer from './authorizationReducer';
 import {projectPopoverReducer, projectsReducer} from './projectReducer';

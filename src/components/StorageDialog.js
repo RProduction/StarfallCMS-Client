@@ -1,11 +1,11 @@
 import React from 'react';
-import {useSelector, useDispatch} from 'react-redux';
 
-import { ADD_DIALOG, RENAME_DIALOG, HideDialog
-    , ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
-import DialogCustom from './DialogCustom';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Axios from '../Axios';
+
+import { ADD_DIALOG, RENAME_DIALOG, HideDialog, ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
+import DialogCustom from './DialogCustom';
 
 function StorageDialog(props){
     const dispatch = useDispatch();

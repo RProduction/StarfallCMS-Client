@@ -1,6 +1,9 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {Grid, Typography} from '@material-ui/core';
+
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+
+import Link from 'react-router-dom/Link';
 
 const LinkRoot = React.forwardRef((props, ref)=>{
     return <Link to={props.to} innerRef={ref}>
