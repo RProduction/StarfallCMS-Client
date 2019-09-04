@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import Link from 'react-router-dom/Link';
-import matchPath from 'react-router-dom/matchPath';
+import {Link, matchPath} from 'react-router-dom';
 
 function HeaderLink(props){
     const {location} = props;

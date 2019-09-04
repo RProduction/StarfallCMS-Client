@@ -1,5 +1,6 @@
 import React, {useState, useMemo} from 'react';
-import Link from 'react-router-dom/Link';
+
+import {Link} from 'react-router-dom';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -46,9 +47,6 @@ function SideBarProject(props){
             </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List className={style.root} disablePadding>
-                    <ListItem button component={Link} to={`/${name}/authentication`} divider>
-                        <ListItemText primary="Authentication" />
-                    </ListItem>
                     <ListItem button component={Link} to={`/${name}/storage`} divider>
                         <ListItemText primary="Storage" />
                     </ListItem>

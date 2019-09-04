@@ -4,7 +4,7 @@ import authorizationReducer from './authorizationReducer';
 import {projectPopoverReducer, projectsReducer} from './projectReducer';
 import {entitiesReducer} from './entityReducer';
 import {documentsReducer} from './documentReducer';
-import {storageReducer, storagePathReducer} from './storageReducer';
+import {storageReducer} from './storageReducer';
 import {notificationReducer, dialogReducer, targetReducer, sidebarReducer} from './globalReducer';
 
 const reducers = combineReducers(
@@ -14,7 +14,6 @@ const reducers = combineReducers(
         entities: entitiesReducer,
         documents: documentsReducer,
         storage: storageReducer,
-        storagePath: storagePathReducer,
         dialog: dialogReducer,
         notification: notificationReducer,
         target: targetReducer,

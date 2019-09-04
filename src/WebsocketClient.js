@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 import {AddProjects, DeleteProject, RenameProject, ImgProject} from './redux/actions/projectActions';
 import {AddEntities, DeleteEntities, RenameEntity} from './redux/actions/entityActions';
 import {AddDocuments, ModifyDocument, DeleteDocuments} from './redux/actions/documentActions';
-import {UploadStorage, FolderStorage, RenameStorage, MoveStorage, DeleteStorage} from './redux/actions/storageActions';
+import {UploadStorage, RenameStorage, DeleteStorage, PublicStorage} from './redux/actions/storageActions';
 
 function WebsocketClient(props) {
     const dispatch = useDispatch();
@@ -125,27 +125,22 @@ function WebsocketClient(props) {
             storage.on('upload', (msg)=>{
                 console.log("upload into storage");
                 console.log(msg);
-                dispatch(UploadStorage(msg.id, msg.path, msg.files));
-            });
-            storage.on('folder', (msg)=>{
-                console.log("new folder into storage");
-                console.log(msg);
-                dispatch(FolderStorage(msg.id, msg.path));
-            });
-            storage.on('move', (msg)=>{
-                console.log("move storage");
-                console.log(msg);
-                dispatch(MoveStorage(msg.id, msg.path, msg.targets));
+                dispatch(UploadStorage(msg));
             });
             storage.on('rename', (msg)=>{
                 console.log("rename storage");
                 console.log(msg);
-                dispatch(RenameStorage(msg.id, msg.path, msg.name, msg.new_name));
+                dispatch(RenameStorage(msg.id, msg.name, msg.updated_at));
+            });
+            storage.on('public', (msg)=>{
+                console.log("toggle isPublic storage");
+                console.log(msg);
+                dispatch(PublicStorage(msg.id, msg.isPublic, msg.updated_at));
             });
             storage.on('delete', (msg)=>{
                 console.log("delete storage");
                 console.log(msg);
-                dispatch(DeleteStorage(msg.id, msg.paths));
+                dispatch(DeleteStorage(msg.ids));
             });
         });
 

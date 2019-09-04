@@ -2,8 +2,7 @@ import React, {lazy, Suspense, useEffect} from 'react';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import Route from 'react-router-dom/Route';
-import Switch from 'react-router-dom/Switch';
+import {Route, Switch} from 'react-router-dom';
 
 import {useDispatch} from 'react-redux';
 

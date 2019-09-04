@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 
 import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';
@@ -8,9 +8,7 @@ import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import CloudUpload from '@material-ui/icons/CloudUpload';
-import CreateNewFolder from '@material-ui/icons/CreateNewFolder';
 import Create from '@material-ui/icons/Create';
-import SwapHoriz from '@material-ui/icons/SwapHoriz';
 import MaterialTable from 'material-table';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -18,26 +16,25 @@ import {useDispatch, useSelector} from 'react-redux';
 import Axios from '../Axios';
 
 import StorageCustomBody from './StorageCustomBody';
-import StorageCustomHeaderTitle from './StorageCustomHeaderTitle';
-import StorageCustomRow from './StorageCustomRow';
-import StorageCustomRowName from './StorageCustomRowName';
-import {selectProjectByName} from '../redux/selectors/projectSelectors';
-import {selectStoragePath, selectStorage} from '../redux/selectors/storageSelectors';
-import {InitStoragePath} from '../redux/actions/storageActions';
-import { ShowAddDialog, ShowRenameDialog, SetTarget, ShowNotificationDialog} from '../redux/actions/globalActions';
+import {selectStorageInProjectByName} from '../redux/selectors/storageSelectors';
+import { ShowRenameDialog, SetTarget, ShowNotificationDialog} from '../redux/actions/globalActions';
 import StorageDialog from './StorageDialog';
 
 const columns = [
-    {
+	{
+		field: "id",
+		searchable: false,
+		hidden: true
+	},
+	{
 		title: "Name",
-        field: "name", 
-		searchable: true,
-		render: rowData => <StorageCustomRowName rowData={rowData}/>
+		field: 'name',
+		searchable: true
 	},
 	{
 		title: "Size",
-        field: "size", 
-        searchable: false
+		field: 'size',
+		searchable: false
 	},
 	{
 		title: "Created At",
@@ -48,6 +45,10 @@ const columns = [
 		title: "Modified At",
         field: "modified", 
         searchable: false
+	},
+	{
+		title: "Is Public?",
+		field: "isPublic"
 	}
 ];
 
@@ -55,37 +56,23 @@ function Storage(props) {
 	const dispatch = useDispatch();
 	const {project} = props.match.params;
 	const fileInput = useRef(null);
-
-	const select = useMemo(selectProjectByName, []);
-	const _project = useSelector(state => select(state, project));
 	
-	const storagePath = useSelector(selectStoragePath);
-	
-	const _selectStorage = useMemo(selectStorage, []);
-	const storage = useSelector(state => _selectStorage(
-		state, 
-		storagePath ? storagePath.fullpath : ''
-	));
-
-	useEffect(()=>{
-		if(_project){
-			dispatch(InitStoragePath(_project.id));
-		}
-	}, [_project]);
+	const _selectStorage = useMemo(selectStorageInProjectByName, []);
+	const storage = useSelector(state => _selectStorage(state, project));console.log(storage);
 
 	return (
 		<React.Fragment>
 			<StorageDialog/>
 			<MaterialTable 
-				title={<StorageCustomHeaderTitle title={
-					storagePath.partialpath ? storagePath.partialpath : '/'
-				}/>}
+				title="Storage"
 				columns={columns}
-				data={storage.map(value => ({
+				data={storage.storage.map(value => ({
+					id: value.id,
 					name: value.name,
 					size: value.size,
 					created: value.created,
-					modified: value.modified
+					modified: value.modified,
+					isPublic: value.isPublic
 				}))}
 				actions={[
 					{
@@ -94,62 +81,35 @@ function Storage(props) {
 						isFreeAction: true,
 						onClick: ()=>fileInput.current.click()
 					},
-					{
-						icon: ()=><CreateNewFolder/>,
-						tooltip: "Add Folder",
-						isFreeAction: true,
-						onClick: (e, rowData)=>{
-							// action to add folder
-							dispatch(SetTarget({
-								id: _project.id, 
-								path: storagePath.partialpath
-							}));
-							dispatch(ShowAddDialog());
-						}
-					},
 					rowData => ({
 						icon: ()=><Create/>,
 						tooltip: "Rename",
 						onClick: (e, data)=>{
-							// rename file or folder
+							// rename file
 							dispatch(SetTarget({
-								id: _project.id, 
-								name: data[0].name,
-								path: storagePath.partialpath
+								id: data[0].id, 
+								name: data[0].name
 							}));
 							dispatch(ShowRenameDialog());
 						},
 						hidden: rowData.length !== 1
 					}),
 					{
-						icon: ()=><SwapHoriz/>,
-						tooltip: "Move",
-						onClick: (e, data)=>{
-							
-						}
-					},
-					{
 						icon: ()=><DeleteForever/>,
 						tooltip: "Delete",
 						onClick: async(e, data)=>{
 							try{
-								const paths = data.map(
-									value => storagePath.partialpath 
-									? `${storagePath.partialpath}/${value.name}`
-									: value.name
-								);
-								
-								await Axios.delete(`storage/${_project.id}`, {
-									data: {paths: paths}
+								await Axios.delete('storage', {
+									data: {ids: data.map(value => value.id)}
 								});
 								dispatch(ShowNotificationDialog(
-									`Delete Files and Folders`, 
-									`Succeed deleting files and folders`
+									'Delete Files', 
+									'Succeed deleting files'
 								));
 							}catch(err){
 								dispatch(ShowNotificationDialog(
-									`Delete Files and Folders`, 
-									`Fail deleting files and folders, error: ${err}`
+									'Delete Files', 
+									'Fail deleting files, error: ${err}'
 								));
 							}
 						}
@@ -164,8 +124,7 @@ function Storage(props) {
 					LastPage: LastPage
 				}}
 				components={{
-					Body: StorageCustomBody,
-					Row: StorageCustomRow
+					Body: StorageCustomBody
 				}}
 				options={{
 					search: false,
@@ -181,13 +140,12 @@ function Storage(props) {
 					console.log(fileInput.current.files);
 					try{
 						const formdata = new FormData();
-						formdata.set('path', storagePath.partialpath);
 						for(const file of fileInput.current.files){
 							formdata.append('file[]', file, file.name);
 						}
 
 						await Axios.post(
-							`storage/${_project.id}`, 
+							`storage/${storage.project.id}`, 
 							formdata,
 							{headers:{
 								'Content-Type': 'multipart/form-data'

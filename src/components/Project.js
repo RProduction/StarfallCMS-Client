@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react';
 
-import Link from 'react-router-dom/Link';
+import {Link} from 'react-router-dom';
 
 import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';

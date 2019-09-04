@@ -3,7 +3,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import Link from 'react-router-dom/Link';
+import {Link} from 'react-router-dom';
 
 const LinkRoot = React.forwardRef((props, ref)=>{
     return <Link to={props.to} innerRef={ref}>

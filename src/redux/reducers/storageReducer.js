@@ -3,155 +3,53 @@ import {produce} from 'immer';
 
 // for storage reducer
 
-// receive project id and data consist of folder structure in shape of object tree
-const InitStorage = (state, action) => produce(state, (draft)=>{
-    const {id, data} = action;
-    draft[id] = data;
-});
-
-// receive project id, path, files
-// process path into keys
-// path can null
+// receive files
 const UploadStorage = (state, action) => produce(state, (draft)=>{
-    const {id, path, files} = action;
-    
-    if(!draft[id]) draft[id] = {};
+    const {files} = action;
 
-    let currentPath = draft[id];
-    let keys = path ? path.split('/') : [];
-    keys.forEach((key)=>{
-        currentPath = currentPath[key];
-    });
-
-    files.forEach(file => currentPath[file.name] = {
-        name: file.name,
-        size: file.size,
-        created: file.created,
-        modified: file.modified
-    });
-});
-
-// receive project id, path
-// process path into keys
-// path will never null
-const FolderStorage = (state, action) => produce(state, (draft)=>{
-    const {id, path} = action;
-    
-    if(!draft[id]) draft[id] = {};
-
-    let currentPath = draft[id];
-    let keys = path.split('/');
-    keys.forEach((key, index)=>{
-        if(index+1 < keys.length){
-            currentPath = currentPath[key];
-        }else{
-            currentPath[key] = {};
+    files.forEach(file => {
+        draft[file.id] = {
+            id: file.id,
+            project_id: file.project_id,
+            name: file.name,
+            extension: file.extension,
+            size: file.size,
+            isPublic: file.isPublic,
+            created: file.created_at,
+            modified: file.updated_at
         }
     });
 });
 
-// receive project id, path, and targets
-// path can null
-// targets is array and 1 path will never null
-const MoveStorage = (state, action) => produce(state, (draft)=>{
-    const {id, path, targets} = action;
-
-    let currentPath = draft[id];
-    let keys = path ? path.split('/') : [];
-    keys.forEach((key)=>{
-        currentPath = currentPath[key];
-    });
-
-    targets.forEach(target => {
-        let currentTarget = draft[id];
-        let keys = target.split('/');
-        keys.forEach((key, index)=>{
-            if(index+1 < keys.length){
-                currentTarget = currentTarget[key];
-            }else{
-                currentPath[key] = currentTarget[key];
-                delete currentTarget[key];
-            }
-        });
-    });
-});
-
-// receive project id, path, name, new_name
-// path can null
+// receive id, name, updated
 const RenameStorage = (state, action) => produce(state, (draft)=>{
-    const {id, path, name, new_name} = action;
+    const {id, name, updated} = action;
     
-    let currentPath = draft[id];
-    let keys = path ? path.split('/') : [];
-    keys.forEach((key)=>{
-        currentPath = currentPath[key];        
-    });
-
-    currentPath[new_name] = currentPath[name];
-    delete currentPath[name];
-
-    // check if file then set new name
-    if(currentPath[new_name].name && currentPath[new_name].name.constructor === String)
-        currentPath[new_name].name = new_name;
+    draft[id].name = name;
+    draft[id].updated = updated;
 });
 
-// receive project id, and target paths
-// paths is array and 1 path will never null
+// receive id, isPublic, updated
+const PublicStorage = (state, action) => produce(state, (draft)=>{
+    const {id, isPublic, updated} = action;
+    
+    draft[id].isPublic = isPublic;
+    draft[id].updated = updated;
+});
+
+// receive ids
 const DeleteStorage = (state, action) => produce(state, (draft)=>{
-    const {id, paths} = action;
+    const {ids} = action;
     
-    paths.forEach(path => {
-        let currentPath = draft[id];
-        let keys = path.split('/');
-        keys.forEach((key, index)=>{
-            if(index+1 < keys.length){
-                currentPath = currentPath[key];
-            }else{
-                delete currentPath[key];
-            }
-        });
-    });
+    for(let id of ids){
+        delete draft[id];
+    }
 });
-
-// for storage path reducer
-
-// receive project id
-// init path when first visiting storage
-function InitStoragePath(state, action){
-    const {id} = action;
-    return `${id}`;
-}
-
-function ForwardStoragePath(state, action){
-    const {next} = action;
-    return `${state}/${next}`;
-}
-
-function BackwardStoragePath(state, action){
-    const paths = state.split('/');
-    let res = '';
-    paths.forEach((path, index) => {
-        if(index === 0)
-            res = path;
-        else if(index+1 < paths.length)
-            res += `/${path}`;
-    });
-
-    return res;
-}
 
 // reducers
 export const storageReducer = createReducer({}, {
-    INIT_STORAGE: InitStorage,
     UPLOAD_STORAGE: UploadStorage,
-    FOLDER_STORAGE: FolderStorage,
-    MOVE_STORAGE: MoveStorage,
     RENAME_STORAGE: RenameStorage,
+    PUBLIC_STORAGE: PublicStorage,
     DELETE_STORAGE: DeleteStorage,
-});
-
-export const storagePathReducer = createReducer('', {
-    INIT_STORAGE_PATH: InitStoragePath,
-    FORWARD_STORAGE_PATH: ForwardStoragePath,
-    BACKWARD_STORAGE_PATH: BackwardStoragePath
 });

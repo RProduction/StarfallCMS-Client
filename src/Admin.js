@@ -1,8 +1,6 @@
 import React, {useEffect, lazy, Suspense} from 'react';
 
-import Route from 'react-router-dom/Route';
-import Switch from 'react-router-dom/Switch';
-import Redirect from 'react-router-dom/Redirect';
+import {Route, Switch, Redirect} from 'react-router-dom';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
@@ -56,7 +54,6 @@ function Admin(props) {
 				<Suspense fallback={<div></div>}>
 					<Switch>
 						<Route path='/:project/:entity/:document' component={Document}/>
-						<Route path='/:project/authentication' component={null}/>
 						<Route path='/:project/storage' component={Storage}/>
 						<Route path='/:project/:entity' component={Entity}/>
 						<Route path='/:project' component={Project}/>

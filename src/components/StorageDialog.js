@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Axios from '../Axios';
 
-import { ADD_DIALOG, RENAME_DIALOG, HideDialog, ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
+import { RENAME_DIALOG, HideDialog, ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
 import DialogCustom from './DialogCustom';
 
 function StorageDialog(props){
@@ -17,33 +17,6 @@ function StorageDialog(props){
         <React.Fragment>
             <DialogCustom
                 dialogProps={{
-                    open: dialogType === ADD_DIALOG,
-                    onClose: () => dispatch(HideDialog())
-                }}
-                category="add"
-                title="Add New Folder"
-                btn="Add New Folder"
-                request={async({name})=>{
-                    try{
-                        await Axios.post(`storage/${target.id}/folder`, {
-                            path: target.path ? `${target.path}/${name}` : name
-                        });
-                        dispatch(HideDialog());
-                        dispatch(ShowNotificationDialog(
-                            `Add New Folder ${name}`, 
-                            `Succeed adding new folder ${name}`
-                        ));
-                    }catch(err){
-                        dispatch(HideDialog());
-                        dispatch(ShowNotificationDialog(
-                            `Add New Folder ${name}`, 
-                            `Fail adding new folder ${name}, error: ${err}`
-                        ));
-                    }
-                }}
-            />
-            <DialogCustom
-                dialogProps={{
                     open: dialogType === RENAME_DIALOG,
                     onClose: () => dispatch(HideDialog())
                 }}
@@ -52,15 +25,13 @@ function StorageDialog(props){
                 btn={`Rename ${target.name}`}
                 request={async({name})=>{
                     // check if this is file or folder
-                    // if file then add extension behind name
-                    const extension = target.name.split('.')[1];
+					// if file then add extension behind name
+					const extension = target.name.split('.')[1];
                     const new_name = extension ? `${name}.${extension}` : name;
-
+                    
                     try{
                         await Axios.post(`storage/${target.id}/rename`, {
-                            path: target.path,
-                            name: target.name, 
-                            new_name: new_name
+                            name: new_name
                         });
                         dispatch(HideDialog());
                         dispatch(ShowNotificationDialog(
