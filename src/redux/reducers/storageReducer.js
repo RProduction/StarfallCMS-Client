@@ -12,7 +12,6 @@ const UploadStorage = (state, action) => produce(state, (draft)=>{
             id: file.id,
             project_id: file.project_id,
             name: file.name,
-            extension: file.extension,
             size: file.size,
             isPublic: file.isPublic,
             created: file.created_at,

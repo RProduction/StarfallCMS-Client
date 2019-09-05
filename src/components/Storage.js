@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Axios from '../Axios';
 
 import StorageCustomBody from './StorageCustomBody';
+import StorageCustomToggle from './StorageCustomToggle';
 import {selectStorageInProjectByName} from '../redux/selectors/storageSelectors';
 import { ShowRenameDialog, SetTarget, ShowNotificationDialog} from '../redux/actions/globalActions';
 import StorageDialog from './StorageDialog';
@@ -48,7 +49,8 @@ const columns = [
 	},
 	{
 		title: "Is Public?",
-		field: "isPublic"
+		field: "isPublic",
+		render: (rowData) => <StorageCustomToggle rowData={rowData}/>
 	}
 ];
 
@@ -109,7 +111,7 @@ function Storage(props) {
 							}catch(err){
 								dispatch(ShowNotificationDialog(
 									'Delete Files', 
-									'Fail deleting files, error: ${err}'
+									`Fail deleting files, error: ${err}`
 								));
 							}
 						}
@@ -152,12 +154,12 @@ function Storage(props) {
 							}}
 						);
 						dispatch(ShowNotificationDialog(
-							`Upload Files`, 
-							`Succeed uploading files`
+							'Upload Files', 
+							'Succeed uploading files'
 						));
 					}catch(err){
 						dispatch(ShowNotificationDialog(
-							`Upload Files`, 
+							'Upload Files', 
 							`Fail uploading files, error: ${err}`
 						));
 					}

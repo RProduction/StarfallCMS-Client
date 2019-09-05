@@ -13,11 +13,9 @@ export const selectStorageInProjectByName = ()=>{
         (storage, project)=>{
             return {
                 project: project,
-                storage: Object.values(storage).map(value => {
-                    if(value.project_id === project.id){
-                        return value;
-                    }
-                })
+                storage: Object.values(storage).filter(
+                    value => value.project_id === project.id
+                )
             };
         }
     );
