@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -28,10 +28,16 @@ function DocumentEdit(props){
 
     const _document = useSelector(state => selectDocument(state, document));
 
-    const [data, setData] = useState(
-        _document ? JSON.stringify(_document.data, null, 4) : `{}`
-    );
+    const [data, setData] = useState('{}');
     const [valid, setValid] = useState(false);
+
+    useEffect(()=>{
+        if(_document){
+            const newdata = JSON.stringify(_document.data, null, 4);
+            setData(newdata);
+            console.log(newdata);
+        }
+    }, [_document]);
     
     return(
         <Grid container className={style.root} direction="column">

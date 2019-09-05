@@ -30,7 +30,7 @@ function DocumentAdd(props){
     const selectEntity = useMemo(selectEntityInProjectByName, []);
     const _entity = useSelector(state => selectEntity(state, project, entity));
     
-    const [data, setData] = useState(`{}`);
+    const [data, setData] = useState('{}');
     const [valid, setValid] = useState(false);
 
     return(
