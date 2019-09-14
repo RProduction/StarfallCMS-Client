@@ -24,10 +24,10 @@ export const selectDocumentsInEntityByName = ()=>{
             return select(state, project, name);
         },
         (documents, entity)=>{
-            return {
+            return entity ? {
                 entity: entity,
                 documents: documents.filter(value => value.entityId === entity.id)
-            };
+            } : null;
         }
     );
 };

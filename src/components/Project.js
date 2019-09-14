@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';
@@ -73,32 +73,22 @@ function Project(props){
     const select = useMemo(selectEntitiesInProjectByName, []);
     const entities = useSelector(state => select(state, project));
 
-    const [datas, setDatas] = useState([]);
-
-    useEffect(()=>{
-        setDatas(entities.entities.map((value, index) => ({
-            "#": (index+1),
-            id: value.id,
-            projectName: project,
-            name: value.name,
-            createdAt: value.created,
-            updatedAt: value.updated
-        })));
-    }, [entities]);
-
-    // view all entities within project and their attribute
-    // entity id
-    // entity name
-    // entity last modified
-    // how many items
-
-    return(
+    if(!entities)
+        return <Redirect to="/"/>;
+    else return(
         <React.Fragment>
             <ProjectDialog/>
             <MaterialTable 
                 title="Entities" 
                 columns={columns} 
-                data={datas}
+                data={entities.entities.map((value, index) => ({
+                    "#": (index+1),
+                    id: value.id,
+                    projectName: project,
+                    name: value.name,
+                    createdAt: value.created,
+                    updatedAt: value.updated
+                }))}
                 actions={[
                     {
                         icon: ()=><Create/>, 

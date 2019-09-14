@@ -1,5 +1,7 @@
 import React, {useMemo, useRef} from 'react';
 
+import {Redirect} from 'react-router-dom';
+
 import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';
 import ArrowForward from '@material-ui/icons/ArrowForward';
@@ -22,6 +24,11 @@ import { ShowRenameDialog, SetTarget, ShowNotificationDialog} from '../redux/act
 import StorageDialog from './StorageDialog';
 
 const columns = [
+	{
+        title: "#", 
+        field: "#", 
+        searchable: false
+    },
 	{
 		field: "id",
 		searchable: false,
@@ -62,13 +69,16 @@ function Storage(props) {
 	const _selectStorage = useMemo(selectStorageInProjectByName, []);
 	const storage = useSelector(state => _selectStorage(state, project));console.log(storage);
 
-	return (
+	if(!storage)
+		return <Redirect to="/"/>;
+	else return (
 		<React.Fragment>
 			<StorageDialog/>
 			<MaterialTable 
 				title="Storage"
 				columns={columns}
-				data={storage.storage.map(value => ({
+				data={storage.storage.map((value, index) => ({
+					'#': (index+1),
 					id: value.id,
 					name: value.name,
 					size: value.size,

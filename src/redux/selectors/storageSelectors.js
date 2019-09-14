@@ -11,12 +11,12 @@ export const selectStorageInProjectByName = ()=>{
             return select(_, project);
         },
         (storage, project)=>{
-            return {
+            return project ? {
                 project: project,
                 storage: Object.values(storage).filter(
                     value => value.project_id === project.id
                 )
-            };
+            } : null;
         }
     );
 };

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useMemo} from 'react';
 
 import {Link, Redirect} from 'react-router-dom';
 
@@ -77,28 +77,15 @@ function Entity(props){
     const select = useMemo(selectDocumentsInEntityByName, []);
     const documents = useSelector(state => select(state, project, entity));
 
-    const [datas, setDatas] = useState([]);
-
-    useEffect(()=>{
-        if(documents.documents){
-            setDatas(documents.documents.map((value, index) => ({
-                "#": (index+1),
-                id: value.id,
-                projectName: project,
-                entityName: entity,
-                createdAt: value.created,
-                updatedAt: value.updated
-            })));
-        }
-    }, [documents]);
-
     // view all documents within entity and their attribute
     // document id
     // document last modified
     if(redirect === 'add') return <Redirect to={`/${project}/${entity}/add`}/>;
     else if(redirect === 'schema') return <Redirect to={`/${project}/${entity}/schema`}/>;
 
-    return(
+    if(!documents)
+        return <Redirect to="/"/>;
+    else return(
         <React.Fragment>
             <DialogCustom
                 category="notification"
@@ -112,7 +99,14 @@ function Entity(props){
             <MaterialTable 
                 title="Documents" 
                 columns={columns} 
-                data={datas}
+                data={documents.documents.map((value, index) => ({
+                    "#": (index+1),
+                    id: value.id,
+                    projectName: project,
+                    entityName: entity,
+                    createdAt: value.created,
+                    updatedAt: value.updated
+                }))}
                 actions={[
                     {
                         icon: ()=><Add/>,

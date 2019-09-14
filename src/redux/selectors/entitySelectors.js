@@ -23,10 +23,10 @@ export const selectEntitiesInProjectByName = ()=>{
             return select(state, name);
         },
         (entities, project)=>{
-            return {
+            return project ? {
                 project: project,
                 entities: entities.filter(value => value.projectId === project.id)
-            };
+            } : null;
         }
     );
 };
@@ -39,9 +39,9 @@ export const selectEntityInProjectByName = ()=>{
         },
         (_, __, name) => name,
         (entities, project, name)=>{
-            return entities.find(
+            return project ? entities.find(
                 value => value.name === name && value.projectId === project.id
-            );
+            ) : null;
         }
     );
 };
