@@ -48,7 +48,10 @@ export const AuthSignUp = (username, password) => async dispatch => {
             `Fail to sign up`
         ));
         console.log(err);
+        return false;
     }
+
+    return true;
 }
 
 export const AuthSignOut = () => async dispatch => {
@@ -59,4 +62,18 @@ export const AuthSignOut = () => async dispatch => {
     catch(err){
         console.log(err);
     }
+}
+
+export const InitUsers = () => async dispatch => {
+    try{
+        const data = await Axios.get('user');
+        dispatch({type: 'INIT_USERS', users: data.data});
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+export function DeleteUser(id){
+    return {type: 'DELETE_USER', id: id};
 }

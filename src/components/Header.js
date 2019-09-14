@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
@@ -8,16 +8,18 @@ import Hidden from '@material-ui/core/Hidden';
 import Box from '@material-ui/core/Box';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import Settings from '@material-ui/icons/Settings';
 import Menu from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import clsx from 'clsx';
 
 import {useSelector, useDispatch} from 'react-redux';
 
 import {SwitchSideBar} from '../redux/actions/globalActions';
-import HeaderUserMenu from './HeaderUserMenu';
+import {AuthSignOut} from '../redux/actions/authorizationActions';
 import HeaderLink from './HeaderLink';
+import {CREATOR} from '../redux/actions/authorizationActions';
 
 const useStyle = makeStyles(theme=>({
     root: {
@@ -39,10 +41,11 @@ const useStyle = makeStyles(theme=>({
 }));
 
 function Header(props){
+    const {history} = props;
     const style = useStyle();
     const dispatch = useDispatch();
     const sidebar = useSelector(state => state.sidebar);
-    const [anchor, setAnchor] = useState(null);
+    const _status = useSelector(state => state.authStatus);
 
     return(
         <React.Fragment>
@@ -65,18 +68,28 @@ function Header(props){
                     >
                         <HeaderLink {...props}/>
                     </Box>
+                    {_status === CREATOR ?
+                        <IconButton
+                            edge="end"
+                            aria-label="Account of current user"
+                            aria-haspopup="true"
+                            color="inherit"
+                            onClick={e => history.push('/userlist')}
+                        >
+                            <Settings />
+                        </IconButton> : null
+                    }
                     <IconButton
                         edge="end"
-                        aria-label="Account of current user"
+                        aria-label="Log Off"
                         aria-haspopup="true"
                         color="inherit"
-                        onClick={e => setAnchor(e.currentTarget)}
+                        onClick={e => dispatch(AuthSignOut())}
                     >
-                        <AccountCircle />
+                        <ExitToApp />
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <HeaderUserMenu anchor={anchor} close={()=>setAnchor(null)}/>
         </React.Fragment>
     );
 }

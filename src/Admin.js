@@ -12,13 +12,14 @@ import SideBar from './components/SideBar';
 import {InitDatabase} from './redux/actions/projectActions';
 import ContentContainer from './components/ContentContainer';
 import WebsocketClient from './WebsocketClient';
-import {NOT_AUTHORIZED, FIRST_BOOT} from './redux/actions/authorizationActions';
+import {NOT_AUTHORIZED, FIRST_BOOT, CREATOR} from './redux/actions/authorizationActions';
 
 const Overview = lazy(()=>import('./components/Overview'));
 const Project = lazy(()=>import('./components/Project'));
 const Entity = lazy(()=>import('./components/Entity'));
 const Document = lazy(()=>import('./components/Document'));
 const Storage = lazy(()=>import('./components/Storage'));
+const UserList = lazy(()=>import('./components/UserList'));
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -53,6 +54,7 @@ function Admin(props) {
 			<ContentContainer className={style.root}>
 				<Suspense fallback={<div></div>}>
 					<Switch>
+						{_status === CREATOR ? <Route path='/userlist' component={UserList}/> : null}
 						<Route path='/:project/:entity/:document' component={Document}/>
 						<Route path='/:project/storage' component={Storage}/>
 						<Route path='/:project/:entity' component={Entity}/>

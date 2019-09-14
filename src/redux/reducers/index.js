@@ -1,6 +1,6 @@
 import combineReducers from 'redux/src/combineReducers';
 
-import authorizationReducer from './authorizationReducer';
+import {authorizationReducer, usersReducer} from './authorizationReducer';
 import {projectPopoverReducer, projectsReducer} from './projectReducer';
 import {entitiesReducer} from './entityReducer';
 import {documentsReducer} from './documentReducer';
@@ -10,6 +10,7 @@ import {notificationReducer, dialogReducer, targetReducer, sidebarReducer} from 
 const reducers = combineReducers(
     {
         authStatus: authorizationReducer,
+        users: usersReducer,
         projects: projectsReducer,
         entities: entitiesReducer,
         documents: documentsReducer,

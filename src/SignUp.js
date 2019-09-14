@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {Redirect} from 'react-router-dom';
 
@@ -13,7 +13,7 @@ import * as Yup from 'yup';
 
 import AuthorizationForm from './components/AuthorizationForm';
 import FormButton from './components/FormButton';
-import {AuthSignUp, USER, NOT_AUTHORIZED} from './redux/actions/authorizationActions';
+import {AuthSignUp, USER, NOT_AUTHORIZED, CREATOR} from './redux/actions/authorizationActions';
 import {HideNotificationDialog} from './redux/actions/globalActions';
 import DialogCustom from './components/DialogCustom';
 
@@ -39,6 +39,7 @@ const SignUp = (props)=>{
 	const dispatch = useDispatch();
 	const notification = useSelector(state => state.notification);
 	const _status = useSelector(state => state.authStatus);
+	const [redirect, setRedirect] = useState(false);
 
 	const {
 		values: { username, password, confirmPassword },
@@ -57,7 +58,7 @@ const SignUp = (props)=>{
 
 	if(_status === NOT_AUTHORIZED)
 		return <Redirect to='/signin'/>;
-	else if(_status === USER)
+	else if(_status === USER || redirect)
 		return <Redirect to='/'/>;
 	else return (
 		<React.Fragment>
@@ -73,9 +74,10 @@ const SignUp = (props)=>{
 			<Grid component={PaperForm} container item
 				xs={8} sm={6} className={style.root}
 				elevation={3}
-				onSubmit={(e)=>{
+				onSubmit={async(e)=>{
 					e.preventDefault();
-					dispatch(AuthSignUp(username, password));
+					const res = await dispatch(AuthSignUp(username, password));
+					if(_status === CREATOR && res) setRedirect(true);
 				}}
 			>
 				<Grid item xs={12} component={TextField} required 
