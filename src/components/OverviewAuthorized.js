@@ -118,11 +118,10 @@ function OverviewAuthorized(props){
                 }}
             />
             <OverviewPopover/>
-            <Box component={FAB} position="fixed" 
-                bottom={30} right={30} zIndex={50}
-                onClick={()=>dispatch(ShowAddDialog())}
-            >
-                <Add/>
+            <Box position="fixed" bottom={30} right={30} zIndex={50}>
+                <FAB onClick={()=>dispatch(ShowAddDialog())}>
+                    <Add/>
+                </FAB>
             </Box>
         </React.Fragment>
     )
