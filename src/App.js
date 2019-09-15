@@ -6,6 +6,7 @@ import {Route, Switch} from 'react-router-dom';
 
 import {useDispatch} from 'react-redux';
 
+import LoadingIndicator from './components/LoadingIndicator';
 import {CheckAuthStatus} from './redux/actions/authorizationActions';
 
 const Admin = lazy(()=>import('./Admin'));
@@ -20,7 +21,7 @@ function App() {
 	}, []);
 	  
 	return (
-    	<Suspense fallback={<div></div>}>
+    	<Suspense fallback={<LoadingIndicator/>}>
 			<CssBaseline/>
 			
 			<Switch>

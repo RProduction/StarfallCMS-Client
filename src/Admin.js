@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideBar from './components/SideBar';
+import LoadingIndicator from './components/LoadingIndicator';
 import {InitDatabase} from './redux/actions/projectActions';
 import ContentContainer from './components/ContentContainer';
 import WebsocketClient from './WebsocketClient';
@@ -52,7 +53,7 @@ function Admin(props) {
 			
 			<WebsocketClient/>
 			<ContentContainer className={style.root}>
-				<Suspense fallback={<div></div>}>
+				<Suspense fallback={<LoadingIndicator/>}>
 					<Switch>
 						{_status === CREATOR ? <Route path='/userlist' component={UserList}/> : null}
 						<Route path='/:project/:entity/:document' component={Document}/>
