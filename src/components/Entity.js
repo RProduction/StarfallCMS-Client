@@ -50,7 +50,7 @@ const columns = [
     },
     {
         field: "data",
-        searchable: false,
+        searchable: true,
         hidden: true
     }
 ]
@@ -96,7 +96,7 @@ function Entity(props){
                     entityName: entity,
                     createdAt: value.created,
                     updatedAt: value.updated,
-                    data: value.data
+                    data: JSON.stringify(value.data, null, 4)
                 }))}
                 actions={[
                     {
@@ -112,7 +112,7 @@ function Entity(props){
                             // get selected row and delete batch
                             const ids = rowDatas.map(value => value.id);
                             try{
-                                const res = await Axios.delete('document', {
+                                await Axios.delete('document', {
                                     data: {ids: ids}
                                 });
                                 dispatch(ShowNotificationDialog(
@@ -136,7 +136,7 @@ function Entity(props){
                     readonly={true}
                     minLines={1}
                     fontSize={18}
-                    data={JSON.stringify(rowData.data, null, 4)} 
+                    data={rowData.data} 
                     onChange={() => {}}
                     onValidation={() => {}}
                 />}
