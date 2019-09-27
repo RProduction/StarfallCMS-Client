@@ -45,10 +45,68 @@ const DeleteStorage = (state, action) => produce(state, (draft)=>{
     }
 });
 
+// upload progress
+const PushFileUpload = (state, action) => produce(state, (draft)=>{
+    const {project, name, file} = action;
+    if(!draft[project]) 
+        draft[project] = {};
+
+    let ptr = draft[project];
+    if(!ptr[name])
+        ptr[name] = {
+            project: project,
+            name: name,
+            file: URL.createObjectURL(file),
+            progress: 0,
+            status: "Waiting",
+            cancel: null
+        };
+});
+
+const InitFileUpload = (state, action) => produce(state, (draft)=>{
+    const {project, name} = action;
+    let ptr = draft[project];
+    if(ptr[name])
+        ptr[name].status = "Uploading";
+});
+
+const SetFileUpload = (state, action) => produce(state, (draft)=> {
+    // progress from 0 to 1
+    const {project, name, progress} = action;
+    let ptr = draft[project];
+    if(ptr[name])
+        ptr[name].progress = progress;
+});
+
+const FinishFileUpload = (state, action) => produce(state, (draft)=>{
+    const {project, name} = action;
+    let ptr = draft[project];
+    if(ptr[name])
+        ptr[name].status = "Finish";
+});
+
+const PopFileUpload = (state, action) => produce(state, (draft) => {
+    const {project, name} = action;
+    let ptr = draft[project];
+    if(ptr[name]){
+        URL.revokeObjectURL(ptr[name].file);
+        delete ptr[name];
+    }
+});
+
 // reducers
 export const storageReducer = createReducer({}, {
     UPLOAD_STORAGE: UploadStorage,
     RENAME_STORAGE: RenameStorage,
     PUBLIC_STORAGE: PublicStorage,
     DELETE_STORAGE: DeleteStorage,
+});
+
+
+export const fileUploadReducer = createReducer({}, {
+    PUSH_FILE_UPLOAD: PushFileUpload,
+    INIT_FILE_UPLOAD: InitFileUpload,
+    SET_FILE_UPLOAD: SetFileUpload,
+    FINISH_FILE_UPLOAD: FinishFileUpload,
+    POP_FILE_UPLOAD: PopFileUpload
 });

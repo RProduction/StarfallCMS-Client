@@ -44,3 +44,46 @@ export const FetchStorage = (projectId) => async dispatch => {
         console.log(err);
     }
 }
+
+// upload progress
+export function PushFileUpload(project, name, file) {
+    return {
+        type: "PUSH_FILE_UPLOAD",
+        name: name,
+        file: file,
+        project: project
+    };
+}
+
+export function InitFileUpload(project, name, cancel) {
+    return {
+        type: "INIT_FILE_UPLOAD", 
+        name: name,
+        project: project
+    };
+}
+
+export function SetFileUpload(project, name, progress) {
+    return {
+        type: "SET_FILE_UPLOAD", 
+        name: name, 
+        progress: progress,
+        project: project
+    };
+}
+
+export function FinishFileUpload(project, name) {
+    return {
+        type: "FINISH_FILE_UPLOAD", 
+        name: name, 
+        project: project
+    };
+}
+
+export function PopFileUpload(project, name) {
+    return {
+        type: "POP_FILE_UPLOAD",
+        name: name,
+        project: project
+    };
+}

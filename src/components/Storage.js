@@ -19,8 +19,10 @@ import Axios from '../Axios';
 
 import StorageCustomBody from './StorageCustomBody';
 import StorageCustomToggle from './StorageCustomToggle';
+import StorageCustomToolbar from './StorageCustomToolbar';
 import {selectStorageInProjectByName} from '../redux/selectors/storageSelectors';
-import { ShowRenameDialog, SetTarget, ShowNotificationDialog} from '../redux/actions/globalActions';
+import {PushFileUpload} from '../redux/actions/storageActions';
+import { ShowRenameDialog, SetTarget, ShowNotificationDialog } from '../redux/actions/globalActions';
 import StorageDialog from './StorageDialog';
 
 const columns = [
@@ -157,7 +159,10 @@ function Storage(props) {
 					LastPage: LastPage
 				}}
 				components={{
-					Body: StorageCustomBody
+					Body: StorageCustomBody,
+					Toolbar: (props) => <StorageCustomToolbar 
+						{...props} project={storage.project.id}
+					/>
 				}}
 				options={{
 					search: false,
@@ -169,30 +174,9 @@ function Storage(props) {
 			/>
 			<input multiple name="files" type="file" 
 				style={{display: 'none'}} ref={fileInput}
-				onChange={async(e)=>{
-					console.log(fileInput.current.files);
-					try{
-						const formdata = new FormData();
-						for(const file of fileInput.current.files){
-							formdata.append('file[]', file, file.name);
-						}
-
-						await Axios.post(
-							`storage/${storage.project.id}`, 
-							formdata,
-							{headers:{
-								'Content-Type': 'multipart/form-data'
-							}}
-						);
-						dispatch(ShowNotificationDialog(
-							'Upload Files', 
-							'Succeed uploading files'
-						));
-					}catch(err){
-						dispatch(ShowNotificationDialog(
-							'Upload Files', 
-							`Fail uploading files, error: ${err}`
-						));
+				onChange={(e)=>{
+					for(const file of fileInput.current.files){
+						dispatch(PushFileUpload(storage.project.id, file.name, file));
 					}
 				}}
 			/>

@@ -20,3 +20,18 @@ export const selectStorageInProjectByName = ()=>{
         }
     );
 };
+
+// file upload selectors
+const _selectFileUpload = state => state.fileUpload;
+export const selectFileUploadName = (state, project) => {
+    const res = _selectFileUpload(state)[project];
+    return res ? Object.keys(res) : [];
+};
+export const selectFileUpload = (state, project, name) => {
+    const res = _selectFileUpload(state)[project];
+    return res ? res[name] : null;
+};
+export const selectAllFileUpload = (state, project) => {
+    const res = _selectFileUpload(state)[project];
+    return res ? Object.values(res) : [];
+};
