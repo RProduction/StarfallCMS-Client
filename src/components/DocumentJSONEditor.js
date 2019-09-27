@@ -8,7 +8,7 @@ import 'brace/mode/json';
 import 'brace/theme/github';
 
 function DocumentJSONEditor(props){
-    const {data, onChange, onValidation} = props;
+    const {data, onChange, onValidation, readonly, minLines, fontSize} = props;
 
     return(
         <Grid item container xs={12}>
@@ -20,9 +20,9 @@ function DocumentJSONEditor(props){
                 onChange={onChange}
                 onValidate={onValidation}
                 width="100%"
-                minLines={20}
+                minLines={minLines}
                 maxLines={Infinity}
-                fontSize={22}
+                fontSize={fontSize}
                 showPrintMargin={true}
                 showGutter={true}
                 highlightActiveLine={true}
@@ -32,6 +32,8 @@ function DocumentJSONEditor(props){
                 enableSnippets={false}
                 showLineNumbers={true}
                 tabSize={4}
+                wrapEnabled={true}
+                readOnly={readonly}
                 editorProps={{$blockScrolling: Infinity}}
             />
         </Grid>

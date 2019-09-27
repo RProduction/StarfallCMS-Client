@@ -1,15 +1,12 @@
 import React, {useState, useMemo} from 'react';
 
-import {Link, Redirect} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 
 import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import Add from '@material-ui/icons/Add';
+import NavigateNext from '@material-ui/icons/NavigateNext';
 import MaterialTable from 'material-table';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -19,13 +16,9 @@ import Axios from '../Axios';
 import {selectDocumentsInEntityByName} from '../redux/selectors/documentSelectors';
 import {ShowNotificationDialog, HideNotificationDialog} from '../redux/actions/globalActions';
 import DialogCustom from './DialogCustom';
+import DocumentJSONEditor from './DocumentJSONEditor';
 
 const columns = [
-    {
-        title: "#", 
-        field: "#", 
-        searchable: false
-    },
     {
         field: "projectName", 
         searchable: false, 
@@ -41,15 +34,7 @@ const columns = [
     {
         title: "ID", 
         field: "id", 
-        searchable: false, 
-        render: (rowData)=>{
-            const {id, projectName, entityName} = rowData;
-            return(
-                <Link style={{color: 'black'}} to={`/${projectName}/${entityName}/${id}`}>
-                    {id}
-                </Link>
-            )
-        }
+        searchable: false
     },
     {
         title: "Created At", 
@@ -62,6 +47,11 @@ const columns = [
         field: "updatedAt", 
         searchable: false,
         type: 'datetime'
+    },
+    {
+        field: "data",
+        searchable: false,
+        hidden: true
     }
 ]
 
@@ -69,6 +59,7 @@ const columns = [
 // Any actions in Entity will affect Document and need to be signin
 function Entity(props){
     const dispatch = useDispatch();
+    const {history} = props;
     const {project, entity} = props.match.params;
 
     const notification = useSelector(state => state.notification);
@@ -99,13 +90,13 @@ function Entity(props){
             <MaterialTable 
                 title="Documents" 
                 columns={columns} 
-                data={documents.documents.map((value, index) => ({
-                    "#": (index+1),
+                data={documents.documents.map(value => ({
                     id: value.id,
                     projectName: project,
                     entityName: entity,
                     createdAt: value.created,
-                    updatedAt: value.updated
+                    updatedAt: value.updated,
+                    data: value.data
                 }))}
                 actions={[
                     {
@@ -137,17 +128,25 @@ function Entity(props){
                         }
                     }
                 ]}
+                onRowClick={(e, rowData)=>{
+                    const {id, projectName, entityName} = rowData;
+                    history.push(`/${projectName}/${entityName}/${id}`);
+                }}
+                detailPanel={rowData => <DocumentJSONEditor
+                    readonly={true}
+                    minLines={1}
+                    fontSize={18}
+                    data={JSON.stringify(rowData.data, null, 4)} 
+                    onChange={() => {}}
+                    onValidation={() => {}}
+                />}
                 icons={{
                     Search: Search,
                     ResetSearch: Clear,
-                    FirstPage: FirstPage,
-                    PreviousPage: ArrowBack,
-                    NextPage: ArrowForward,
-                    LastPage: LastPage
+                    DetailPanel: NavigateNext
                 }}
                 options={{
-                    pageSize: 100,
-                    pageSizeOptions: [100,500,1000],
+                    paging: false,
                     search: true,
                     selection: true,
                     actionsColumnIndex: -1

@@ -67,7 +67,7 @@ function Storage(props) {
 	const fileInput = useRef(null);
 	
 	const _selectStorage = useMemo(selectStorageInProjectByName, []);
-	const storage = useSelector(state => _selectStorage(state, project));console.log(storage);
+	const storage = useSelector(state => _selectStorage(state, project));
 
 	if(!storage)
 		return <Redirect to="/"/>;
@@ -77,15 +77,29 @@ function Storage(props) {
 			<MaterialTable 
 				title="Storage"
 				columns={columns}
-				data={storage.storage.map((value, index) => ({
-					'#': (index+1),
-					id: value.id,
-					name: value.name,
-					size: value.size,
-					created: value.created,
-					modified: value.modified,
-					isPublic: value.isPublic
-				}))}
+				data={storage.storage.map((value, index) => {
+					let size = value.size;
+					if (size === 0) size = '0 Bytes';
+					else{
+						const k = 1024;
+						const dm = 2 < 0 ? 0 : 2;
+						const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+						const i = Math.floor(Math.log(size) / Math.log(k));
+
+						size = parseFloat((size / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+					}
+
+					return {
+						'#': (index+1),
+						id: value.id,
+						name: value.name,
+						size: size,
+						created: value.created,
+						modified: value.modified,
+						isPublic: value.isPublic
+					};
+				})}
 				actions={[
 					{
 						icon: ()=><CloudUpload/>,
@@ -127,6 +141,13 @@ function Storage(props) {
 						}
 					}
 				]}
+				onRowClick={(e, rowData) => {
+					const url = process.env.NODE_ENV === 'development' ? 
+					`http://localhost:3333/storage/stream/${project}/${rowData.name}` : 
+					`/storage/stream/${project}/${rowData.name}`;
+
+					window.open(url);
+				}}
 				icons={{
 					Search: Search,
 					ResetSearch: Clear,

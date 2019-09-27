@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Link, Redirect} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 
 import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';
@@ -40,15 +40,7 @@ const columns = [
     {
         title: "Name", 
         field: "name", 
-        searchable: true, 
-        render: (rowData)=>{
-            const {name, projectName} = rowData;
-            return(
-                <Link style={{color: 'black'}} to={`/${projectName}/${name}`}>
-                    {name}
-                </Link>
-            )
-        }
+        searchable: true
     },
     {
         title: "Created At", 
@@ -68,6 +60,7 @@ const columns = [
 // Any actions in Project will affect Entity and need Creator or Manager level Authorization
 function Project(props){
     const dispatch = useDispatch();
+    const {history} = props;
     const {project} = props.match.params;
 
     const select = useMemo(selectEntitiesInProjectByName, []);
@@ -118,6 +111,10 @@ function Project(props){
                         }
                     }
                 ]}
+                onRowClick={(e, rowData)=>{
+                    const {name, projectName} = rowData;
+                    history.push(`/${projectName}/${name}`);
+                }}
                 icons={{
                     Search: Search,
                     ResetSearch: Clear,

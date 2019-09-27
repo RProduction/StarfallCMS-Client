@@ -40,6 +40,9 @@ function DocumentAdd(props){
     else return(
         <Grid container className={style.root} direction="column">
             <DocumentJSONEditor 
+                readonly={false}
+                minLines={20}
+                fontSize={22}
                 data={data} 
                 onChange={(value) => setData(value)}
                 onValidation={(annotations) => setValid(annotations.length === 0)}
