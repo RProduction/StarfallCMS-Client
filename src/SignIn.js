@@ -84,6 +84,7 @@ function SignIn(props) {
 					value={username} variant="outlined" margin="dense"
 					helperText={touched.username ? errors.username : ""}
 					error={touched.username && Boolean(errors.username)}
+					placeholder="Username12345"
 				/>
 				<Grid item xs={12} component={TextField} required id="password"
 					name="password" label="Password" type="password"
@@ -115,15 +116,9 @@ const ValidationSchema = Yup.object({
 	})
 });
 
-const InitialValues = {
-	username: 'Username12345',
-	password: ''
-};
-
 function Validation(){
 	return <AuthorizationForm 
 		validationSchema={ValidationSchema}
-		initialValues={InitialValues}
 		render={(props)=><SignIn {...props}/>}
 	/>
 }

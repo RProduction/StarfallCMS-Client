@@ -85,7 +85,8 @@ const SignUp = (props)=>{
 					onChange={change.bind(null, "username")}
 					value={username} variant="outlined" margin="dense"
 					helperText={touched.username ? errors.username : ""}
-						error={touched.username && Boolean(errors.username)}
+					error={touched.username && Boolean(errors.username)}
+					placeholder="Username12345"
 				/>
 				<Grid item xs={12} component={TextField} required id="password" 
 					name="password" label="Password" type="password"
@@ -126,16 +127,9 @@ const ValidationSchema = Yup.object({
 	.oneOf([Yup.ref("password")], "password does not match")
 });
 
-const InitialValues = {
-	username: 'Username12345',
-	password: '',
-	confirmPassword: ''
-};
-
 function Validation(){
 	return <AuthorizationForm 
 		validationSchema={ValidationSchema}
-		initialValues={InitialValues}
 		render={(props)=><SignUp {...props}/>}
 	/>
 }
