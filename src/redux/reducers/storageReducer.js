@@ -74,7 +74,7 @@ const SetFileUpload = (state, action) => produce(state, (draft)=> {
     // progress from 0 to 1
     const {project, name, progress} = action;
     let ptr = draft[project];
-    if(ptr[name])
+    if(ptr[name] && progress > ptr[name].progress)
         ptr[name].progress = progress;
 });
 

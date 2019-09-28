@@ -18,6 +18,8 @@ import {
 import {selectAllFileUpload} from "../redux/selectors/storageSelectors";
 import StorageCustomToolbarItem from "./StorageCustomToolbarItem";
 
+let cancelers = {};
+
 const useStyle = makeStyle(theme => ({
     root: {
         borderBottom: "1px solid black",
@@ -30,7 +32,7 @@ function StorageCustomToolbar(props) {
     const style = useStyle();
     const dispatch = useDispatch();
     const upload = useSelector(state => selectAllFileUpload(state, project));
-    const [cancel, setCancel] = useState({});
+    const [cancel, setCancel] = useState(cancelers[project] || {});
 
     const handleUpload = async(name, file, cancelToken) => {
         try{
@@ -45,7 +47,7 @@ function StorageCustomToolbar(props) {
                         'Content-Type': 'multipart/form-data'
                     },
                     onUploadProgress: (e)=>{
-                        const progress = Math.floor(e.loaded * 1.0) / e.total;
+                        const progress = (Math.floor(e.loaded * 1.0) / e.total) * 100;
                         dispatch(SetFileUpload(project, name, progress));
                     },
                     cancelToken: cancelToken.token
@@ -92,6 +94,12 @@ function StorageCustomToolbar(props) {
             }
         }
     }, [upload]);
+
+    useEffect(() => {
+        cancelers = produce(cancelers, (draft)=>{
+            draft[project] = cancel;
+        });
+    }, [cancel]);
 
     return (
         <React.Fragment>
